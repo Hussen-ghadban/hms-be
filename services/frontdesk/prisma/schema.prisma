@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model RoomType {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  baseRate    Decimal  @default(0) @db.Decimal(10,2)
+  hotelId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Room Room[]
+  Amenity Amenity[]
+  @@unique([hotelId, name])
+}
+
+model Room {
+  id         String     @id @default(cuid())
+  roomNumber String
+  status     RoomStatus @default(AVAILABLE)
+  roomTypeId String
+  roomType   RoomType   @relation(fields: [roomTypeId], references: [id])
+  hotelId    String
+  @@unique([hotelId, roomNumber])
+}
+
+model RatePlan {
+  id          String        @id @default(cuid())
+  hotelId     String
+  code        String // “BAR”, “CORP10”
+  name        String
+  baseAdjType AdjType // PERCENT | FIXED
+  baseAdjVal  Decimal       @db.Decimal(6, 2) // +10 % or –15 USD
+  currencyId  String
+  currency    Currency      @relation(fields: [currencyId], references: [id])
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@unique([hotelId, code])
+}
+
+model Guest {
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String?
+  phoneNumber String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  hotelId     String
+
+  @@unique([email])
+}
+
+
+model ExchangeRate {
+  id             String   @id @default(cuid())
+  baseCurrency   String
+  targetCurrency String
+  rate           Decimal  @db.Decimal(18, 6)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  base           Currency @relation("BaseCurrency", fields: [baseCurrency], references: [code])
+  target         Currency @relation("TargetCurrency", fields: [targetCurrency], references: [code])
+  hotelId        String
+
+  @@unique([baseCurrency, targetCurrency, hotelId])
+}
+
+model Currency {
+  id          String         @id @default(cuid())
+  code        String         @unique
+  name        String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  baseRates   ExchangeRate[] @relation("BaseCurrency")
+  targetRates ExchangeRate[] @relation("TargetCurrency")
+  RatePlan    RatePlan[]
+}
+
+model Amenity {
+  id          String   @id @default(cuid())
+  name        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  hotelId     String
+  RoomType RoomType[]
+}
+
+
+enum RoomStatus {
+  AVAILABLE
+  OCCUPIED
+  MAINTENANCE
+  DIRTY
+  CLEANING
+  RESERVED
+  OUT_OF_SERVICE
+}
+
+enum AdjType {
+  PERCENT
+  FIXED
+}
