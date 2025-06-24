@@ -8,7 +8,6 @@ export default class RatePlanService {
     baseAdjType,
     baseAdjVal,
     currencyId,
-    tenantId,
     hotelId,
   }: CreateRatePlanParams) {
     try {
@@ -33,14 +32,14 @@ export default class RatePlanService {
 
 
 
-  async getRatePlans(tenantId: string, hotelId: string) {
+  async getRatePlans(hotelId: string) {
     return await prisma.ratePlan.findMany({
       where: { hotelId },
       orderBy: { createdAt: "desc" },
     });
   }
 
-  async getRatePlan(id: string, tenantId: string, hotelId: string) {
+  async getRatePlan(id: string,hotelId: string) {
     return await prisma.ratePlan.findFirst({
       where: { id, hotelId },
     });
@@ -54,7 +53,6 @@ export default class RatePlanService {
     baseAdjVal,
     currencyId,
     isActive,
-    tenantId,
     hotelId,
   }: UpdateRatePlanParams) {
 
@@ -75,7 +73,7 @@ export default class RatePlanService {
     return updatedRatePlan;
   }
 
-  async deleteRatePlan(id: string, tenantId: string, hotelId: string) {
+  async deleteRatePlan(id: string, hotelId: string) {
     const plan = await prisma.ratePlan.findFirst({ where: { id, hotelId } });
     if (!plan) throw new Error("Rate plan not found");
 

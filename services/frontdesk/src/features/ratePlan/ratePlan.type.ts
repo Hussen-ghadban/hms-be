@@ -4,7 +4,6 @@ export interface CreateRatePlanParams {
   baseAdjType: "PERCENT" | "FIXED";
   baseAdjVal: number;
   currencyId: string;
-  tenantId: string;
   hotelId: string;
 }
 
@@ -16,7 +15,6 @@ export interface UpdateRatePlanParams {
   baseAdjVal?: number;
   currencyId?: string;
   isActive?: boolean;
-  tenantId: string;
   hotelId: string;
 }
 
@@ -27,7 +25,6 @@ export interface RatePlan {
   baseAdjType: "PERCENT" | "FIXED";
   baseAdjVal: number;
   currencyId: string;
-  tenantId: string;
   hotelId: string;
   isActive: boolean;
   createdAt: Date;

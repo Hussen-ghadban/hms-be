@@ -5,10 +5,10 @@ const ratePlanService = new RatePlanService();
 
 export const  addRatePlan = async (req: Request, res: Response, next: NextFunction):Promise<void> => {
   try {
-    const { tenantId, hotelId } = req.user!;
+    const { hotelId } = req.user!;
 
 
-    if (!tenantId || !hotelId) { res.status(400).json({ error: "Tenant ID and Hotel ID are required" }); return; }
+    if ( !hotelId) { res.status(400).json({ error: "Tenant ID and Hotel ID are required" }); return; }
 
     const { code, name, baseAdjType, baseAdjVal, currencyId } = req.body;
 
@@ -18,7 +18,6 @@ export const  addRatePlan = async (req: Request, res: Response, next: NextFuncti
       baseAdjType,
       baseAdjVal,
       currencyId,
-      tenantId,
       hotelId,
     });
 
@@ -35,12 +34,12 @@ export const  addRatePlan = async (req: Request, res: Response, next: NextFuncti
 
 export const getRatePlans = async (req: Request, res: Response, next: NextFunction):Promise<void> => {
   try {
-    const { tenantId, hotelId } = req.user!;
+    const { hotelId } = req.user!;
 
 
-    if (!tenantId || !hotelId)  {res.status(400).json({ error: "Tenant ID and Hotel ID are required" }); return; }
+    if ( !hotelId)  {res.status(400).json({ error: "Tenant ID and Hotel ID are required" }); return; }
 
-    const plans = await ratePlanService.getRatePlans(tenantId, hotelId);
+    const plans = await ratePlanService.getRatePlans(hotelId);
 
     res.json({
       status: 200,
@@ -54,13 +53,13 @@ export const getRatePlans = async (req: Request, res: Response, next: NextFuncti
 
 export const getRatePlan = async (req: Request, res: Response, next: NextFunction):Promise<void> => {
   try {
-    const { tenantId, hotelId } = req.user!;
+    const { hotelId } = req.user!;
 
     const id = req.params.id;
 
-    if (!tenantId || !hotelId)  {res.status(400).json({ error: "Tenant ID and Hotel ID are required" }); return; }
+    if (!hotelId)  {res.status(400).json({ error: "Tenant ID and Hotel ID are required" }); return; }
 
-    const plan = await ratePlanService.getRatePlan(id, tenantId, hotelId);
+    const plan = await ratePlanService.getRatePlan(id, hotelId);
     if (!plan) { res.status(404).json({ error: "Rate plan not found" }); return; }
 
     res.json({
@@ -77,11 +76,11 @@ export const getRatePlan = async (req: Request, res: Response, next: NextFunctio
 
 export const updateRatePlan = async (req: Request, res: Response, next: NextFunction):Promise<void> => {
   try {
-    const { tenantId, hotelId } = req.user!;
+    const {  hotelId } = req.user!;
 
     const id = req.params.id;
 
-    if (!tenantId || !hotelId)  {res.status(400).json({ error: "Tenant ID and Hotel ID are required" }); return; }
+    if (!hotelId)  {res.status(400).json({ error: "Tenant ID and Hotel ID are required" }); return; }
     const { code,name, baseAdjType, baseAdjVal, currencyId, isActive } = req.body;
 
     const updatedPlan = await ratePlanService.updateRatePlan({
@@ -92,7 +91,6 @@ export const updateRatePlan = async (req: Request, res: Response, next: NextFunc
       baseAdjVal,
       currencyId,
       isActive,
-      tenantId,
       hotelId,
     });
 
@@ -109,12 +107,12 @@ export const updateRatePlan = async (req: Request, res: Response, next: NextFunc
 
 export const deleteRatePlan = async (req: Request, res: Response, next: NextFunction):Promise<void> => {
   try {
-    const { tenantId, hotelId } = req.user!;
+    const { hotelId } = req.user!;
 
     const id = req.params.id;
 
-    if (!tenantId || !hotelId) { res.status(400).json({ error: "Tenant ID and Hotel ID are required" }); return; }
-    await ratePlanService.deleteRatePlan(id, tenantId, hotelId);
+    if (!hotelId) { res.status(400).json({ error: "Tenant ID and Hotel ID are required" }); return; }
+    await ratePlanService.deleteRatePlan(id,  hotelId);
 
     res.json({
       status: 200,
