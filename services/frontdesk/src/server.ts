@@ -7,6 +7,7 @@ import roomRoutes from './features/room/room.routes'
 import ratePlanRouter from './features/ratePlan/ratePlan.routes';
 import exchangeRouter from './features/exchange/exchange.routes';
 import amenityRouter from './features/amenity/amenity.routes';
+import reservationRouter from './features/reservation/reservation.routes';
 
 const app = express();
 app.use(express.json());
@@ -15,6 +16,8 @@ app.use("/room", roomRoutes)
 app.use("/ratePlan", ratePlanRouter);
 app.use("/exchange", exchangeRouter);
 app.use("/amenity",amenityRouter)
+app.use("/reservation",reservationRouter)
+
 
 
 const PORT = process.env.PORT || 4001;
