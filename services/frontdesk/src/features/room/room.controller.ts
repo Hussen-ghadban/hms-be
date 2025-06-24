@@ -13,13 +13,16 @@ export const addRoom = async (req: Request, res: Response, next: NextFunction) =
             return;
         }
 
-
-        const { roomNumber, roomTypeId } = req.body;
+        const { roomNumber, roomTypeId, floor,maxOccupancy,childOccupancy,adultOccupancy } = req.body;
 
         const newRoom = await roomService.createRoom({
             roomNumber,
             roomTypeId,
             hotelId,
+            floor,
+            maxOccupancy,
+            childOccupancy,
+            adultOccupancy,
         });
 
         res.status(201).json({
@@ -86,14 +89,17 @@ export const updateRoom = async (req: Request, res: Response, next: NextFunction
             return;
         }
 
-        const { roomNumber, status, roomTypeId } = req.body;
+        const { roomNumber, status, roomTypeId, floor, maxOccupancy, childOccupancy, adultOccupancy } = req.body;
 
         const updatedRoom = await roomService.updateRoom({
             id,
             roomNumber,
-            status,
             roomTypeId,
             hotelId,
+            floor,
+            maxOccupancy,
+            childOccupancy,
+            adultOccupancy,
         });
 
         res.json({

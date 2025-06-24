@@ -7,11 +7,15 @@ export default class RoomService {
         roomNumber,
         roomTypeId,
         hotelId,
+        floor,
+        maxOccupancy,
+        childOccupancy,
+        adultOccupancy,
     }: CreateRoomParams) {
         try {
             const existing = await prisma.room.findUnique({
                 where: {
-                        hotelId_roomNumber: {
+                    hotelId_roomNumber: {
                         hotelId,
                         roomNumber
                     }
@@ -32,10 +36,14 @@ export default class RoomService {
 
             const room = await prisma.room.create({
                 data: {
+                    floor,
                     roomNumber,
-                    status:RoomStatus.AVAILABLE,
+                    status: RoomStatus.AVAILABLE,
                     roomTypeId,
                     hotelId,
+                    maxOccupancy,
+                    adultOccupancy,
+                    childOccupancy,
                 },
                 include: {
                     roomType: true,
@@ -64,7 +72,8 @@ export default class RoomService {
             where: { id, hotelId },
             include: {
                 roomType: true,
-        }});
+            }
+        });
 
         if (!room) {
             throw new Error("Room not found");
@@ -76,9 +85,12 @@ export default class RoomService {
     async updateRoom({
         id,
         roomNumber,
-        status,
         roomTypeId,
         hotelId,
+        floor,
+        maxOccupancy,
+        childOccupancy,
+        adultOccupancy,
     }: UpdateRoomParams) {
         // Check existence and ownership
         const room = await prisma.room.findFirst({
@@ -119,9 +131,12 @@ export default class RoomService {
         const updatedRoom = await prisma.room.update({
             where: { id },
             data: {
-                ...(roomNumber && { roomNumber }),
-                ...(status && { status }),
-                ...(roomTypeId && { roomTypeId }),
+                roomNumber,
+                roomTypeId,
+                floor,
+                maxOccupancy,
+                childOccupancy,
+                adultOccupancy,
             },
             include: {
                 roomType: true,

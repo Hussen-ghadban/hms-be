@@ -4,6 +4,10 @@ export interface CreateRoomParams {
   roomNumber: string;
   roomTypeId: string;
   hotelId: string;
+  floor: number;
+  maxOccupancy: number;
+  adultOccupancy: number;
+  childOccupancy: number;
 }
 
 export interface UpdateRoomParams {
@@ -12,4 +16,9 @@ export interface UpdateRoomParams {
   status?: RoomStatus;
   roomTypeId?: string;
   hotelId: string;
+  floor:number;
+  maxOccupancy:number;
+  adultOccupancy:number;
+  childOccupancy: number;
+  description?: string;
 }
