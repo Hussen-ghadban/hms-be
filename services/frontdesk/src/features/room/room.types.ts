@@ -8,6 +8,7 @@ export interface CreateRoomParams {
   maxOccupancy: number;
   adultOccupancy: number;
   childOccupancy: number;
+  amenities?: string[];
 }
 
 export interface UpdateRoomParams {
@@ -21,4 +22,5 @@ export interface UpdateRoomParams {
   adultOccupancy:number;
   childOccupancy: number;
   description?: string;
+  amenities?: string[];
 }

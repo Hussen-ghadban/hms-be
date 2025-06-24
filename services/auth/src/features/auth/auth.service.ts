@@ -5,7 +5,7 @@ import { AppActions, AppSubjects, defineAbilitiesForUser } from '../../utils/abi
 import { Permission } from './auth.types';
 
 class AuthService {
-  async login(email: string, password: string, hotelId: string) {
+  async login(email: string, password: string) {
     const user = await prisma.user.findUnique({
       where: { email },
       include: { role: { include: { permissions: true } }, hotel: true },
@@ -15,7 +15,7 @@ class AuthService {
       throw new Error('INVALID_CRED');
     }
 
-    const userHotel = user.hotel.find(h => h.id === hotelId);
+    const userHotel = user.hotel[0];
     if (!userHotel) {
       throw new Error('INVALID_CRED');
     }
