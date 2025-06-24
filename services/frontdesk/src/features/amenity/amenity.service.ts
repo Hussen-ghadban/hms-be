@@ -7,7 +7,6 @@ export default class AmenityService {
         hotelId,
     }: CreateAmenityParams) {
         try {
-            // Check if an amenity with the same name already exists in this tenant+hotel
             const existing = await prisma.amenity.findFirst({
                 where: { name, hotelId },
             });

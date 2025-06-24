@@ -28,7 +28,7 @@ export default class RoomTypeService {
             throw new Error("An unexpected error occurred");
         }
     }
-    async getAll(tenantId: string, hotelId: string) {
+    async getAll( hotelId: string) {
         try {
             const roomTypes = await prisma.roomType.findMany({
                 where: {
@@ -43,7 +43,7 @@ export default class RoomTypeService {
             throw new Error("An unexpected error occurred");
         }
     }
-    async getById(tenantId: string, hotelId: string, roomTypeId: string) {
+    async getById( hotelId: string, roomTypeId: string) {
         try {
             const roomType = await prisma.roomType.findUnique({
                 where: {

@@ -1,16 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import GuestService from "./guest.service";
 
-const guestService =new GuestService();
+const guestService = new GuestService();
 
-export const addGuest=async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
+export const addGuest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-    const { hotelId } = req.user!;
+        const { hotelId } = req.user!;
 
 
         if (!hotelId) {
-             res.status(400).json({ status: 400, message: "Hotel ID are required" });
-             return;
+            res.status(400).json({ status: 400, message: "Hotel ID is required" });
+            return;
         }
 
         const { firstName, lastName, email, phoneNumber } = req.body;
@@ -30,12 +30,12 @@ export const addGuest=async(req:Request,res:Response,next:NextFunction):Promise<
             data: newGuest,
         });
     } catch (error) {
-        
+
     }
 }
 export const getGuests = async (req: Request, res: Response, next: NextFunction) => {
     try {
-    const { hotelId } = req.user!;
+        const { hotelId } = req.user!;
 
         if (!hotelId) {
         }
@@ -53,7 +53,7 @@ export const getGuests = async (req: Request, res: Response, next: NextFunction)
 }
 export const getGuest = async (req: Request, res: Response, next: NextFunction) => {
     try {
-    const {  hotelId } = req.user!;
+        const { hotelId } = req.user!;
 
         const id = req.params.id;
 
@@ -76,7 +76,7 @@ export const getGuest = async (req: Request, res: Response, next: NextFunction) 
 }
 export const updateGuest = async (req: Request, res: Response, next: NextFunction) => {
     try {
-    const { hotelId } = req.user!;
+        const { hotelId } = req.user!;
 
         const id = req.params.id;
 
@@ -104,11 +104,11 @@ export const updateGuest = async (req: Request, res: Response, next: NextFunctio
 }
 export const deleteGuest = async (req: Request, res: Response, next: NextFunction) => {
     try {
-    const {  hotelId } = req.user!;
+        const { hotelId } = req.user!;
 
         const id = req.params.id;
 
-        if ( !hotelId) {
+        if (!hotelId) {
 
         }
 

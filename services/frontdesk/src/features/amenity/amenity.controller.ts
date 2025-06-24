@@ -3,14 +3,14 @@ import AmenityService from "./amenity.service";
 
 const amenityService = new AmenityService();
 
-export const addAmenity = async (req: Request, res: Response, next: NextFunction):Promise<void> => {
+export const addAmenity = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-    const { hotelId } = req.user!;
+        const { hotelId } = req.user!;
 
 
-        if ( !hotelId) {
-             res.status(400).json({ status: 400, message: "Hotel ID are required" });
-                return;
+        if (!hotelId) {
+            res.status(400).json({ status: 400, message: "Hotel ID is required" });
+            return;
         }
 
         const { name } = req.body;
@@ -31,13 +31,13 @@ export const addAmenity = async (req: Request, res: Response, next: NextFunction
     }
 };
 
-export const getAmenities = async (req: Request, res: Response, next: NextFunction):Promise<void> => {
+export const getAmenities = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-    const {hotelId } = req.user!;
+        const { hotelId } = req.user!;
 
 
-        if ( !hotelId) {
-            res.status(400).json({ status: 400, message: "Hotel ID are required" });
+        if (!hotelId) {
+            res.status(400).json({ status: 400, message: "Hotel ID is required" });
             return;
         }
 
@@ -52,14 +52,14 @@ export const getAmenities = async (req: Request, res: Response, next: NextFuncti
     }
 };
 
-export const getAmenity = async (req: Request, res: Response, next: NextFunction):Promise<void> => {
+export const getAmenity = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-    const {hotelId } = req.user!;
+        const { hotelId } = req.user!;
 
         const { id } = req.params;
 
         if (!hotelId) {
-            res.status(400).json({ status: 400, message: "Hotel ID are required" });
+            res.status(400).json({ status: 400, message: "Hotel ID is required" });
             return;
         }
 
@@ -75,14 +75,14 @@ export const getAmenity = async (req: Request, res: Response, next: NextFunction
     }
 };
 
-export const updateAmenity = async (req: Request, res: Response, next: NextFunction):Promise<void> => {
+export const updateAmenity = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-    const {hotelId } = req.user!;
+        const { hotelId } = req.user!;
 
         const { id } = req.params;
 
         if (!hotelId) {
-            res.status(400).json({ status: 400, message: "Hotel ID are required" });
+            res.status(400).json({ status: 400, message: "Hotel ID is required" });
             return;
         }
 
@@ -104,14 +104,14 @@ export const updateAmenity = async (req: Request, res: Response, next: NextFunct
     }
 };
 
-export const deleteAmenity = async (req: Request, res: Response, next: NextFunction):Promise<void> => {
+export const deleteAmenity = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-    const { hotelId } = req.user!;
+        const { hotelId } = req.user!;
 
         const { id } = req.params;
 
-        if ( !hotelId) {
-            res.status(400).json({ status: 400, message: "Tenant ID and Hotel ID are required" });
+        if (!hotelId) {
+            res.status(400).json({ status: 400, message: "Hotel ID is required" });
             return;
         }
 

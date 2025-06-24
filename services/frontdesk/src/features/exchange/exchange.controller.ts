@@ -7,8 +7,8 @@ export const addExchangeRate = async (req: Request, res: Response, next: NextFun
   try {
     const { hotelId } = req.user!;
 
-    if ( !hotelId) {
-      res.status(400).json({ status: 400, message: "Hotel ID are required" });
+    if (!hotelId) {
+      res.status(400).json({ status: 400, message: "Hotel ID is required" });
       return;
     }
 
@@ -25,14 +25,14 @@ export const addExchangeRate = async (req: Request, res: Response, next: NextFun
 
 export const getExchangeRates = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {  hotelId } = req.user!;
+    const { hotelId } = req.user!;
 
-    if ( !hotelId) {
-      res.status(400).json({ status: 400, message: "Hotel ID are required" });
+    if (!hotelId) {
+      res.status(400).json({ status: 400, message: "Hotel ID is required" });
       return;
     }
 
-    const data = await service.getExchangeRates( hotelId);
+    const data = await service.getExchangeRates(hotelId);
     res.json({ status: 200, message: "Exchange rates retrieved successfully", data });
   } catch (err) {
     next(err)
@@ -41,11 +41,11 @@ export const getExchangeRates = async (req: Request, res: Response, next: NextFu
 
 export const getExchangeRate = async (req: Request, res: Response, next: NextFunction) => {
   try {
-        const { hotelId } = req.user!;
+    const { hotelId } = req.user!;
 
     const id = req.params.id;
-    if ( !hotelId) {
-      res.status(400).json({ status: 400, message: "Hotel ID are required" });
+    if (!hotelId) {
+      res.status(400).json({ status: 400, message: "Hotel ID is required" });
       return;
     }
 
@@ -57,11 +57,11 @@ export const getExchangeRate = async (req: Request, res: Response, next: NextFun
 
 export const updateExchangeRate = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {  hotelId } = req.user!;
+    const { hotelId } = req.user!;
 
     const id = req.params.id;
-    if ( !hotelId) {
-      res.status(400).json({ status: 400, message: "Hotel ID are required" });
+    if (!hotelId) {
+      res.status(400).json({ status: 400, message: "Hotel ID is required" });
       return;
     }
 
@@ -79,7 +79,7 @@ export const updateExchangeRate = async (req: Request, res: Response, next: Next
   } catch (err) {
     console.error("Error updating exchange rate:", err);
     next(err);
-    }
+  }
 };
 
 export const deleteExchangeRate = async (req: Request, res: Response, next: NextFunction) => {
@@ -88,7 +88,7 @@ export const deleteExchangeRate = async (req: Request, res: Response, next: Next
 
     const id = req.params.id;
     if (!hotelId) {
-      res.status(400).json({ status: 400, message: "Hotel ID are required" });
+      res.status(400).json({ status: 400, message: "Hotel ID is required" });
       return;
     }
 
