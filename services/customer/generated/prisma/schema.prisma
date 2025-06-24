@@ -15,14 +15,19 @@ datasource db {
 }
 
 model Guest {
-  id          String   @id @default(cuid())
-  firstName   String
-  lastName    String
-  email       String?
-  phoneNumber String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  hotelId     String
+  id             String    @id @default(cuid())
+  gid            String    @unique
+  firstName      String
+  lastName       String
+  email          String?
+  phoneNumber    String?
+  identification Json
+  nationality    String?
+  preferences    Json?
+  dob            DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  hotelId        String
 
   @@unique([email])
 }

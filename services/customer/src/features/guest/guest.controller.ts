@@ -1,19 +1,23 @@
 import { NextFunction, Request, Response } from "express";
 import GuestService from "./guest.service";
 
-const guestService =new GuestService();
+const guestService = new GuestService();
 
-export const addGuest=async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
+export const addGuest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-    const { hotelId } = req.user!;
-
+        const { hotelId } = req.user!;
 
         if (!hotelId) {
-             res.status(400).json({ status: 400, message: "Hotel ID are required" });
-             return;
+            res.status(400).json({ status: 400, message: "Hotel ID are required" });
+            return;
         }
 
-        const { firstName, lastName, email, phoneNumber } = req.body;
+        const { firstName, lastName, email, phoneNumber, identification, nationality, preferences, dob } = req.body;
+
+        if (!identification) {
+            res.status(400).json({ status: 400, message: "Identification is required" });
+            return;
+        }
 
         // Assuming guestService is defined and has a method to create a guest
         const newGuest = await guestService.createGuest({
@@ -21,6 +25,10 @@ export const addGuest=async(req:Request,res:Response,next:NextFunction):Promise<
             lastName,
             email,
             phoneNumber,
+            identification,
+            nationality,
+            preferences,
+            dob: dob ? new Date(dob) : undefined,
             hotelId,
         });
 
@@ -30,12 +38,12 @@ export const addGuest=async(req:Request,res:Response,next:NextFunction):Promise<
             data: newGuest,
         });
     } catch (error) {
-        
+
     }
 }
 export const getGuests = async (req: Request, res: Response, next: NextFunction) => {
     try {
-    const { hotelId } = req.user!;
+        const { hotelId } = req.user!;
 
         if (!hotelId) {
         }
@@ -53,7 +61,7 @@ export const getGuests = async (req: Request, res: Response, next: NextFunction)
 }
 export const getGuest = async (req: Request, res: Response, next: NextFunction) => {
     try {
-    const {  hotelId } = req.user!;
+        const { hotelId } = req.user!;
 
         const id = req.params.id;
 
@@ -76,14 +84,14 @@ export const getGuest = async (req: Request, res: Response, next: NextFunction) 
 }
 export const updateGuest = async (req: Request, res: Response, next: NextFunction) => {
     try {
-    const { hotelId } = req.user!;
+        const { hotelId } = req.user!;
 
         const id = req.params.id;
 
         if (!hotelId) {
         }
 
-        const { firstName, lastName, email, phoneNumber } = req.body;
+        const { firstName, lastName, email, phoneNumber, identification, nationality, preferences, dob } = req.body;
 
         const updatedGuest = await guestService.updateGuest({
             id,
@@ -91,6 +99,10 @@ export const updateGuest = async (req: Request, res: Response, next: NextFunctio
             lastName,
             email,
             phoneNumber,
+            identification,
+            nationality,
+            preferences,
+            dob: dob ? new Date(dob) : undefined,
             hotelId,
         });
 
@@ -104,11 +116,11 @@ export const updateGuest = async (req: Request, res: Response, next: NextFunctio
 }
 export const deleteGuest = async (req: Request, res: Response, next: NextFunction) => {
     try {
-    const {  hotelId } = req.user!;
+        const { hotelId } = req.user!;
 
         const id = req.params.id;
 
-        if ( !hotelId) {
+        if (!hotelId) {
 
         }
 

@@ -881,10 +881,13 @@ export namespace Prisma {
 
   export type GuestMinAggregateOutputType = {
     id: string | null
+    gid: string | null
     firstName: string | null
     lastName: string | null
     email: string | null
     phoneNumber: string | null
+    nationality: string | null
+    dob: Date | null
     createdAt: Date | null
     updatedAt: Date | null
     hotelId: string | null
@@ -892,10 +895,13 @@ export namespace Prisma {
 
   export type GuestMaxAggregateOutputType = {
     id: string | null
+    gid: string | null
     firstName: string | null
     lastName: string | null
     email: string | null
     phoneNumber: string | null
+    nationality: string | null
+    dob: Date | null
     createdAt: Date | null
     updatedAt: Date | null
     hotelId: string | null
@@ -903,10 +909,15 @@ export namespace Prisma {
 
   export type GuestCountAggregateOutputType = {
     id: number
+    gid: number
     firstName: number
     lastName: number
     email: number
     phoneNumber: number
+    identification: number
+    nationality: number
+    preferences: number
+    dob: number
     createdAt: number
     updatedAt: number
     hotelId: number
@@ -916,10 +927,13 @@ export namespace Prisma {
 
   export type GuestMinAggregateInputType = {
     id?: true
+    gid?: true
     firstName?: true
     lastName?: true
     email?: true
     phoneNumber?: true
+    nationality?: true
+    dob?: true
     createdAt?: true
     updatedAt?: true
     hotelId?: true
@@ -927,10 +941,13 @@ export namespace Prisma {
 
   export type GuestMaxAggregateInputType = {
     id?: true
+    gid?: true
     firstName?: true
     lastName?: true
     email?: true
     phoneNumber?: true
+    nationality?: true
+    dob?: true
     createdAt?: true
     updatedAt?: true
     hotelId?: true
@@ -938,10 +955,15 @@ export namespace Prisma {
 
   export type GuestCountAggregateInputType = {
     id?: true
+    gid?: true
     firstName?: true
     lastName?: true
     email?: true
     phoneNumber?: true
+    identification?: true
+    nationality?: true
+    preferences?: true
+    dob?: true
     createdAt?: true
     updatedAt?: true
     hotelId?: true
@@ -1022,10 +1044,15 @@ export namespace Prisma {
 
   export type GuestGroupByOutputType = {
     id: string
+    gid: string
     firstName: string
     lastName: string
     email: string | null
     phoneNumber: string | null
+    identification: JsonValue
+    nationality: string | null
+    preferences: JsonValue | null
+    dob: Date | null
     createdAt: Date
     updatedAt: Date
     hotelId: string
@@ -1050,10 +1077,15 @@ export namespace Prisma {
 
   export type GuestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    gid?: boolean
     firstName?: boolean
     lastName?: boolean
     email?: boolean
     phoneNumber?: boolean
+    identification?: boolean
+    nationality?: boolean
+    preferences?: boolean
+    dob?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     hotelId?: boolean
@@ -1061,10 +1093,15 @@ export namespace Prisma {
 
   export type GuestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    gid?: boolean
     firstName?: boolean
     lastName?: boolean
     email?: boolean
     phoneNumber?: boolean
+    identification?: boolean
+    nationality?: boolean
+    preferences?: boolean
+    dob?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     hotelId?: boolean
@@ -1072,10 +1109,15 @@ export namespace Prisma {
 
   export type GuestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    gid?: boolean
     firstName?: boolean
     lastName?: boolean
     email?: boolean
     phoneNumber?: boolean
+    identification?: boolean
+    nationality?: boolean
+    preferences?: boolean
+    dob?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     hotelId?: boolean
@@ -1083,26 +1125,36 @@ export namespace Prisma {
 
   export type GuestSelectScalar = {
     id?: boolean
+    gid?: boolean
     firstName?: boolean
     lastName?: boolean
     email?: boolean
     phoneNumber?: boolean
+    identification?: boolean
+    nationality?: boolean
+    preferences?: boolean
+    dob?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     hotelId?: boolean
   }
 
-  export type GuestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "phoneNumber" | "createdAt" | "updatedAt" | "hotelId", ExtArgs["result"]["guest"]>
+  export type GuestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gid" | "firstName" | "lastName" | "email" | "phoneNumber" | "identification" | "nationality" | "preferences" | "dob" | "createdAt" | "updatedAt" | "hotelId", ExtArgs["result"]["guest"]>
 
   export type $GuestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Guest"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      gid: string
       firstName: string
       lastName: string
       email: string | null
       phoneNumber: string | null
+      identification: Prisma.JsonValue
+      nationality: string | null
+      preferences: Prisma.JsonValue | null
+      dob: Date | null
       createdAt: Date
       updatedAt: Date
       hotelId: string
@@ -1530,10 +1582,15 @@ export namespace Prisma {
    */
   interface GuestFieldRefs {
     readonly id: FieldRef<"Guest", 'String'>
+    readonly gid: FieldRef<"Guest", 'String'>
     readonly firstName: FieldRef<"Guest", 'String'>
     readonly lastName: FieldRef<"Guest", 'String'>
     readonly email: FieldRef<"Guest", 'String'>
     readonly phoneNumber: FieldRef<"Guest", 'String'>
+    readonly identification: FieldRef<"Guest", 'Json'>
+    readonly nationality: FieldRef<"Guest", 'String'>
+    readonly preferences: FieldRef<"Guest", 'Json'>
+    readonly dob: FieldRef<"Guest", 'DateTime'>
     readonly createdAt: FieldRef<"Guest", 'DateTime'>
     readonly updatedAt: FieldRef<"Guest", 'DateTime'>
     readonly hotelId: FieldRef<"Guest", 'String'>
@@ -1919,10 +1976,15 @@ export namespace Prisma {
 
   export const GuestScalarFieldEnum: {
     id: 'id',
+    gid: 'gid',
     firstName: 'firstName',
     lastName: 'lastName',
     email: 'email',
     phoneNumber: 'phoneNumber',
+    identification: 'identification',
+    nationality: 'nationality',
+    preferences: 'preferences',
+    dob: 'dob',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     hotelId: 'hotelId'
@@ -1939,12 +2001,36 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
   };
 
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   export const NullsOrder: {
@@ -1971,6 +2057,20 @@ export namespace Prisma {
    * Reference to a field of type 'String[]'
    */
   export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -2010,10 +2110,15 @@ export namespace Prisma {
     OR?: GuestWhereInput[]
     NOT?: GuestWhereInput | GuestWhereInput[]
     id?: StringFilter<"Guest"> | string
+    gid?: StringFilter<"Guest"> | string
     firstName?: StringFilter<"Guest"> | string
     lastName?: StringFilter<"Guest"> | string
     email?: StringNullableFilter<"Guest"> | string | null
     phoneNumber?: StringNullableFilter<"Guest"> | string | null
+    identification?: JsonFilter<"Guest">
+    nationality?: StringNullableFilter<"Guest"> | string | null
+    preferences?: JsonNullableFilter<"Guest">
+    dob?: DateTimeNullableFilter<"Guest"> | Date | string | null
     createdAt?: DateTimeFilter<"Guest"> | Date | string
     updatedAt?: DateTimeFilter<"Guest"> | Date | string
     hotelId?: StringFilter<"Guest"> | string
@@ -2021,10 +2126,15 @@ export namespace Prisma {
 
   export type GuestOrderByWithRelationInput = {
     id?: SortOrder
+    gid?: SortOrder
     firstName?: SortOrder
     lastName?: SortOrder
     email?: SortOrderInput | SortOrder
     phoneNumber?: SortOrderInput | SortOrder
+    identification?: SortOrder
+    nationality?: SortOrderInput | SortOrder
+    preferences?: SortOrderInput | SortOrder
+    dob?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     hotelId?: SortOrder
@@ -2032,6 +2142,7 @@ export namespace Prisma {
 
   export type GuestWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    gid?: string
     email?: string
     AND?: GuestWhereInput | GuestWhereInput[]
     OR?: GuestWhereInput[]
@@ -2039,17 +2150,26 @@ export namespace Prisma {
     firstName?: StringFilter<"Guest"> | string
     lastName?: StringFilter<"Guest"> | string
     phoneNumber?: StringNullableFilter<"Guest"> | string | null
+    identification?: JsonFilter<"Guest">
+    nationality?: StringNullableFilter<"Guest"> | string | null
+    preferences?: JsonNullableFilter<"Guest">
+    dob?: DateTimeNullableFilter<"Guest"> | Date | string | null
     createdAt?: DateTimeFilter<"Guest"> | Date | string
     updatedAt?: DateTimeFilter<"Guest"> | Date | string
     hotelId?: StringFilter<"Guest"> | string
-  }, "id" | "email">
+  }, "id" | "gid" | "email">
 
   export type GuestOrderByWithAggregationInput = {
     id?: SortOrder
+    gid?: SortOrder
     firstName?: SortOrder
     lastName?: SortOrder
     email?: SortOrderInput | SortOrder
     phoneNumber?: SortOrderInput | SortOrder
+    identification?: SortOrder
+    nationality?: SortOrderInput | SortOrder
+    preferences?: SortOrderInput | SortOrder
+    dob?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     hotelId?: SortOrder
@@ -2063,10 +2183,15 @@ export namespace Prisma {
     OR?: GuestScalarWhereWithAggregatesInput[]
     NOT?: GuestScalarWhereWithAggregatesInput | GuestScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Guest"> | string
+    gid?: StringWithAggregatesFilter<"Guest"> | string
     firstName?: StringWithAggregatesFilter<"Guest"> | string
     lastName?: StringWithAggregatesFilter<"Guest"> | string
     email?: StringNullableWithAggregatesFilter<"Guest"> | string | null
     phoneNumber?: StringNullableWithAggregatesFilter<"Guest"> | string | null
+    identification?: JsonWithAggregatesFilter<"Guest">
+    nationality?: StringNullableWithAggregatesFilter<"Guest"> | string | null
+    preferences?: JsonNullableWithAggregatesFilter<"Guest">
+    dob?: DateTimeNullableWithAggregatesFilter<"Guest"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Guest"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Guest"> | Date | string
     hotelId?: StringWithAggregatesFilter<"Guest"> | string
@@ -2074,10 +2199,15 @@ export namespace Prisma {
 
   export type GuestCreateInput = {
     id?: string
+    gid: string
     firstName: string
     lastName: string
     email?: string | null
     phoneNumber?: string | null
+    identification: JsonNullValueInput | InputJsonValue
+    nationality?: string | null
+    preferences?: NullableJsonNullValueInput | InputJsonValue
+    dob?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     hotelId: string
@@ -2085,10 +2215,15 @@ export namespace Prisma {
 
   export type GuestUncheckedCreateInput = {
     id?: string
+    gid: string
     firstName: string
     lastName: string
     email?: string | null
     phoneNumber?: string | null
+    identification: JsonNullValueInput | InputJsonValue
+    nationality?: string | null
+    preferences?: NullableJsonNullValueInput | InputJsonValue
+    dob?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     hotelId: string
@@ -2096,10 +2231,15 @@ export namespace Prisma {
 
   export type GuestUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    gid?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    identification?: JsonNullValueInput | InputJsonValue
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: NullableJsonNullValueInput | InputJsonValue
+    dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hotelId?: StringFieldUpdateOperationsInput | string
@@ -2107,10 +2247,15 @@ export namespace Prisma {
 
   export type GuestUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    gid?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    identification?: JsonNullValueInput | InputJsonValue
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: NullableJsonNullValueInput | InputJsonValue
+    dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hotelId?: StringFieldUpdateOperationsInput | string
@@ -2118,10 +2263,15 @@ export namespace Prisma {
 
   export type GuestCreateManyInput = {
     id?: string
+    gid: string
     firstName: string
     lastName: string
     email?: string | null
     phoneNumber?: string | null
+    identification: JsonNullValueInput | InputJsonValue
+    nationality?: string | null
+    preferences?: NullableJsonNullValueInput | InputJsonValue
+    dob?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     hotelId: string
@@ -2129,10 +2279,15 @@ export namespace Prisma {
 
   export type GuestUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    gid?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    identification?: JsonNullValueInput | InputJsonValue
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: NullableJsonNullValueInput | InputJsonValue
+    dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hotelId?: StringFieldUpdateOperationsInput | string
@@ -2140,10 +2295,15 @@ export namespace Prisma {
 
   export type GuestUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    gid?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    identification?: JsonNullValueInput | InputJsonValue
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: NullableJsonNullValueInput | InputJsonValue
+    dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hotelId?: StringFieldUpdateOperationsInput | string
@@ -2178,6 +2338,63 @@ export namespace Prisma {
     mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
 
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -2197,10 +2414,15 @@ export namespace Prisma {
 
   export type GuestCountOrderByAggregateInput = {
     id?: SortOrder
+    gid?: SortOrder
     firstName?: SortOrder
     lastName?: SortOrder
     email?: SortOrder
     phoneNumber?: SortOrder
+    identification?: SortOrder
+    nationality?: SortOrder
+    preferences?: SortOrder
+    dob?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     hotelId?: SortOrder
@@ -2208,10 +2430,13 @@ export namespace Prisma {
 
   export type GuestMaxOrderByAggregateInput = {
     id?: SortOrder
+    gid?: SortOrder
     firstName?: SortOrder
     lastName?: SortOrder
     email?: SortOrder
     phoneNumber?: SortOrder
+    nationality?: SortOrder
+    dob?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     hotelId?: SortOrder
@@ -2219,10 +2444,13 @@ export namespace Prisma {
 
   export type GuestMinOrderByAggregateInput = {
     id?: SortOrder
+    gid?: SortOrder
     firstName?: SortOrder
     lastName?: SortOrder
     email?: SortOrder
     phoneNumber?: SortOrder
+    nationality?: SortOrder
+    dob?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     hotelId?: SortOrder
@@ -2263,6 +2491,72 @@ export namespace Prisma {
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -2284,6 +2578,10 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -2316,6 +2614,17 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
@@ -2383,6 +2692,66 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {

@@ -7,15 +7,27 @@ export default class GuestService {
     lastName,
     email,
     phoneNumber,
+    identification,
+    nationality,
+    preferences,
+    dob,
     hotelId,
   }: CreateGuestParams) {
     try {
+      // Generate unique guest ID
+      const gid = `GUEST-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
       const guest = await prisma.guest.create({
         data: {
+          gid,
           firstName,
           lastName,
           email,
           phoneNumber,
+          identification,
+          nationality,
+          preferences,
+          dob,
           hotelId,
         },
       });
@@ -27,7 +39,7 @@ export default class GuestService {
     }
   }
 
-  async getGuests( hotelId: string) {
+  async getGuests(hotelId: string) {
     return prisma.guest.findMany({
       where: { hotelId },
       orderBy: { createdAt: "desc" },
@@ -52,6 +64,10 @@ export default class GuestService {
     lastName,
     email,
     phoneNumber,
+    identification,
+    nationality,
+    preferences,
+    dob,
     hotelId,
   }: UpdateGuestParams) {
     // Check existence and ownership
@@ -70,6 +86,10 @@ export default class GuestService {
         lastName,
         email,
         phoneNumber,
+        identification,
+        nationality,
+        preferences,
+        dob,
       },
     });
 
@@ -78,7 +98,7 @@ export default class GuestService {
 
   async deleteGuest(id: string, hotelId: string) {
     const guest = await prisma.guest.findFirst({
-      where: { id,  hotelId },
+      where: { id, hotelId },
     });
 
     if (!guest) {

@@ -122,10 +122,15 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 
 exports.Prisma.GuestScalarFieldEnum = {
   id: 'id',
+  gid: 'gid',
   firstName: 'firstName',
   lastName: 'lastName',
   email: 'email',
   phoneNumber: 'phoneNumber',
+  identification: 'identification',
+  nationality: 'nationality',
+  preferences: 'preferences',
+  dob: 'dob',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   hotelId: 'hotelId'
@@ -136,9 +141,24 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 
 exports.Prisma.NullsOrder = {
