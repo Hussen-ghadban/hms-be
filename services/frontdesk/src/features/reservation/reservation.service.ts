@@ -12,6 +12,18 @@ export default class ReservationService {
     hotelId,
   }: CreateReservationParams) {
     try {
+        const overlapping = await prisma.reservation.findFirst({
+        where: {
+          roomId,
+          // Overlap condition: (existing.checkIn < new.checkOut) && (existing.checkOut > new.checkIn)
+          checkIn: { lt: checkOut },
+          checkOut: { gt: checkIn },
+        },
+      });
+
+      if (overlapping) {
+        throw new Error("Room is already reserved for the selected dates");
+      }
       const room = await prisma.room.findUnique({ where: { id: roomId } });
       const roomType = await prisma.roomType.findUnique({ where: { id: room?.roomTypeId } });
       const ratePlan = await prisma.ratePlan.findUnique({ where: { id: ratePlanId } });
@@ -56,6 +68,12 @@ export default class ReservationService {
       if (!reservation) {
         throw new Error("Reservation not found");
       }
+      if (reservation.status !== "CONFIRMED" && reservation.status !== "HELD") {
+        throw new Error("Only CONFIRMED or HELD reservations can be checked in");
+      }
+        if (reservation.room.status !== "AVAILABLE") {
+            throw new Error("Room is not available for check-in");
+        }
       // 2. Update reservation status
       const updatedReservation = await tx.reservation.update({
         where: { id: reservationId },
