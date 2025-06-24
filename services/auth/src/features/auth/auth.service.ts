@@ -44,13 +44,17 @@ class AuthService {
         throw new Error('No token provided');
       }
 
+      // Handle Bearer token format
+
       const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { sub: string; hid: string };
 
-      if (!decoded) {
-        throw new Error("Error decoding token");
+      if (!decoded || !decoded.sub || !decoded.hid) {
+        throw new Error("Invalid token structure");
       }
 
       const userId = decoded.sub;
+      const hotelId = decoded.hid;
+
       const user = await prisma.user.findUnique({
         where: { id: userId },
         include: {
@@ -62,8 +66,16 @@ class AuthService {
         },
       });
 
-      if (!user || !user.role) {
-        throw new Error("")
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      if (!user.isActive) {
+        throw new Error("User account is inactive");
+      }
+
+      if (!user.role) {
+        throw new Error("User has no role assigned");
       }
 
       // Map permissions from DB to Permission[]
@@ -72,19 +84,22 @@ class AuthService {
         action: p.action,
       }));
 
+
       // Build ability based on user's permissions
       const ability = await defineAbilitiesForUser(userPermissions);
 
       const denied: string[] = [];
+      const available: string[] = userPermissions.map(p => `${p.subject}.${p.action}`);
 
+      // Check required permissions
       for (const perm of requiredPermissions) {
         const [subject, action] = perm.split('.');
         if (!subject || !action) {
-          throw new Error(`Invalid permission format: ${perm}`);
+          throw new Error(`Invalid permission format: ${perm}. Expected format: subject.action`);
         }
 
         if (!ability.can(action as AppActions, subject as AppSubjects)) {
-          denied.push(`${subject}.${action}`);
+          denied.push(perm);
         }
       }
 
@@ -92,15 +107,32 @@ class AuthService {
 
       return {
         granted,
-        userId: decoded.sub,
-        hotelId: decoded.hid,
-      }
-      return user;
+        denied,
+        available,
+        user: {
+          id: userId,
+          hotelId: hotelId,
+          email: user.email,
+          role: user.role.name
+        }
+      };
+
     } catch (e) {
-      if (e instanceof Error) {
-        throw new Error(e.message);
+      // Re-throw JWT errors with more specific messages
+      if (e instanceof jwt.JsonWebTokenError) {
+        throw new Error('Invalid token');
       }
-      throw new Error("An unexpected error occurred");
+      if (e instanceof jwt.TokenExpiredError) {
+        throw new Error('Token expired');
+      }
+      if (e instanceof jwt.NotBeforeError) {
+        throw new Error('Token not active');
+      }
+
+      if (e instanceof Error) {
+        throw e; // Re-throw our custom errors
+      }
+      throw new Error("An unexpected error occurred during authentication");
     }
   }
 }

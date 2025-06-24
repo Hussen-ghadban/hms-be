@@ -28,8 +28,8 @@ export const login = async (req: Request, res: Response) => {
 
 export const authenticate = async (req: Request, res: Response) => {
     try {
-        const { token } = req.body;
-        const result = await authService.authenticate(token);
+        const { token,permissions } = req.body;
+        const result = await authService.authenticate(token,permissions);
         if (!result) {
             res.status(401).json({ error: 'Unauthorized' });
         }
