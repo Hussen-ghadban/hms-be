@@ -6,6 +6,6 @@ import { requirePermissions } from "../../middleware/requirePermissions";
 
 const router = Router();
 
-router.post("/", requirePermissions(['Room.create']),create);
+router.post("/", requirePermissions(['RoomType.create']),create);
 
 export default router;

@@ -21,16 +21,17 @@ export const requirePermissions = (permissions: string[]) => {
       res.status(401).json({ error: 'NO_TOKEN' });
       return;
     }
-
+    const cleanToken = token.startsWith('Bearer ') ? token.slice(7) : token;
     try {
-      const response = await fetch(`${AUTH_SERVICE_URL}/auth/check-permissions`, {
+      const response = await fetch(`${AUTH_SERVICE_URL}/auth/services/authenticate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': token
         },
         body: JSON.stringify({
-          required: permissions
+          token: cleanToken,
+          permissions: permissions
         })
       });
 
