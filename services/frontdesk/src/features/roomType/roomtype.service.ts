@@ -1,4 +1,5 @@
 import { prisma } from "../../lib/prisma";
+import { AppError } from "../../utils/AppError";
 
 export default class RoomTypeService {
     constructor() { }
@@ -7,7 +8,7 @@ export default class RoomTypeService {
         try {
             // Validate input
             if ( !hotelId || !name || !description || baseRate === undefined) {
-                throw new Error("Invalid input parameters");
+                throw new AppError("Missing required fields", 400);
             }
 
             // Create room type in the database
@@ -21,12 +22,11 @@ export default class RoomTypeService {
             });
 
             return roomType;
-        } catch (e) {
-            if (e instanceof Error) {
-                throw new Error(e.message);
-            }
-            throw new Error("An unexpected error occurred");
-        }
+        } catch (err) {
+      console.error("Failed to create room type:", err);
+      if (err instanceof AppError) throw err;
+      throw new AppError("Failed to create room type", 500);
+    }
     }
     async getAll( hotelId: string) {
         try {
