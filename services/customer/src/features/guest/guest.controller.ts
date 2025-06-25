@@ -1,25 +1,22 @@
 import { NextFunction, Request, Response } from "express";
 import GuestService from "./guest.service";
+import { AppError } from "../../utils/AppError";
 
 const guestService = new GuestService();
 
 export const addGuest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { hotelId } = req.user!;
-
-        if (!hotelId) {
-            res.status(400).json({ status: 400, message: "Hotel ID are required" });
-            return;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
         }
 
+        const { hotelId } = req.user;
         const { firstName, lastName, email, phoneNumber, identification, nationality, preferences, dob } = req.body;
 
         if (!identification) {
-            res.status(400).json({ status: 400, message: "Identification is required" });
-            return;
+            throw new AppError("Identification is required", 400);
         }
 
-        // Assuming guestService is defined and has a method to create a guest
         const newGuest = await guestService.createGuest({
             firstName,
             lastName,
@@ -38,15 +35,16 @@ export const addGuest = async (req: Request, res: Response, next: NextFunction):
             data: newGuest,
         });
     } catch (error) {
-
+        next(error);
     }
 }
 export const getGuests = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { hotelId } = req.user!;
-
-        if (!hotelId) {
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
         }
+
+        const { hotelId } = req.user;
 
         // Assuming guestService is defined and has a method to get guests
         const guests = await guestService.getGuests(hotelId);
@@ -57,16 +55,17 @@ export const getGuests = async (req: Request, res: Response, next: NextFunction)
             data: guests,
         });
     } catch (error) {
+        next(error);
     }
 }
 export const getGuest = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { hotelId } = req.user!;
-
-        const id = req.params.id;
-
-        if (!hotelId) {
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
         }
+
+        const { hotelId } = req.user;
+        const id = req.params.id;
 
         // Assuming guestService is defined and has a method to get a guest by ID
         const guest = await guestService.getGuest(id, hotelId);
@@ -80,16 +79,17 @@ export const getGuest = async (req: Request, res: Response, next: NextFunction) 
             data: guest,
         });
     } catch (error) {
+        next(error);
     }
 }
 export const updateGuest = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { hotelId } = req.user!;
-
-        const id = req.params.id;
-
-        if (!hotelId) {
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
         }
+
+        const { hotelId } = req.user;
+        const id = req.params.id;
 
         const { firstName, lastName, email, phoneNumber, identification, nationality, preferences, dob } = req.body;
 
@@ -112,25 +112,23 @@ export const updateGuest = async (req: Request, res: Response, next: NextFunctio
             data: updatedGuest,
         });
     } catch (error) {
+        next(error);
     }
 }
 export const deleteGuest = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { hotelId } = req.user!;
-
-        const id = req.params.id;
-
-        if (!hotelId) {
-
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
         }
 
-        // Assuming guestService is defined and has a method to delete a guest
+        const { hotelId } = req.user;
+        const id = req.params.id;
         await guestService.deleteGuest(id, hotelId);
-
         res.json({
             status: 200,
             message: "Guest deleted successfully",
         });
     } catch (error) {
+        next(error);
     }
 }

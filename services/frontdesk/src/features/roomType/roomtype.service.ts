@@ -36,12 +36,11 @@ export default class RoomTypeService {
                 }
             });
             return roomTypes;
-        } catch (e) {
-            if (e instanceof Error) {
-                throw new Error(e.message);
-            }
-            throw new Error("An unexpected error occurred");
-        }
+        } catch (err) {
+      console.error("Failed to create room type:", err);
+      if (err instanceof AppError) throw err;
+      throw new AppError("Failed to create room type", 500);
+    }
     }
     async getById( hotelId: string, roomTypeId: string) {
         try {
@@ -52,14 +51,13 @@ export default class RoomTypeService {
                 }
             });
             if (!roomType) {
-                throw new Error("Room type not found");
+                throw new AppError("Room type not found", 404);
             }
             return roomType;
-        } catch (e) {
-            if (e instanceof Error) {
-                throw new Error(e.message);
-            }
-            throw new Error("An unexpected error occurred");
-        }
+        } catch (err) {
+      console.error("Failed to create room type:", err);
+      if (err instanceof AppError) throw err;
+      throw new AppError("Failed to create room type", 500);
+    }
     }
 }

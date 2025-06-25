@@ -1,17 +1,17 @@
 import { Request, Response, NextFunction } from "express";
 import ReservationService from "./reservation.service";
+import { AppError } from "../../utils/AppError";
 
 const reservationService = new ReservationService();
 
 export const addReservation = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
   try {
-    const { hotelId } = req.user!;
-    const { checkIn, checkOut, guestId, roomId, ratePlanId } = req.body;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
+        }
 
-    if (!hotelId) {
-      res.status(400).json({ status: 400, message: "Hotel ID is required" });
-      return;
-    }
+        const { hotelId } = req.user;
+    const { checkIn, checkOut, guestId, roomId, ratePlanId } = req.body;
 
     const newReservation = await reservationService.createReservation({
       checkIn: new Date(checkIn),
@@ -33,13 +33,13 @@ export const addReservation = async (req: Request,res: Response,next: NextFuncti
 };
 export const checkInReservation = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { reservationId } = req.params;
-    const {hotelId} = req.user!;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
+        }
+
+        const { hotelId } = req.user;
     const {deposit}=req.body;
-        if (!hotelId) {
-      res.status(400).json({ status: 400, message: "Hotel ID is required" });
-      return;
-    }
+    const { reservationId } = req.params;
 
     if (!reservationId) {
       res.status(400).json({ message: "Reservation ID is required" });

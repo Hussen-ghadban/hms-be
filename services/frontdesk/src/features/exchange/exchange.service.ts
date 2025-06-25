@@ -1,4 +1,5 @@
 import { prisma } from "../../lib/prisma";
+import { AppError } from "../../utils/AppError";
 import { CreateExchangeRateParams, UpdateExchangeRateParams } from "./exchange.type";
 
 export default class ExchangeRateService {
@@ -18,10 +19,11 @@ export default class ExchangeRateService {
         },
       });
       return exchangeRate;
-    } catch (error) {
-      console.error("Error creating exchange rate:", error);
-      throw new Error("Failed to create exchange rate");
-    }
+    } catch (err) {
+          console.error("Failed to create room type:", err);
+          if (err instanceof AppError) throw err;
+          throw new AppError("Failed to create room type", 500);
+        }
   }
 
   async getExchangeRates( hotelId: string) {
@@ -36,7 +38,7 @@ export default class ExchangeRateService {
       where: { id, hotelId },
     });
 
-    if (!rate) throw new Error("Exchange rate not found");
+    if (!rate) throw new AppError("Exchange rate not found",404);
     return rate;
   }
 
@@ -51,7 +53,7 @@ export default class ExchangeRateService {
       where: { id, hotelId },
     });
 
-    if (!existing) throw new Error("Exchange rate not found");
+    if (!existing) throw new AppError("Exchange rate not found", 404);
 
     return prisma.exchangeRate.update({
       where: { id },
@@ -68,7 +70,7 @@ export default class ExchangeRateService {
       where: { id, hotelId },
     });
 
-    if (!existing) throw new Error("Exchange rate not found");
+    if (!existing) throw new AppError("Exchange rate not found", 404);
 
     await prisma.exchangeRate.delete({ where: { id } });
     return { message: "Exchange rate deleted successfully" };

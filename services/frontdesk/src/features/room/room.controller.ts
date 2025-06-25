@@ -1,17 +1,16 @@
 import { Request, Response, NextFunction } from "express";
 import RoomService from "./room.service";
+import { AppError } from "../../utils/AppError";
 
 const roomService = new RoomService();
 
 export const addRoom = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { hotelId } = req.user!
-
-
-        if (!hotelId) {
-            res.status(400).json({ status: 400, message: "Hotel ID is required" });
-            return;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
         }
+
+        const { hotelId } = req.user;
 
         const { roomNumber, roomTypeId, floor,maxOccupancy,childOccupancy,adultOccupancy } = req.body;
 
@@ -37,13 +36,11 @@ export const addRoom = async (req: Request, res: Response, next: NextFunction) =
 
 export const getRooms = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { hotelId } = req.user!
-
-
-        if (!hotelId) {
-            res.status(400).json({ status: 400, message: "Hotel ID is required" });
-            return;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
         }
+
+        const { hotelId } = req.user;
 
         const rooms = await roomService.getRooms(hotelId);
 
@@ -58,15 +55,13 @@ export const getRooms = async (req: Request, res: Response, next: NextFunction) 
 
 export const getRoom = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { hotelId } = req.user!
-
-        const { id } = req.params;
-
-        if (!hotelId) {
-            res.status(400).json({ status: 400, message: "Hotel ID is required" });
-            return;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
         }
 
+        const { hotelId } = req.user;
+        
+        const { id } = req.params;
         const room = await roomService.getRoom(id, hotelId);
 
         res.json({
@@ -80,14 +75,12 @@ export const getRoom = async (req: Request, res: Response, next: NextFunction) =
 
 export const updateRoom = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { hotelId } = req.user!
-
-        const { id } = req.params;
-
-        if (!hotelId) {
-            res.status(400).json({ status: 400, message: "Hotel ID is required" });
-            return;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
         }
+
+        const { hotelId } = req.user;
+        const { id } = req.params;
 
         const { roomNumber, status, roomTypeId, floor, maxOccupancy, childOccupancy, adultOccupancy } = req.body;
 
@@ -114,15 +107,13 @@ export const updateRoom = async (req: Request, res: Response, next: NextFunction
 
 export const deleteRoom = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { hotelId } = req.user!
-
-        const { id } = req.params;
-
-        if (!hotelId) {
-            res.status(400).json({ status: 400, message: " Hotel ID is required" });
-            return;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
         }
 
+        const { hotelId } = req.user;
+        
+        const { id } = req.params;
         const result = await roomService.deleteRoom(id, hotelId);
 
         res.json({
@@ -136,14 +127,12 @@ export const deleteRoom = async (req: Request, res: Response, next: NextFunction
 
 export const getRoomsByStatus = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { hotelId } = req.user!
-
-        const { status } = req.params;
-
-        if (!hotelId) {
-            res.status(400).json({ status: 400, message: "Hotel ID is required" });
-            return;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
         }
+
+        const { hotelId } = req.user;
+        const { status } = req.params;
         const rooms = await roomService.getRoomsByStatus(status, hotelId);
 
         res.json({

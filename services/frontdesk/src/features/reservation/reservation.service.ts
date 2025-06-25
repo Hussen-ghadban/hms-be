@@ -1,4 +1,5 @@
 import { prisma } from "../../lib/prisma";
+import { AppError } from "../../utils/AppError";
 import { CheckInParams, CreateReservationParams } from "./reservation.type";
 import { Decimal } from "@prisma/client/runtime/library"; // 👈 Required for Decimal operations
 
@@ -22,14 +23,14 @@ export default class ReservationService {
       });
 
       if (overlapping) {
-        throw new Error("Room is already reserved for the selected dates");
+        throw new AppError("Room is already reserved for the selected dates", 400);
       }
       const room = await prisma.room.findUnique({ where: { id: roomId } });
       const roomType = await prisma.roomType.findUnique({ where: { id: room?.roomTypeId } });
       const ratePlan = await prisma.ratePlan.findUnique({ where: { id: ratePlanId } });
 
       if (!room || !roomType || !ratePlan) {
-        throw new Error("Room, RoomType, or RatePlan not found");
+        throw new AppError("Room, RoomType, or RatePlan not found",404);
       }
 
       let price = new Decimal(roomType.baseRate);
@@ -53,10 +54,11 @@ export default class ReservationService {
       });
 
       return reservation;
-    } catch (error) {
-      console.error("Error creating reservation:", error);
-      throw new Error("Failed to create reservation");
-    }
+    } catch (err) {
+          console.error("Failed to create room type:", err);
+          if (err instanceof AppError) throw err;
+          throw new AppError("Failed to create room type", 500);
+        }
   }
   async checkIn({reservationId, hotelId,deposit}:CheckInParams) {
     return await prisma.$transaction(async (tx) => {
@@ -66,13 +68,13 @@ export default class ReservationService {
       });
 
       if (!reservation) {
-        throw new Error("Reservation not found");
+        throw new AppError("Reservation not found", 404);
       }
       if (reservation.status !== "CONFIRMED" && reservation.status !== "HELD") {
-        throw new Error("Only CONFIRMED or HELD reservations can be checked in");
+        throw new AppError("Only CONFIRMED or HELD reservations can be checked in", 400);
       }
         if (reservation.room.status !== "AVAILABLE") {
-            throw new Error("Room is not available for check-in");
+            throw new AppError("Room is not available for check-in", 400);
         }
       // 2. Update reservation status
       const updatedReservation = await tx.reservation.update({

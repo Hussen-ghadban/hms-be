@@ -1,4 +1,5 @@
 import { prisma } from "../../lib/prisma";
+import { AppError } from "../../utils/AppError";
 import { CreateAmenityParams, UpdateAmenityParams } from "./amenity.type";
 
 export default class AmenityService {
@@ -11,7 +12,7 @@ export default class AmenityService {
                 where: { name, hotelId },
             });
             if (existing) {
-                throw new Error("Amenity with this name already exists");
+                throw new AppError("Amenity with this name already exists", 400);
             }
 
             const amenity = await prisma.amenity.create({
@@ -22,10 +23,11 @@ export default class AmenityService {
             });
 
             return amenity;
-        } catch (error) {
-            console.error("Error creating amenity:", error);
-            throw new Error("Failed to create amenity");
-        }
+        } catch (err) {
+      console.error("Failed to create room type:", err);
+      if (err instanceof AppError) throw err;
+      throw new AppError("Failed to create room type", 500);
+    }
     }
 
     async getAmenities(hotelId: string) {
@@ -41,7 +43,7 @@ export default class AmenityService {
         });
 
         if (!amenity) {
-            throw new Error("Amenity not found");
+            throw new AppError("Amenity not found",404);
         }
 
         return amenity;
@@ -58,7 +60,7 @@ export default class AmenityService {
         });
 
         if (!amenity) {
-            throw new Error("Amenity not found");
+            throw new AppError("Amenity not found",404);
         }
 
         // Check for duplicate name if name is being updated
@@ -67,7 +69,7 @@ export default class AmenityService {
                 where: { name, hotelId },
             });
             if (existing) {
-                throw new Error("Amenity with this name already exists");
+                throw new AppError("Amenity with this name already exists", 400);
             }
         }
 
@@ -87,7 +89,7 @@ export default class AmenityService {
         });
 
         if (!amenity) {
-            throw new Error("Amenity not found");
+            throw new AppError("Amenity not found",404);
         }
 
         await prisma.amenity.delete({

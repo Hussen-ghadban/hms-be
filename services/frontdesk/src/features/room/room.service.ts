@@ -1,5 +1,6 @@
 import { RoomStatus } from "../../../generated/prisma";
 import { prisma } from "../../lib/prisma";
+import { AppError } from "../../utils/AppError";
 import { CreateRoomParams, UpdateRoomParams } from "./room.types";
 
 export default class RoomService {
@@ -57,10 +58,11 @@ export default class RoomService {
             });
 
             return room;
-        } catch (error) {
-            console.error("Error creating room:", error);
-            throw new Error("Failed to create room");
-        }
+        } catch (err) {
+              console.error("Failed to create room type:", err);
+              if (err instanceof AppError) throw err;
+              throw new AppError("Failed to create room type", 500);
+            }
     }
 
     async getRooms(hotelId: string) {
@@ -82,7 +84,7 @@ export default class RoomService {
         });
 
         if (!room) {
-            throw new Error("Room not found");
+            throw new AppError("Room not found", 404);
         }
 
         return room;
@@ -105,7 +107,7 @@ export default class RoomService {
         });
 
         if (!room) {
-            throw new Error("Room not found");
+            throw new AppError("Room not found", 404);
         }
 
         // If roomNumber is being updated, check for duplicates
@@ -120,7 +122,7 @@ export default class RoomService {
             });
 
             if (existing) {
-                throw new Error("Room with this number already exists");
+                throw new AppError("Room with this number already exists", 400);
             }
         }
 
@@ -131,7 +133,7 @@ export default class RoomService {
             });
 
             if (!roomType) {
-                throw new Error("Invalid room type ID");
+                throw new AppError("Invalid room type ID", 400);
             }
         }
 
@@ -168,7 +170,7 @@ export default class RoomService {
         });
 
         if (!room) {
-            throw new Error("Room not found");
+            throw new AppError("Room not found", 404);
         }
 
         await prisma.room.delete({
