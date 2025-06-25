@@ -12,6 +12,7 @@ import { Permission } from "../middleware/introspect";
 // Define proper types based on your schema
 export type AppSubjects = 
   | "User" 
+  | "Role"
   | "Hotel"
   | "Room"
   | "RoomType"
@@ -76,8 +77,11 @@ function isValidAction(action: string): action is AppActions {
 function isValidSubject(subject: string): subject is AppSubjects {
   return [
     "User",
+    "Role",
     "Hotel",
     "Room",
+    "Amenity",
+    "ExchangeRate",
     "RoomType",
     "Guest",
     "Reservation",

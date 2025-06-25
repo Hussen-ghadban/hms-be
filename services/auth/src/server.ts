@@ -2,6 +2,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import authRoutes from './features/auth/auth.routes';
+import roleRoutes from './features/role/role.routes';
 // import introspectRoutes from './features/introspection/introspection.routes'
 import validateRoutes from './middleware/authenticate';
 import { errorHandler } from './middleware/errorHandler';
@@ -12,7 +13,7 @@ app.use(validateRoutes);
 app.use(errorHandler);
 
 app.use('/auth', authRoutes);
-
+app.use('/role',roleRoutes);
 
 
 app.listen(process.env.PORT || 4000, () =>
