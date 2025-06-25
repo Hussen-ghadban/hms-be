@@ -1,17 +1,16 @@
 import { Request, Response, NextFunction } from "express";
 import AmenityService from "./amenity.service";
+import { AppError } from "../../utils/AppError";
 
 const amenityService = new AmenityService();
 
 export const addAmenity = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { hotelId } = req.user!;
-
-
-        if (!hotelId) {
-            res.status(400).json({ status: 400, message: "Hotel ID is required" });
-            return;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
         }
+
+        const { hotelId } = req.user;
 
         const { name } = req.body;
 
@@ -33,13 +32,10 @@ export const addAmenity = async (req: Request, res: Response, next: NextFunction
 
 export const getAmenities = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { hotelId } = req.user!;
-
-
-        if (!hotelId) {
-            res.status(400).json({ status: 400, message: "Hotel ID is required" });
-            return;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
         }
+        const { hotelId } = req.user;
 
         const amenities = await amenityService.getAmenities(hotelId);
 
@@ -54,15 +50,13 @@ export const getAmenities = async (req: Request, res: Response, next: NextFuncti
 
 export const getAmenity = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { hotelId } = req.user!;
-
-        const { id } = req.params;
-
-        if (!hotelId) {
-            res.status(400).json({ status: 400, message: "Hotel ID is required" });
-            return;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
         }
 
+        const { hotelId } = req.user;
+        
+        const { id } = req.params;
 
         const amenity = await amenityService.getAmenity(id, hotelId);
 
@@ -77,14 +71,12 @@ export const getAmenity = async (req: Request, res: Response, next: NextFunction
 
 export const updateAmenity = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { hotelId } = req.user!;
-
-        const { id } = req.params;
-
-        if (!hotelId) {
-            res.status(400).json({ status: 400, message: "Hotel ID is required" });
-            return;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
         }
+
+        const { hotelId } = req.user;
+        const { id } = req.params;
 
         const { name } = req.body;
 
@@ -106,15 +98,13 @@ export const updateAmenity = async (req: Request, res: Response, next: NextFunct
 
 export const deleteAmenity = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { hotelId } = req.user!;
-
-        const { id } = req.params;
-
-        if (!hotelId) {
-            res.status(400).json({ status: 400, message: "Hotel ID is required" });
-            return;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
         }
 
+        const { hotelId } = req.user;
+        
+        const { id } = req.params;
         const result = await amenityService.deleteAmenity(id, hotelId);
 
         res.json({

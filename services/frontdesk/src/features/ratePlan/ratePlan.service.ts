@@ -1,4 +1,5 @@
 import { prisma } from "../../lib/prisma";
+import { AppError } from "../../utils/AppError";
 import { CreateRatePlanParams, UpdateRatePlanParams } from "./ratePlan.type";
 
 export default class RatePlanService {
@@ -24,10 +25,11 @@ export default class RatePlanService {
       });
 
       return ratePlan;
-    } catch (error) {
-      console.error("Error creating rate plan:", error);
-      throw new Error("Failed to create rate plan");
-    }
+    } catch (err) {
+          console.error("Failed to create room type:", err);
+          if (err instanceof AppError) throw err;
+          throw new AppError("Failed to create room type", 500);
+        }
   }
 
 
@@ -57,7 +59,7 @@ export default class RatePlanService {
   }: UpdateRatePlanParams) {
 
     const plan = await prisma.ratePlan.findFirst({ where: { id, hotelId } });
-    if (!plan) throw new Error("Rate plan not found");
+    if (!plan) throw new AppError("Rate plan not found",404);
 
     const updatedRatePlan = await prisma.ratePlan.update({
       where: { id },
@@ -75,7 +77,7 @@ export default class RatePlanService {
 
   async deleteRatePlan(id: string, hotelId: string) {
     const plan = await prisma.ratePlan.findFirst({ where: { id, hotelId } });
-    if (!plan) throw new Error("Rate plan not found");
+    if (!plan) throw new AppError("Rate plan not found",404);
 
     await prisma.ratePlan.delete({ where: { id } });
     return { message: "Deleted successfully" };

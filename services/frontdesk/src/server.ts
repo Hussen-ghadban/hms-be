@@ -8,6 +8,7 @@ import ratePlanRouter from './features/ratePlan/ratePlan.routes';
 import exchangeRouter from './features/exchange/exchange.routes';
 import amenityRouter from './features/amenity/amenity.routes';
 import reservationRouter from './features/reservation/reservation.routes';
+import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 app.use(express.json());
@@ -24,3 +25,4 @@ const PORT = process.env.PORT || 4001;
 app.listen(process.env.PORT || 4001, () =>
   console.log(`Front Desk listening 🚪 ${PORT}`)
 );
+app.use(errorHandler);

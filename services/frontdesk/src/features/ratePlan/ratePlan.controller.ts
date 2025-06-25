@@ -1,15 +1,16 @@
 import { Request, Response, NextFunction } from "express";
 import RatePlanService from "./ratePlan.service";
+import { AppError } from "../../utils/AppError";
 
 const ratePlanService = new RatePlanService();
 
 export const addRatePlan = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { hotelId } = req.user!;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
+        }
 
-
-    if (!hotelId) { res.status(400).json({ error: "Hotel ID is required" }); return; }
-
+        const { hotelId } = req.user;
     const { code, name, baseAdjType, baseAdjVal, currencyId } = req.body;
 
     const newRatePlan = await ratePlanService.createRatePlan({
@@ -28,17 +29,17 @@ export const addRatePlan = async (req: Request, res: Response, next: NextFunctio
     });
   } catch (err) {
     console.error("Error creating rate plan:", err);
-    res.status(500).json({ error: "Internal server error" });
+   next(err);
   }
 };
 
 export const getRatePlans = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { hotelId } = req.user!;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
+        }
 
-
-    if (!hotelId) { res.status(400).json({ error: "Hotel ID is required" }); return; }
-
+        const { hotelId } = req.user;
     const plans = await ratePlanService.getRatePlans(hotelId);
 
     res.json({
@@ -47,18 +48,18 @@ export const getRatePlans = async (req: Request, res: Response, next: NextFuncti
       data: plans,
     });
   } catch (err) {
-    res.status(500).json({ error: "Internal server error" });
+    next(err);
   }
 };
 
 export const getRatePlan = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { hotelId } = req.user!;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
+        }
 
+        const { hotelId } = req.user;
     const id = req.params.id;
-
-    if (!hotelId) { res.status(400).json({ error: "Hotel ID is required" }); return; }
-
     const plan = await ratePlanService.getRatePlan(id, hotelId);
     if (!plan) { res.status(404).json({ error: "Rate plan not found" }); return; }
 
@@ -69,18 +70,18 @@ export const getRatePlan = async (req: Request, res: Response, next: NextFunctio
     });
   } catch (err) {
     console.error("Error retrieving rate plan:", err);
-    res.status(500).json({ error: "Internal server error" });
-    return;
+    next(err);
   }
 };
 
 export const updateRatePlan = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { hotelId } = req.user!;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
+        }
 
+        const { hotelId } = req.user;
     const id = req.params.id;
-
-    if (!hotelId) { res.status(400).json({ error: "Hotel ID is required" }); return; }
     const { code, name, baseAdjType, baseAdjVal, currencyId, isActive } = req.body;
 
     const updatedPlan = await ratePlanService.updateRatePlan({
@@ -101,17 +102,18 @@ export const updateRatePlan = async (req: Request, res: Response, next: NextFunc
     });
   } catch (err) {
     console.error("Error updating rate plan:", err);
-    res.status(500).json({ error: "Internal server error" });
+    next(err);
   }
 };
 
 export const deleteRatePlan = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { hotelId } = req.user!;
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
+        }
 
+        const { hotelId } = req.user;
     const id = req.params.id;
-
-    if (!hotelId) { res.status(400).json({ error: "Hotel ID is required" }); return; }
     await ratePlanService.deleteRatePlan(id, hotelId);
 
     res.json({
@@ -120,6 +122,6 @@ export const deleteRatePlan = async (req: Request, res: Response, next: NextFunc
     });
   } catch (err) {
     console.error("Error deleting rate plan:", err);
-    res.status(500).json({ error: "Internal server error" });
+    next(err);
   }
 };

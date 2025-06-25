@@ -1,4 +1,5 @@
 import { prisma } from "../../lib/prisma";
+import { AppError } from "../../utils/AppError";
 import { CreateGuestParams, UpdateGuestParams } from "./guest.type";
 
 export default class GuestService {
@@ -33,9 +34,10 @@ export default class GuestService {
       });
 
       return guest;
-    } catch (error) {
-      console.error("Error creating guest:", error);
-      throw new Error("Failed to create guest");
+    } catch (err) {
+      console.error("Failed to create room type:", err);
+      if (err instanceof AppError) throw err;
+      throw new AppError("Failed to create room type", 500);
     }
   }
 
@@ -52,7 +54,7 @@ export default class GuestService {
     });
 
     if (!guest) {
-      throw new Error("Guest not found");
+      throw new AppError("Guest not found", 404);
     }
 
     return guest;
@@ -76,7 +78,7 @@ export default class GuestService {
     });
 
     if (!guest) {
-      throw new Error("Guest not found");
+      throw new AppError("Guest not found", 404);
     }
 
     const updatedGuest = await prisma.guest.update({
@@ -102,7 +104,7 @@ export default class GuestService {
     });
 
     if (!guest) {
-      throw new Error("Guest not found");
+      throw new AppError("Guest not found", 404);
     }
 
     await prisma.guest.delete({
