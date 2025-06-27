@@ -6,7 +6,6 @@ const guestService = new GuestService();
 
 export const addGuest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-         console.log("BODY:", req.body);
         if (!req.user || !req.user.hotelId) {
         throw new AppError("Hotel ID is required", 400);
         }

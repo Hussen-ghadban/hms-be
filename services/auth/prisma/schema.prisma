@@ -15,10 +15,10 @@ datasource db {
 }
 
 model Hotel {
-  id       String @id @default(cuid())
-  name     String
-  users    User[]
-  roles    Role[]
+  id    String @id @default(cuid())
+  name  String
+  users User[]
+  roles Role[]
 }
 
 model Permission {
@@ -33,7 +33,7 @@ model Role {
   name        String
   hotelId     String
   hotel       Hotel        @relation(fields: [hotelId], references: [id])
-  permissions Permission[] 
+  permissions Permission[]
   users       User[]
 
   @@unique([hotelId, name])
@@ -41,14 +41,15 @@ model Role {
 
 model User {
   id        String  @id @default(cuid())
-  email     String
-  username  String
-  password   String  @map("passwordHash")
+  email     String  
+  username  String  @unique
+  password  String  @map("passwordHash")
   firstName String
   lastName  String
   isActive  Boolean @default(true)
   roleId    String
-  hotel     Hotel[]   
+  hotel     Hotel[]
   role      Role    @relation(fields: [roleId], references: [id])
+
   @@unique([email])
 }

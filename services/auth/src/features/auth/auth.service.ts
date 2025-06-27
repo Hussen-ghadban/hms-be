@@ -2,28 +2,29 @@ import { prisma } from '../../lib/prisma';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { AppActions, AppSubjects, defineAbilitiesForUser } from '../../utils/ability';
-import { Permission } from './auth.types';
+import { Permission ,addUserParams} from './auth.types';
+import { AppError } from '../../utils/AppError';
 
 class AuthService {
-  async login(email: string, password: string) {
+  async login(username: string, password: string) {
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { username },
       include: { role: { include: { permissions: true } }, hotel: true },
     });
 
     if (!user || !user.isActive) {
-      throw new Error('INVALID_CRED');
+      throw new AppError('INVALID_CRED',401);
     }
 
     const userHotel = user.hotel[0];
     if (!userHotel) {
-      throw new Error('INVALID_CRED');
+      throw new AppError('INVALID_CRED',401);
     }
 
-    // const passwordMatches = await bcrypt.compare(password, user.password);
-    // if (!passwordMatches) {
-    //   throw new Error('INVALID_CRED');
-    // }
+    const passwordMatches = await bcrypt.compare(password, user.password);
+    if (!passwordMatches) {
+      throw new AppError('INVALID_CRED',401);
+    }
 
     const payload = {
       sub: user.id,
@@ -37,7 +38,42 @@ class AuthService {
     return token;
   }
 
+  async addUser({
+    email,
+    password,
+    username,
+    firstName,
+    lastName,
+    roleId,
+    hotelId,
+  }:addUserParams) {
+    const existing = await prisma.user.findUnique({ where: { email } });
+    if (existing) {
+      throw new AppError('User already exists');
+    }
 
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create user
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        hotel: { connect: { id: hotelId } },
+        roleId: roleId
+      },
+      include: {
+        role: true,
+        hotel: true,
+      },
+    });
+
+    return user;
+  }
   async authenticate(token: string, requiredPermissions: string[] = []) {
     try {
       if (!token) {
