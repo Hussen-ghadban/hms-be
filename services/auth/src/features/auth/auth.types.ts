@@ -20,3 +20,12 @@ export interface Permission {
   subject: string;
   action: string;
 }
+export interface addUserParams {
+    email: string,
+    password: string,
+    username: string,
+    firstName: string,
+    lastName: string,
+    roleId: string
+    hotelId: string,
+}
