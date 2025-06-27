@@ -11,13 +11,13 @@ export const addReservation = async (req: Request,res: Response,next: NextFuncti
         }
 
         const { hotelId } = req.user;
-    const { checkIn, checkOut, guestId, roomId, ratePlanId } = req.body;
+    const { checkIn, checkOut, guestId, roomIds, ratePlanId } = req.body;
 
     const newReservation = await reservationService.createReservation({
       checkIn: new Date(checkIn),
       checkOut: new Date(checkOut),
       guestId,
-      roomId,
+      roomIds,
       ratePlanId,
       hotelId,
       authorization: req.headers.authorization

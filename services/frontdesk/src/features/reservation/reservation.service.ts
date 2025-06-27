@@ -10,260 +10,271 @@ export default class ReservationService {
     checkIn,
     checkOut,
     guestId,
-    roomId,
+    roomIds,
     ratePlanId,
     hotelId,
     authorization
   }: CreateReservationParams & { authorization?: string }) {
     try {
-      console.log("Fetching guest from:", `${CUSTOMER_SERVICE_URL}/guest/get/${guestId}`);
-        const guestRes = await fetch(`${CUSTOMER_SERVICE_URL}/guest/get/${guestId}`, {
-  headers: {
-    Authorization: authorization || "",
-    "Content-Type": "application/json"
-  }
-});
-      if (!guestRes.ok) {
-        throw new AppError("Guest not found", 404);
-      }
-      const guestData = await guestRes.json();
-      if (!guestData || !guestData.data) {
-        throw new AppError("Guest not found", 404);
-      }
-          if (checkOut <= checkIn) {
-      throw new AppError("Check-out date must be after check-in date", 400);
-    }
-        const overlapping = await prisma.reservation.findFirst({
-        where: {
-          roomId,
-          // Overlap condition: (existing.checkIn < new.checkOut) && (existing.checkOut > new.checkIn)
-          checkIn: { lt: checkOut },
-          checkOut: { gt: checkIn },
-        },
+      // 1. Guest validation
+      const guestRes = await fetch(`${CUSTOMER_SERVICE_URL}/guest/get/${guestId}`, {
+        headers: {
+          Authorization: authorization || "",
+          "Content-Type": "application/json"
+        }
       });
+      if (!guestRes.ok) throw new AppError("Guest not found", 404);
+      const guestData = await guestRes.json();
+      if (!guestData || !guestData.data) throw new AppError("Guest not found", 404);
 
-      if (overlapping) {
-        throw new AppError("Room is already reserved for the selected dates", 400);
+      // 2. Date validation
+      if (checkOut <= checkIn) {
+        throw new AppError("Check-out date must be after check-in date", 400);
       }
-      const room = await prisma.room.findUnique({ where: { id: roomId } });
-      const roomType = await prisma.roomType.findUnique({ where: { id: room?.roomTypeId } });
+
+      // 3. Connected rooms validation
+      if (roomIds.length > 1) {
+        const allConnected = await this.areRoomsConnected(roomIds);
+        if (!allConnected) {
+          throw new AppError("All selected rooms must be connected to each other", 400);
+        }
+      }
+
+      // 4. Overlapping check for each room
+      for (const roomId of roomIds) {
+        const overlapping = await prisma.reservation.findFirst({
+          where: {
+            rooms: { some: { id: roomId } },
+            checkIn: { lt: checkOut },
+            checkOut: { gt: checkIn },
+          },
+        });
+        if (overlapping) {
+          throw new AppError(`Room ${roomId} is already reserved for the selected dates`, 400);
+        }
+      }
+
+      // 5. RatePlan validation
       const ratePlan = await prisma.ratePlan.findUnique({ where: { id: ratePlanId } });
-
-      if (!room || !roomType || !ratePlan) {
-        throw new AppError("Room, RoomType, or RatePlan not found",404);
-      }
-          if (room.hotelId !== hotelId) {
-      throw new AppError("Room does not belong to the selected hotel", 400);
-    }
-    if (ratePlan.hotelId !== hotelId) {
-      throw new AppError(
-        "RatePlan does not belong to the selected hotel",
-        400
-      );
-    }
-
-
-      let price = new Decimal(roomType.baseRate);
-
-      if (ratePlan.baseAdjType === "PERCENT") {
-        price = price.plus(price.mul(ratePlan.baseAdjVal).div(100));
-      } else if (ratePlan.baseAdjType === "FIXED") {
-        price = price.plus(ratePlan.baseAdjVal);
+      if (!ratePlan) throw new AppError("RatePlan not found", 404);
+      if (ratePlan.hotelId !== hotelId) {
+        throw new AppError("RatePlan does not belong to the selected hotel", 400);
       }
 
+      // 6. Price calculation for all rooms
+      let totalPrice = new Decimal(0);
+      for (const roomId of roomIds) {
+        const room = await prisma.room.findUnique({ where: { id: roomId } });
+        if (!room) throw new AppError(`Room ${roomId} not found`, 404);
+        if (room.hotelId !== hotelId) {
+          throw new AppError("Room does not belong to the selected hotel", 400);
+        }
+        const roomType = await prisma.roomType.findUnique({ where: { id: room.roomTypeId } });
+        if (!roomType) throw new AppError(`RoomType for room ${roomId} not found`, 404);
+
+        let price = new Decimal(roomType.baseRate);
+        if (ratePlan.baseAdjType === "PERCENT") {
+          price = price.plus(price.mul(ratePlan.baseAdjVal).div(100));
+        } else if (ratePlan.baseAdjType === "FIXED") {
+          price = price.plus(ratePlan.baseAdjVal);
+        }
+        totalPrice = totalPrice.plus(price);
+      }
+
+      // 7. Create reservation with all rooms
       const reservation = await prisma.reservation.create({
         data: {
           checkIn,
           checkOut,
           guestId,
-          roomId,
+          rooms: {
+            connect: roomIds.map(id => ({ id })),
+          },
           ratePlanId,
           hotelId,
-          price,
+          price: totalPrice,
+        },
+        include: {
+          rooms: true,
         },
       });
 
       return reservation;
     } catch (err) {
-          console.error("Failed to create reservation:", err);
-          if (err instanceof AppError) throw err;
-          throw new AppError("Failed to create reservation", 500);
-        }
+      console.error("Failed to create reservation:", err);
+      if (err instanceof AppError) throw err;
+      throw new AppError("Failed to create reservation", 500);
+    }
   }
+async updateReservation({
+  reservationId,
+  checkIn,
+  checkOut,
+  roomIds, // now expects an array
+  ratePlanId,
+}: UpdateReservationParams & { roomIds?: string[] }) {
+  try {
+    const reservation = await prisma.reservation.findUnique({
+      where: { id: reservationId },
+      include: { rooms: true },
+    });
 
-  async updateReservation({
-    reservationId,
-    checkIn,
-    checkOut,
-    roomId,
-    ratePlanId,
-  }: UpdateReservationParams) {
-    try {
-      // ✅ Fetch the current reservation
-      const reservation = await prisma.reservation.findUnique({
-        where: { id: reservationId },
-      });
+    if (!reservation) {
+      throw new AppError("Reservation not found", 404);
+    }
 
-      if (!reservation) {
-        throw new AppError("Reservation not found", 404);
-      }
+    const dataToUpdate: Record<string, any> = {};
 
-      const dataToUpdate: Record<string, any> = {};
+    if (checkIn) dataToUpdate.checkIn = checkIn;
+    if (checkOut) dataToUpdate.checkOut = checkOut;
+    if (ratePlanId) dataToUpdate.ratePlanId = ratePlanId;
 
-      // ✅ Update dates if provided
-      if (checkIn) dataToUpdate.checkIn = checkIn;
-      if (checkOut) dataToUpdate.checkOut = checkOut;
+    // Update rooms if provided
+    if (roomIds && roomIds.length > 0) {
+      dataToUpdate.rooms = { set: roomIds.map(id => ({ id })) };
+    }
 
-      // ✅ Update room if provided
-      if (roomId) dataToUpdate.roomId = roomId;
+    // Overlapping check for each room if rooms or dates are changing
+    const effectiveRoomIds = roomIds ?? reservation.rooms.map(r => r.id);
+    const effectiveCheckIn = checkIn ?? reservation.checkIn;
+    const effectiveCheckOut = checkOut ?? reservation.checkOut;
 
-      // ✅ Update rate plan if provided
-      if (ratePlanId) dataToUpdate.ratePlanId = ratePlanId;
+    if (effectiveCheckOut <= effectiveCheckIn) {
+      throw new AppError("Check-out date must be after check-in date", 400);
+    }
 
-      const effectiveRoomId = roomId ?? reservation.roomId;
-      const effectiveCheckIn = checkIn ?? reservation.checkIn;
-      const effectiveCheckOut = checkOut ?? reservation.checkOut;
-        if (effectiveCheckOut <= effectiveCheckIn) {
-    throw new AppError(
-      "Check-out date must be after check-in date",
-      400
-    );
-  }
-      // ✅ Check for overlapping reservations if room or dates are changing
+    for (const roomId of effectiveRoomIds) {
       const overlapping = await prisma.reservation.findFirst({
         where: {
           id: { not: reservationId },
-          roomId: effectiveRoomId,
+          rooms: { some: { id: roomId } },
           checkIn: { lt: effectiveCheckOut },
           checkOut: { gt: effectiveCheckIn },
         },
       });
-
       if (overlapping) {
         throw new AppError(
-          "Room is already reserved for the selected dates",
+          `Room ${roomId} is already reserved for the selected dates`,
           400
         );
       }
+    }
 
-      // ✅ Handle price recalculation if rate plan is changed
-if (ratePlanId || roomId) {
-  const room = await prisma.room.findUnique({
-    where: { id: effectiveRoomId },
-  });
-
-  if (!room) {
-    throw new AppError("Room not found", 404);
-  }
-
-  const roomType = await prisma.roomType.findUnique({
-    where: { id: room.roomTypeId },
-  });
-
-  const effectiveRatePlanId = ratePlanId ?? reservation.ratePlanId;
-
-  if (!roomType || !effectiveRatePlanId) {
-    throw new AppError(
-      "RoomType or RatePlan ID missing for price calculation",
-      404
-    );
-  }
-
-  const ratePlan = await prisma.ratePlan.findUnique({
-    where: { id: effectiveRatePlanId },
-  });
-
-  if (!ratePlan) {
-    throw new AppError("RatePlan not found", 404);
-  }
-  if (room.hotelId !== reservation.hotelId) {
-  throw new AppError(
-    "Room does not belong to the selected hotel",
-    400
-  );
-}
-
-if (ratePlan.hotelId !== reservation.hotelId) {
-  throw new AppError(
-    "RatePlan does not belong to the selected hotel",
-    400
-  );
-}
-
-  let price = new Decimal(roomType.baseRate);
-
-  if (ratePlan.baseAdjType === "PERCENT") {
-    price = price.plus(price.mul(ratePlan.baseAdjVal).div(100));
-  } else if (ratePlan.baseAdjType === "FIXED") {
-    price = price.plus(ratePlan.baseAdjVal);
-  }
-
-  dataToUpdate.price = price;
-}
-
-
-      // ✅ Final reservation update
-      const updatedReservation = await prisma.reservation.update({
-        where: { id: reservationId },
-        data: dataToUpdate,
+    // Price recalculation if rate plan or rooms changed
+    if (ratePlanId || roomIds) {
+      const ratePlan = await prisma.ratePlan.findUnique({
+        where: { id: ratePlanId ?? reservation.ratePlanId },
       });
+      if (!ratePlan) throw new AppError("RatePlan not found", 404);
 
-      return updatedReservation;
-    } catch (error) {
-      console.error("Failed to update reservation:", error);
-      if (error instanceof AppError) throw error;
-      throw new AppError("Failed to update reservation", 500);
+      let totalPrice = new Decimal(0);
+      for (const roomId of effectiveRoomIds) {
+        const room = await prisma.room.findUnique({ where: { id: roomId } });
+        if (!room) throw new AppError(`Room ${roomId} not found`, 404);
+        const roomType = await prisma.roomType.findUnique({ where: { id: room.roomTypeId } });
+        if (!roomType) throw new AppError(`RoomType for room ${roomId} not found`, 404);
+
+        let price = new Decimal(roomType.baseRate);
+        if (ratePlan.baseAdjType === "PERCENT") {
+          price = price.plus(price.mul(ratePlan.baseAdjVal).div(100));
+        } else if (ratePlan.baseAdjType === "FIXED") {
+          price = price.plus(ratePlan.baseAdjVal);
+        }
+        totalPrice = totalPrice.plus(price);
+      }
+      dataToUpdate.price = totalPrice;
+    }
+
+    const updatedReservation = await prisma.reservation.update({
+      where: { id: reservationId },
+      data: dataToUpdate,
+      include: { rooms: true },
+    });
+
+    return updatedReservation;
+  } catch (error) {
+    console.error("Failed to update reservation:", error);
+    if (error instanceof AppError) throw error;
+    throw new AppError("Failed to update reservation", 500);
+  }
+}
+
+async areRoomsConnected(roomIds: string[]): Promise<boolean> {
+  // Fetch all rooms with their connectedRooms
+  const rooms = await prisma.room.findMany({
+    where: { id: { in: roomIds } },
+    include: { connectedRooms: true },
+  });
+
+  // Build a set for quick lookup
+  const roomIdSet = new Set(roomIds);
+
+  // For each room, check if all other rooms are in its connectedRooms
+  for (const room of rooms) {
+    const connectedIds = new Set(room.connectedRooms.map(r => r.id));
+    // Exclude self
+    for (const otherId of roomIds) {
+      if (otherId !== room.id && !connectedIds.has(otherId)) {
+        return false; // Not all rooms are mutually connected
+      }
     }
   }
+  return true;
+}
 
+async checkIn({ reservationId, hotelId, deposit }: CheckInParams) {
+  return await prisma.$transaction(async (tx) => {
+    const reservation = await tx.reservation.findUnique({
+      where: { id: reservationId },
+      include: { rooms: true },
+    });
 
+    if (!reservation) {
+      throw new AppError("Reservation not found", 404);
+    }
+    if (reservation.status !== "CONFIRMED" && reservation.status !== "HELD") {
+      throw new AppError("Only CONFIRMED or HELD reservations can be checked in", 400);
+    }
 
-  async checkIn({reservationId, hotelId,deposit}:CheckInParams) {
-    return await prisma.$transaction(async (tx) => {
-      const reservation = await tx.reservation.findUnique({
-        where: { id: reservationId },
-        include: { room: true },
-      });
-
-      if (!reservation) {
-        throw new AppError("Reservation not found", 404);
+    // Check all rooms are available
+    for (const room of reservation.rooms) {
+      if (room.status !== "AVAILABLE") {
+        throw new AppError(`Room ${room.id} is not available for check-in`, 400);
       }
-      if (reservation.status !== "CONFIRMED" && reservation.status !== "HELD") {
-        throw new AppError("Only CONFIRMED or HELD reservations can be checked in", 400);
-      }
-        if (reservation.room.status !== "AVAILABLE") {
-            throw new AppError("Room is not available for check-in", 400);
-        }
-      // 2. Update reservation status
-      const updatedReservation = await tx.reservation.update({
-        where: { id: reservationId },
-        data: {
-          status: "CHECKED_IN",
-        },
-      });
+    }
 
-      // 3. Update room status
+    // Update reservation status
+    const updatedReservation = await tx.reservation.update({
+      where: { id: reservationId },
+      data: {
+        status: "CHECKED_IN",
+      },
+    });
+
+    // Update all rooms' status
+    for (const room of reservation.rooms) {
       await tx.room.update({
-        where: { id: reservation.roomId },
+        where: { id: room.id },
         data: {
           status: "OCCUPIED",
         },
       });
+    }
 
-      // 4. Create folio
-      const folio = await tx.folio.create({
-        data: {
-          hotelId,
-          reservationId: reservation.id,
-          balance: deposit,
-        },
-      });
-
-      return {
-        reservation: updatedReservation,
-        folio,
-      };
+    // Create folio
+    const folio = await tx.folio.create({
+      data: {
+        hotelId,
+        reservationId: reservation.id,
+        balance: deposit,
+      },
     });
-  }
+
+    return {
+      reservation: updatedReservation,
+      folio,
+    };
+  });
+}
 }
 
