@@ -6,9 +6,9 @@ import { Permission ,addUserParams} from './auth.types';
 import { AppError } from '../../utils/AppError';
 
 class AuthService {
-  async login(email: string, password: string) {
+  async login(username: string, password: string) {
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { username },
       include: { role: { include: { permissions: true } }, hotel: true },
     });
 

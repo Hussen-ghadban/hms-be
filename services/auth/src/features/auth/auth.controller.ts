@@ -8,8 +8,8 @@ const authService = new AuthService();
 
 export const login = async (req: Request, res: Response,next:NextFunction) => {
     try {
-        const { email, password } = req.body;
-        const token = await authService.login(email, password);
+        const { username, password } = req.body;
+        const token = await authService.login(username, password);
         res.status(200).json({ accessToken: token });
     } catch (error) {
         console.error('Login error:', error);
