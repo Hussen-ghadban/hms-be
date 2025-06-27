@@ -3,6 +3,7 @@ import { validateRequest } from "../../middleware/validation";
 import { addAmenity, getAmenities, getAmenity, updateAmenity, deleteAmenity } from "./amenity.controller";
 import { createAmenitySchema, updateAmenitySchema, amenityParamsSchema } from "./amenity.validation";
 import { requirePermissions } from '../../middleware/requirePermissions';
+import { actionLogger } from '../../middleware/logger';
 
 const router = express.Router();
 
@@ -17,13 +18,15 @@ router.get('/get/:id',
     
     requirePermissions(["Amenity.read"]),
     validateRequest({ params: amenityParamsSchema }),
-    getAmenity
+    getAmenity,
+    actionLogger("Get Amenity")
 );
 
 router.get('/get',
     
     requirePermissions(["Amenity.read"]),
-    getAmenities
+    getAmenities,
+    actionLogger("Get Amenities")
 );
 
 router.put('/update/:id',

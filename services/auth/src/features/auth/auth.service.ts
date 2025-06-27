@@ -2,9 +2,15 @@ import { prisma } from '../../lib/prisma';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { AppActions, AppSubjects, defineAbilitiesForUser } from '../../utils/ability';
-import { Permission } from './auth.types';
+import { LogInput, Permission } from './auth.types';
+import { loggerService } from '../logger/logger.service';
+import { BusinessContext } from '../logger/logger.types';
 
 class AuthService {
+
+
+  constructor() { }
+
   async login(email: string, password: string) {
     const user = await prisma.user.findUnique({
       where: { email },
@@ -34,17 +40,27 @@ class AuthService {
       expiresIn: '1h',
     });
 
+    // Create session and log login
+    try {
+      await loggerService.logAction({
+        userId: user.id,
+        hotelId: userHotel.id,
+        service: 'auth',
+        action: 'login',
+        status: 'SUCCESS',
+      });
+    } catch (error) {
+      console.error('Failed to log login:', error);
+    }
+
     return token;
   }
-
-
-  async authenticate(token: string, requiredPermissions: string[] = []) {
+  async authenticate(token: string, requiredPermissions: string[] = [], businessContext?: BusinessContext) {
     try {
       if (!token) {
         throw new Error('No token provided');
       }
 
-      // Handle Bearer token format
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { sub: string; hid: string };
 
@@ -63,15 +79,11 @@ class AuthService {
               permissions: true,
             },
           },
+          hotel: true,
         },
       });
-
       if (!user) {
         throw new Error("User not found");
-      }
-
-      if (!user.isActive) {
-        throw new Error("User account is inactive");
       }
 
       if (!user.role) {
@@ -83,7 +95,6 @@ class AuthService {
         subject: p.subject,
         action: p.action,
       }));
-
 
       // Build ability based on user's permissions
       const ability = await defineAbilitiesForUser(userPermissions);
