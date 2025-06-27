@@ -43,7 +43,7 @@ model Room {
   photos          String[]      @default([])
   roomType        RoomType      @relation(fields: [roomTypeId], references: [id])
   hotelId         String
-  reservations    Reservation[]
+  reservations    Reservation[] @relation("ReservationRooms")
 
   @@unique([hotelId, roomNumber])
 }
@@ -130,8 +130,7 @@ model Reservation {
   checkOut   DateTime
   status     ReservationStatus @default(HELD)
   guestId    String
-  roomId     String
-  room       Room              @relation(fields: [roomId], references: [id])
+  rooms      Room[]            @relation("ReservationRooms")
   hotelId    String
   ratePlanId String
   ratePlan   RatePlan          @relation(fields: [ratePlanId], references: [id])

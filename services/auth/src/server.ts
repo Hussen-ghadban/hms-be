@@ -10,7 +10,6 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(validateRoutes);
-app.use(errorHandler);
 
 app.use('/auth', authRoutes);
 app.use('/role',roleRoutes);
@@ -20,4 +19,5 @@ app.listen(process.env.PORT || 4000, () =>
   console.log('Auth listening 🔒', process.env.PORT || 4000)
 );
 
+app.use(errorHandler);
 
