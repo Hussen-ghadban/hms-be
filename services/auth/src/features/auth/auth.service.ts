@@ -13,17 +13,17 @@ class AuthService {
     });
 
     if (!user || !user.isActive) {
-      throw new AppError('INVALID_CRED',401);
+      throw new AppError('Invalid Credentials',401);
     }
 
     const userHotel = user.hotel[0];
     if (!userHotel) {
-      throw new AppError('INVALID_CRED',401);
+      throw new AppError('Invalid Credentials',401);
     }
 
     const passwordMatches = await bcrypt.compare(password, user.password);
     if (!passwordMatches) {
-      throw new AppError('INVALID_CRED',401);
+      throw new AppError('Invalid Credentials',401);
     }
 
     const payload = {

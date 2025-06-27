@@ -1,5 +1,6 @@
 // src/server.ts
 import express from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './features/auth/auth.routes';
 import roleRoutes from './features/role/role.routes';
@@ -8,12 +9,17 @@ import validateRoutes from './middleware/authenticate';
 import { errorHandler } from './middleware/errorHandler';
 dotenv.config();
 const app = express();
+app.use(cors({
+  allowedHeaders: ['*'],
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+}));
 app.use(express.json());
 app.use(validateRoutes);
 app.use(errorHandler);
 
 app.use('/auth', authRoutes);
-app.use('/role',roleRoutes);
+app.use('/role', roleRoutes);
 
 
 app.listen(process.env.PORT || 4000, () =>
