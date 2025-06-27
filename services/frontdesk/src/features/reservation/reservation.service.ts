@@ -3,6 +3,8 @@ import { AppError } from "../../utils/AppError";
 import { CheckInParams, CreateReservationParams, UpdateReservationParams } from "./reservation.type";
 import { Decimal } from "@prisma/client/runtime/library"; // 👈 Required for Decimal operations
 
+const CUSTOMER_SERVICE_URL = process.env.CUSTOMER_SERVICE_URL;
+
 export default class ReservationService {
   async createReservation({
     checkIn,
@@ -11,8 +13,23 @@ export default class ReservationService {
     roomId,
     ratePlanId,
     hotelId,
-  }: CreateReservationParams) {
+    authorization
+  }: CreateReservationParams & { authorization?: string }) {
     try {
+      console.log("Fetching guest from:", `${CUSTOMER_SERVICE_URL}/guest/get/${guestId}`);
+        const guestRes = await fetch(`${CUSTOMER_SERVICE_URL}/guest/get/${guestId}`, {
+  headers: {
+    Authorization: authorization || "",
+    "Content-Type": "application/json"
+  }
+});
+      if (!guestRes.ok) {
+        throw new AppError("Guest not found", 404);
+      }
+      const guestData = await guestRes.json();
+      if (!guestData || !guestData.data) {
+        throw new AppError("Guest not found", 404);
+      }
           if (checkOut <= checkIn) {
       throw new AppError("Check-out date must be after check-in date", 400);
     }

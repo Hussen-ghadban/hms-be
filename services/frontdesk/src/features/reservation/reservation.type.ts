@@ -5,6 +5,7 @@ export interface CreateReservationParams {
   roomId: string;
   ratePlanId: string;
   hotelId: string;
+  authorization?: string;
 }
 export interface UpdateReservationParams {
   reservationId: string;

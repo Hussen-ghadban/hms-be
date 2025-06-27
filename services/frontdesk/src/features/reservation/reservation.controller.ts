@@ -20,6 +20,7 @@ export const addReservation = async (req: Request,res: Response,next: NextFuncti
       roomId,
       ratePlanId,
       hotelId,
+      authorization: req.headers.authorization
     });
 
     res.status(201).json({
