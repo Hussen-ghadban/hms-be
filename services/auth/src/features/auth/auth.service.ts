@@ -60,9 +60,9 @@ class AuthService {
       data: {
         email,
         password: hashedPassword,
-        username: username || email,
-        firstName: firstName || '',
-        lastName: lastName || '',
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
         hotel: { connect: { id: hotelId } },
         roleId: roleId
       },
