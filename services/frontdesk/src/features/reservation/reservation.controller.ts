@@ -20,6 +20,7 @@ export const addReservation = async (req: Request,res: Response,next: NextFuncti
       roomId,
       ratePlanId,
       hotelId,
+      authorization: req.headers.authorization
     });
 
     res.status(201).json({
@@ -31,6 +32,39 @@ export const addReservation = async (req: Request,res: Response,next: NextFuncti
     next(error);
   }
 };
+
+export const updateReservation = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { reservationId } = req.params;
+    const { checkIn, checkOut, roomId, ratePlanId } = req.body;
+
+    if (!reservationId) {
+      throw new AppError("Reservation ID is required", 400);
+    }
+
+    const updatedReservation = await reservationService.updateReservation({
+      reservationId,
+      checkIn: checkIn ? new Date(checkIn) : undefined,
+      checkOut: checkOut ? new Date(checkOut) : undefined,
+      roomId,
+      ratePlanId,
+    });
+
+    res.status(200).json({
+      status: 200,
+      message: "Reservation updated successfully",
+      data: updatedReservation,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 export const checkInReservation = async (req: Request, res: Response, next: NextFunction) => {
   try {
         if (!req.user || !req.user.hotelId) {
