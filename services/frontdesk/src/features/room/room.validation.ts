@@ -4,6 +4,12 @@ import { RoomStatus } from "../../../generated/prisma";
 export const createRoomSchema = z.object({
   roomNumber: z.string().min(1, "Room number is required"),
   roomTypeId: z.string().min(1, "Room type ID is required"),
+  floor: z.number({ required_error: "Floor is required" }),
+  maxOccupancy: z.number({ required_error: "Max occupancy is required" }),
+  adultOccupancy: z.number({ required_error: "Adult occupancy is required" }),
+  childOccupancy: z.number({ required_error: "Child occupancy is required" }),
+  amenities: z.array(z.string()).optional(),
+  connectedRoomIds: z.array(z.string()).optional()
 });
 
 

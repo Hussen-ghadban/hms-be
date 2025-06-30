@@ -2,12 +2,13 @@
 import express from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
-import roomtypeRoutes from './features/roomType/roomtype.routes';
+import roomtypeRoutes from './features/roomType/roomType.routes';
 import roomRoutes from './features/room/room.routes'
 import ratePlanRouter from './features/ratePlan/ratePlan.routes';
 import exchangeRouter from './features/exchange/exchange.routes';
 import amenityRouter from './features/amenity/amenity.routes';
 import reservationRouter from './features/reservation/reservation.routes';
+import housekeepingRouter from './features/houseKeeping/houseKeeping.routes'
 import { errorHandler } from "./middleware/errorHandler";
 import cors from 'cors';
 
@@ -25,6 +26,8 @@ app.use("/ratePlan", ratePlanRouter);
 app.use("/exchange", exchangeRouter);
 app.use("/amenity",amenityRouter)
 app.use("/reservation",reservationRouter)
+app.use("/housekeeping",housekeepingRouter)
+
 
 
 

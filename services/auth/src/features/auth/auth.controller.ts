@@ -31,10 +31,22 @@ export const addUser = async (req: Request, res: Response,next:NextFunction) => 
         });
     } catch (error) {
         console.error('Add user error:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        next(error)
     }
 };
+export const getUser =async(req: Request, res: Response,next:NextFunction) => {
+try{
+    const {id}=req.params;
+      if (!req.user || !req.user.hotelId) throw new AppError("Hotel ID is required", 400);
+    const { hotelId } = req.user;
+    
+    const user=await authService.getUser(id,hotelId)
+    res.json({status:200,message:"user was fetched successfully",data:user})
+}catch(error){
+    next(error)
+}
 
+}
 export const authenticate = async (req: Request, res: Response) => {
     try {
         const { token,permissions } = req.body;

@@ -2,7 +2,7 @@ export interface CreateReservationParams {
   checkIn: Date;
   checkOut: Date;
   guestId: string;
-  roomId: string;
+  roomIds: string[];
   ratePlanId: string;
   hotelId: string;
   authorization?: string;

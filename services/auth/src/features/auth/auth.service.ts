@@ -34,8 +34,15 @@ class AuthService {
     const token = jwt.sign(payload, process.env.JWT_SECRET!, {
       expiresIn: '1h',
     });
+        const permissions = user.role.permissions.map((p) => ({
+      subject: p.subject,
+      action: p.action,
+    }));
 
-    return token;
+        return {
+      token,
+        permissions,
+    };
   }
 
   async addUser({
@@ -73,6 +80,16 @@ class AuthService {
     });
 
     return user;
+  }
+  async getUser(id:string,hotelId:string){
+      const user=await prisma.user.findFirst({
+        where:{id}
+      })
+      if(!user){
+        throw new AppError("user not found",404)
+      }
+      return user;
+    
   }
   async authenticate(token: string, requiredPermissions: string[] = []) {
     try {
