@@ -52,4 +52,18 @@ model User {
   role      Role    @relation(fields: [roleId], references: [id])
 
   @@unique([email])
+  ActionLog ActionLog[]
+}
+
+model ActionLog {
+  id            String    @id @default(cuid())
+  userId        String
+  hotelId       String
+  service       String    // customer, frontdesk, etc.
+  action        String    // guest.create, room.update, etc.
+  resourceType  String?   // Guest, Room, Reservation, etc.
+  status        String    // SUCCESS, FAILED, DENIED
+  errorMessage  String?
+  timestamp     DateTime  @default(now())
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

@@ -24,6 +24,7 @@ export const addAmenity = async (req: Request, res: Response, next: NextFunction
             message: "Amenity created successfully",
             data: newAmenity,
         });
+        next();
     } catch (error) {
         next(error);
 
@@ -43,6 +44,7 @@ export const getAmenities = async (req: Request, res: Response, next: NextFuncti
             status: 200,
             data: amenities,
         });
+        next();
     } catch (error) {
         next(error);
     }

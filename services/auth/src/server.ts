@@ -7,6 +7,8 @@ import roleRoutes from './features/role/role.routes';
 // import introspectRoutes from './features/introspection/introspection.routes'
 import validateRoutes from './middleware/authenticate';
 import { errorHandler } from './middleware/errorHandler';
+import loggerRoutes from './features/logger/logger.routes';
+
 dotenv.config();
 const app = express();
 app.use(cors({
@@ -18,6 +20,7 @@ app.use(express.json());
 app.use(validateRoutes);
 
 app.use('/auth', authRoutes);
+app.use('/logger',loggerRoutes)
 app.use('/role', roleRoutes);
 
 
