@@ -200,26 +200,52 @@ async updateReservation({
 }
 
 async areRoomsConnected(roomIds: string[]): Promise<boolean> {
+  // Handle edge cases
+  if (roomIds.length <= 1) return true;
+  
   // Fetch all rooms with their connectedRooms
   const rooms = await prisma.room.findMany({
     where: { id: { in: roomIds } },
     include: { connectedRooms: true },
   });
 
-  // Build a set for quick lookup
-  const roomIdSet = new Set(roomIds);
+  // If we didn't find all rooms, they can't be connected
+  if (rooms.length !== roomIds.length) return false;
 
-  // For each room, check if all other rooms are in its connectedRooms
+  // Build adjacency map for the graph
+  const adjacencyMap = new Map<string, Set<string>>();
+  
   for (const room of rooms) {
-    const connectedIds = new Set(room.connectedRooms.map(r => r.id));
-    // Exclude self
-    for (const otherId of roomIds) {
-      if (otherId !== room.id && !connectedIds.has(otherId)) {
-        return false; // Not all rooms are mutually connected
+    const connectedIds = new Set(
+      room.connectedRooms
+        .map(r => r.id)
+        .filter(id => roomIds.includes(id)) // Only include rooms from our input set
+    );
+    adjacencyMap.set(room.id, connectedIds);
+  }
+
+  // Use DFS to check if all rooms are reachable from the first room
+  const visited = new Set<string>();
+  const stack = [roomIds[0]]; // Start from the first room
+  
+  while (stack.length > 0) {
+    const currentRoom = stack.pop()!;
+    
+    if (visited.has(currentRoom)) continue;
+    
+    visited.add(currentRoom);
+    
+    // Add all connected rooms to the stack
+    const connectedRooms = adjacencyMap.get(currentRoom) || new Set();
+    for (const connectedRoom of connectedRooms) {
+      if (!visited.has(connectedRoom)) {
+        stack.push(connectedRoom);
       }
     }
   }
-  return true;
+  
+  // Check if we visited all rooms
+  return visited.size === roomIds.length;
 }
 
 async checkIn({ reservationId, hotelId, deposit }: CheckInParams) {
