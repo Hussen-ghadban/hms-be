@@ -27,7 +27,9 @@ export default class HouseKeepingService {
       if (!room) {
         throw new AppError("Room not found in hotel", 404);
       }
-
+if(room.status==RoomStatus.CLEANING){
+  throw new AppError("room is already has a housekeeper")
+}
       const task = await prisma.houseKeepingTask.create({
         data: {
           roomId,
