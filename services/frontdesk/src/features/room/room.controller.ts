@@ -9,10 +9,11 @@ export const addRoom = async (req: Request, res: Response, next: NextFunction) =
         if (!req.user || !req.user.hotelId) {
         throw new AppError("Hotel ID is required", 400);
         }
+        console.log("Received room data:", req.body);
 
         const { hotelId } = req.user;
 
-        const { roomNumber, roomTypeId, floor,maxOccupancy,childOccupancy,adultOccupancy } = req.body;
+        const { roomNumber, roomTypeId, floor,maxOccupancy,childOccupancy,adultOccupancy, amenities, connectedRoomIds } = req.body;
 
         const newRoom = await roomService.createRoom({
             roomNumber,
@@ -22,6 +23,8 @@ export const addRoom = async (req: Request, res: Response, next: NextFunction) =
             maxOccupancy,
             childOccupancy,
             adultOccupancy,
+            amenities,
+            connectedRoomIds,
         });
 
         res.status(201).json({
@@ -82,7 +85,7 @@ export const updateRoom = async (req: Request, res: Response, next: NextFunction
         const { hotelId } = req.user;
         const { id } = req.params;
 
-        const { roomNumber, status, roomTypeId, floor, maxOccupancy, childOccupancy, adultOccupancy } = req.body;
+        const { roomNumber, status, roomTypeId, floor, maxOccupancy, childOccupancy, adultOccupancy, amenities, connectedRoomIds  } = req.body;
 
         const updatedRoom = await roomService.updateRoom({
             id,
@@ -93,6 +96,8 @@ export const updateRoom = async (req: Request, res: Response, next: NextFunction
             maxOccupancy,
             childOccupancy,
             adultOccupancy,
+            amenities,
+            connectedRoomIds,
         });
 
         res.json({

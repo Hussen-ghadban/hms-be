@@ -5,12 +5,15 @@ dotenv.config();
 
 import guestRouter from './features/guest/guest.routes';
 import { errorHandler } from './middleware/errorHandler';
-
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
-app.use(errorHandler);
-
+app.use(cors({
+  allowedHeaders: ['*'],
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+}));
 app.use("/guest", guestRouter);
 
 
@@ -20,3 +23,5 @@ app.listen(process.env.PORT || 4002, () =>
   console.log(`Customer listening 🚪 ${PORT}`)
 );
 
+
+app.use(errorHandler);

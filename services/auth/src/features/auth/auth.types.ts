@@ -30,3 +30,12 @@ export interface LogInput {
     resourceId: string | undefined,
     status: string,
 }
+export interface addUserParams {
+    email: string,
+    password: string,
+    username: string,
+    firstName: string,
+    lastName: string,
+    roleId: string,
+    hotelId: string
+}

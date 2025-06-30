@@ -12,6 +12,7 @@ import { Permission } from "../middleware/introspect";
 // Define proper types based on your schema
 export type AppSubjects = 
   | "User" 
+  | "Role"
   | "Hotel"
   | "Room"
   | "RoomType"
@@ -22,6 +23,7 @@ export type AppSubjects =
   | "Folio"
   | "POSOutlet"
   | "RatePlan"
+  | "HouseKeeping"
   | "all";
 
 export type AppActions = "create" | "read" | "update" | "delete" | "manage";
@@ -76,14 +78,18 @@ function isValidAction(action: string): action is AppActions {
 function isValidSubject(subject: string): subject is AppSubjects {
   return [
     "User",
+    "Role",
     "Hotel",
     "Room",
+    "Amenity",
+    "ExchangeRate",
     "RoomType",
     "Guest",
     "Reservation",
     "Folio",
     "POSOutlet",
     "RatePlan",
+    "HouseKeeping",
     "all"
   ].includes(subject);
 }

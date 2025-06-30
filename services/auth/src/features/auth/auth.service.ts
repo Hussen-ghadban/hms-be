@@ -5,31 +5,29 @@ import { AppActions, AppSubjects, defineAbilitiesForUser } from '../../utils/abi
 import { LogInput, Permission } from './auth.types';
 import { loggerService } from '../logger/logger.service';
 import { BusinessContext } from '../logger/logger.types';
+import { Permission ,addUserParams} from './auth.types';
+import { AppError } from '../../utils/AppError';
 
 class AuthService {
-
-
-  constructor() { }
-
-  async login(email: string, password: string) {
+  async login(username: string, password: string) {
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { username },
       include: { role: { include: { permissions: true } }, hotel: true },
     });
 
     if (!user || !user.isActive) {
-      throw new Error('INVALID_CRED');
+      throw new AppError('Invalid Credentials',401);
     }
 
     const userHotel = user.hotel[0];
     if (!userHotel) {
-      throw new Error('INVALID_CRED');
+      throw new AppError('Invalid Credentials',401);
     }
 
-    // const passwordMatches = await bcrypt.compare(password, user.password);
-    // if (!passwordMatches) {
-    //   throw new Error('INVALID_CRED');
-    // }
+    const passwordMatches = await bcrypt.compare(password, user.password);
+    if (!passwordMatches) {
+      throw new AppError('Invalid Credentials',401);
+    }
 
     const payload = {
       sub: user.id,
@@ -39,7 +37,6 @@ class AuthService {
     const token = jwt.sign(payload, process.env.JWT_SECRET!, {
       expiresIn: '1h',
     });
-
     // Create session and log login
     try {
       await loggerService.logAction({
@@ -52,10 +49,64 @@ class AuthService {
     } catch (error) {
       console.error('Failed to log login:', error);
     }
+        const permissions = user.role.permissions.map((p) => ({
+      subject: p.subject,
+      action: p.action,
+    }));
 
-    return token;
+        return {
+      token,
+        permissions,
+    };
   }
-  async authenticate(token: string, requiredPermissions: string[] = [], businessContext?: BusinessContext) {
+
+  async addUser({
+    email,
+    password,
+    username,
+    firstName,
+    lastName,
+    roleId,
+    hotelId,
+  }:addUserParams) {
+    const existing = await prisma.user.findUnique({ where: { email } });
+    if (existing) {
+      throw new AppError('User already exists');
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create user
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        hotel: { connect: { id: hotelId } },
+        roleId: roleId
+      },
+      include: {
+        role: true,
+        hotel: true,
+      },
+    });
+
+    return user;
+  }
+  async getUser(id:string,hotelId:string){
+      const user=await prisma.user.findFirst({
+        where:{id}
+      })
+      if(!user){
+        throw new AppError("user not found",404)
+      }
+      return user;
+    
+  }
+  async authenticate(token: string, requiredPermissions: string[] = []) {
     try {
       if (!token) {
         throw new Error('No token provided');

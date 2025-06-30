@@ -12,7 +12,8 @@ export default class RoomService {
         maxOccupancy,
         childOccupancy,
         adultOccupancy,
-        amenities
+        amenities,
+        connectedRoomIds
     }: CreateRoomParams) {
         try {
             const existing = await prisma.room.findUnique({
@@ -35,6 +36,20 @@ export default class RoomService {
             if (!roomType) {
                 throw new Error("Invalid room type ID");
             }
+            if (connectedRoomIds && connectedRoomIds.length > 0) {
+    const foundRooms = await prisma.room.findMany({
+        where: {
+            id: { in: connectedRoomIds },
+            hotelId, // optional: ensures rooms are in the same hotel
+        },
+        select: { id: true }
+    });
+    const foundIds = foundRooms.map(r => r.id);
+    const notFound = connectedRoomIds.filter(id => !foundIds.includes(id));
+    if (notFound.length > 0) {
+        throw new AppError(`Connected room(s) not found: ${notFound.join(", ")}`, 400);
+    }
+}
 
             const room = await prisma.room.create({
                 data: {
@@ -50,10 +65,14 @@ export default class RoomService {
                         ? {
                             connect: amenities.map((id: string) => ({ id }))
                         }
-                        : undefined
+                        : undefined,
+                    connectedRooms: connectedRoomIds && connectedRoomIds.length > 0
+                    ? { connect: connectedRoomIds.map(id => ({ id })) }
+                    : undefined,
                 },
                 include: {
                     roomType: true,
+                    connectedRooms:true,
                 },
             });
 
@@ -99,7 +118,8 @@ export default class RoomService {
         maxOccupancy,
         childOccupancy,
         adultOccupancy,
-        amenities
+        amenities,
+        connectedRoomIds
     }: UpdateRoomParams) {
         // Check existence and ownership
         const room = await prisma.room.findFirst({
@@ -136,6 +156,20 @@ export default class RoomService {
                 throw new AppError("Invalid room type ID", 400);
             }
         }
+        if (connectedRoomIds !== undefined && connectedRoomIds.length > 0) {
+    const foundRooms = await prisma.room.findMany({
+        where: {
+            id: { in: connectedRoomIds },
+            hotelId,
+        },
+        select: { id: true }
+    });
+    const foundIds = foundRooms.map(r => r.id);
+    const notFound = connectedRoomIds.filter(id => !foundIds.includes(id));
+    if (notFound.length > 0) {
+        throw new AppError(`Connected room(s) not found: ${notFound.join(", ")}`, 400);
+    }
+}
 
         const updateData: any = {
             roomNumber,
@@ -153,10 +187,20 @@ export default class RoomService {
                     : []
             };
         }
+        if (connectedRoomIds !== undefined) {
+            updateData.connectedRooms = {
+            set: connectedRoomIds && connectedRoomIds.length > 0
+                ? connectedRoomIds.map(id => ({ id }))
+                : []
+        };
+    }
 
         const updatedRoom = await prisma.room.update({
             where: { id },
             data: updateData,
+            include: {
+            connectedRooms: true,
+        },
         });
 
         return updatedRoom;
