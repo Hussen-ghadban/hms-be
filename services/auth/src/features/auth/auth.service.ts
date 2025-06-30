@@ -34,8 +34,15 @@ class AuthService {
     const token = jwt.sign(payload, process.env.JWT_SECRET!, {
       expiresIn: '1h',
     });
+        const permissions = user.role.permissions.map((p) => ({
+      subject: p.subject,
+      action: p.action,
+    }));
 
-    return token;
+        return {
+      token,
+        permissions,
+    };
   }
 
   async addUser({
