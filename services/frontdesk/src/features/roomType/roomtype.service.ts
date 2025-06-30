@@ -1,63 +1,93 @@
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
+import { CreateRoomTypeParams, UpdateRoomTypeParams } from "./roomType.type";
+
+
 
 export default class RoomTypeService {
-    constructor() { }
+  async createRoomType({ hotelId, name, description, baseRate }: CreateRoomTypeParams) {
+    // Check duplicate
+    const existing = await prisma.roomType.findFirst({
+      where: {
+        hotelId,
+        name,
+      },
+    });
 
-    async create( hotelId: string, name: string, description: string, baseRate: number) {
-        try {
-            // Validate input
-            if ( !hotelId || !name || !description || baseRate === undefined) {
-                throw new AppError("Missing required fields", 400);
-            }
+    if (existing) {
+      throw new AppError("RoomType with this name already exists", 409);
+    }
 
-            // Create room type in the database
-            const roomType = await prisma.roomType.create({
-                data: {
-                    hotelId,
-                    name,
-                    description,
-                    baseRate
-                }
-            });
+    const roomType = await prisma.roomType.create({
+      data: {
+        hotelId,
+        name,
+        description,
+        baseRate: baseRate ?? "0",
+      },
+    });
 
-            return roomType;
-        } catch (err) {
-      console.error("Failed to create room type:", err);
-      if (err instanceof AppError) throw err;
-      throw new AppError("Failed to create room type", 500);
+    return roomType;
+  }
+
+  async getRoomTypes(hotelId: string) {
+    return prisma.roomType.findMany({
+      where: { hotelId },
+      orderBy: { createdAt: "desc" },
+    });
+  }
+
+  async getRoomType(id: string, hotelId: string) {
+    const roomType = await prisma.roomType.findFirst({
+      where: { id, hotelId },
+    });
+
+    if (!roomType) {
+      throw new AppError("RoomType not found", 404);
     }
+
+    return roomType;
+  }
+
+  async updateRoomType({ id, hotelId, name, description, baseRate }: UpdateRoomTypeParams) {
+    const existing = await prisma.roomType.findFirst({
+      where: { id, hotelId },
+    });
+
+    if (!existing) {
+      throw new AppError("RoomType not found", 404);
     }
-    async getAll( hotelId: string) {
-        try {
-            const roomTypes = await prisma.roomType.findMany({
-                where: {
-                    hotelId: hotelId
-                }
-            });
-            return roomTypes;
-        } catch (err) {
-      console.error("Failed to create room type:", err);
-      if (err instanceof AppError) throw err;
-      throw new AppError("Failed to create room type", 500);
+
+    if (name && name !== existing.name) {
+      const duplicate = await prisma.roomType.findFirst({
+        where: { hotelId, name },
+      });
+      if (duplicate) {
+        throw new AppError("RoomType with this name already exists", 409);
+      }
     }
+
+    const updated = await prisma.roomType.update({
+      where: { id },
+      data: { name, description, baseRate },
+    });
+
+    return updated;
+  }
+
+  async deleteRoomType(id: string, hotelId: string) {
+    const existing = await prisma.roomType.findFirst({
+      where: { id, hotelId },
+    });
+
+    if (!existing) {
+      throw new AppError("RoomType not found", 404);
     }
-    async getById( hotelId: string, roomTypeId: string) {
-        try {
-            const roomType = await prisma.roomType.findUnique({
-                where: {
-                    id: roomTypeId,
-                    hotelId: hotelId
-                }
-            });
-            if (!roomType) {
-                throw new AppError("Room type not found", 404);
-            }
-            return roomType;
-        } catch (err) {
-      console.error("Failed to create room type:", err);
-      if (err instanceof AppError) throw err;
-      throw new AppError("Failed to create room type", 500);
-    }
-    }
+
+    await prisma.roomType.delete({
+      where: { id },
+    });
+
+    return { message: "RoomType deleted successfully" };
+  }
 }

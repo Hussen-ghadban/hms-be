@@ -28,22 +28,24 @@ model RoomType {
 }
 
 model Room {
-  id              String        @id @default(cuid())
-  roomNumber      String
-  status          RoomStatus    @default(AVAILABLE)
-  floor           Int
-  maxOccupancy    Int
-  adultOccupancy  Int
-  childOccupancy  Int
-  description     String?
-  roomTypeId      String
-  connectedRooms  Room[]        @relation("RoomConnections")
-  connectingRooms Room[]        @relation("RoomConnections")
-  Amenities       Amenity[]     @relation("RoomAmenities")
-  photos          String[]      @default([])
-  roomType        RoomType      @relation(fields: [roomTypeId], references: [id])
-  hotelId         String
-  reservations    Reservation[] @relation("ReservationRooms")
+  id                String             @id @default(cuid())
+  roomNumber        String
+  status            RoomStatus         @default(AVAILABLE)
+  floor             Int
+  maxOccupancy      Int
+  adultOccupancy    Int
+  childOccupancy    Int
+  description       String?
+  roomTypeId        String
+  connectedRooms    Room[]             @relation("RoomConnections")
+  connectingRooms   Room[]             @relation("RoomConnections")
+  Amenities         Amenity[]          @relation("RoomAmenities")
+  photos            String[]           @default([])
+  roomType          RoomType           @relation(fields: [roomTypeId], references: [id])
+  hotelId           String
+  reservations      Reservation[]      @relation("ReservationRooms")
+  houseKeepingTasks HouseKeepingTask[]
+  // maintenanceTask   MaintenanceTask[]
 
   @@unique([hotelId, roomNumber])
 }
@@ -136,6 +138,28 @@ model Reservation {
   ratePlan   RatePlan          @relation(fields: [ratePlanId], references: [id])
   folio      Folio?
   price      Decimal           @db.Decimal(10, 2)
+}
+
+model HouseKeepingTask {
+  id     String             @id @default(cuid())
+  roomId String
+  userId String
+  room   Room               @relation(fields: [roomId], references: [id])
+  status RoomCleaningStatus
+}
+
+// model MaintenanceTask {
+//   id          String @id @default(cuid())
+//   roomId      String
+//   description String
+//   room        Room   @relation(fields: [roomId], references: [id])
+// }
+
+enum RoomCleaningStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
 }
 
 enum FolioType {

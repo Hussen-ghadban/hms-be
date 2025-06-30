@@ -81,6 +81,16 @@ class AuthService {
 
     return user;
   }
+  async getUser(id:string,hotelId:string){
+      const user=await prisma.user.findFirst({
+        where:{id}
+      })
+      if(!user){
+        throw new AppError("user not found",404)
+      }
+      return user;
+    
+  }
   async authenticate(token: string, requiredPermissions: string[] = []) {
     try {
       if (!token) {
