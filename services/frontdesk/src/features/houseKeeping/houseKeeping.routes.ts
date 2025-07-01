@@ -3,6 +3,7 @@ import { requirePermissions } from "../../middleware/requirePermissions";
 import { validateRequest } from "../../middleware/validation";
 import { createHouseKeepingTaskSchema, houseKeepingTaskParamsSchema, updateHouseKeepingTaskSchema } from "./houseKeeping.validation";
 import { createHouseKeepingTask, deleteHouseKeepingTasks, getHouseKeepingTask, getHouseKeepingTasks, updateHouseKeepingTasks } from "./houseKeeping.controller";
+import { actionLogger } from "../../middleware/logger";
 
 const router=Router();
 
@@ -10,18 +11,21 @@ const router=Router();
 router.post('/add',
     requirePermissions(["HouseKeeping.create"]),
     validateRequest({ body: createHouseKeepingTaskSchema }),
-    createHouseKeepingTask
+    createHouseKeepingTask,
+    actionLogger("add HouseKeeping")
 );
 
 router.get('/get/:id',
     requirePermissions(["HouseKeeping.read"]),
     validateRequest({ params: houseKeepingTaskParamsSchema }),
-    getHouseKeepingTask
+    getHouseKeepingTask,
+    actionLogger("get HouseKeeping")
 );
 
 router.get('/get',
     requirePermissions(["HouseKeeping.read"]),
-    getHouseKeepingTasks
+    getHouseKeepingTasks,
+    actionLogger("get HouseKeepings")
 );
 
 router.put('/update/:id',
@@ -30,12 +34,14 @@ router.put('/update/:id',
         params: houseKeepingTaskParamsSchema,
         body: updateHouseKeepingTaskSchema
     }),
-    updateHouseKeepingTasks
+    updateHouseKeepingTasks,
+    actionLogger("update HouseKeeping")
 );
 
 router.delete('/delete/:id',
     requirePermissions(["HouseKeeping.delete"]),
     validateRequest({ params: houseKeepingTaskParamsSchema }),
-    deleteHouseKeepingTasks
+    deleteHouseKeepingTasks,
+    actionLogger("delete HouseKeeping")
 );
 export default router;

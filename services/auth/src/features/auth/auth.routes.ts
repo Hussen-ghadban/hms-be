@@ -2,11 +2,12 @@
 import { Router } from 'express';
 import { authenticate, login, addUser, getUser } from './auth.controller';
 import { requirePermissions } from "../../middleware/requirePermissions";
+import { actionLogger } from '../../middleware/logger';
 
 const router = Router();
 
-router.post('/login', login);
-router.post('/add-user',requirePermissions(["User.create"]), addUser);
-router.get('/get-user/:id',requirePermissions(["User.read"]), getUser)
+router.post('/login', login,actionLogger("login"));
+router.post('/add-user',requirePermissions(["User.create"]), addUser,actionLogger("add user"));
+router.get('/get-user/:id',requirePermissions(["User.read"]), getUser, actionLogger("get user"))
 router.post('/services/authenticate',authenticate);
 export default router;

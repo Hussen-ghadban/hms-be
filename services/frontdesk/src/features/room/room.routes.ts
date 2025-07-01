@@ -3,6 +3,7 @@ import { validateRequest } from "../../middleware/validation";
 import { addRoom, getRooms, getRoom, updateRoom, deleteRoom, getRoomsByStatus } from "./room.controller";
 import { createRoomSchema, updateRoomSchema, roomParamsSchema } from "./room.validation";
 import { requirePermissions } from '../../middleware/requirePermissions';
+import { actionLogger } from '../../middleware/logger';
 
 const router = express.Router();
 
@@ -10,21 +11,24 @@ router.post('/add',
     
     requirePermissions(["Room.create"]),
     validateRequest({ body: createRoomSchema }),
-    addRoom
+    addRoom,
+    actionLogger("add room")
 );
 
 router.get('/get/:id',
     
     requirePermissions(["Room.read"]),
     validateRequest({ params: roomParamsSchema }),
-    getRoom
+    getRoom,
+    actionLogger("get room")
 );
 
 
 router.get('/get',
     
     requirePermissions(["Room.read"]),
-    getRooms
+    getRooms,
+    actionLogger("get rooms")
 );
 
 
@@ -35,14 +39,16 @@ router.put('/update/:id',
         params: roomParamsSchema,
         body: updateRoomSchema
     }),
-    updateRoom
+    updateRoom,
+    actionLogger("update room")
 );
 
 router.delete('/delete/:id',
     
     requirePermissions(["Room.delete"]),
     validateRequest({ params: roomParamsSchema }),
-    deleteRoom
+    deleteRoom,
+    actionLogger("delete room")
 );
 
 // Additional route for getting rooms by status

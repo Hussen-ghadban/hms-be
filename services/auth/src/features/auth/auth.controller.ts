@@ -47,7 +47,7 @@ try{
 }
 
 }
-export const authenticate = async (req: Request, res: Response) => {
+export const authenticate = async (req: Request, res: Response,next:NextFunction) => {
     try {
         const { token,permissions } = req.body;
         const result = await authService.authenticate(token,permissions);
@@ -55,10 +55,7 @@ export const authenticate = async (req: Request, res: Response) => {
             res.status(401).json({ error: 'Unauthorized' });
         }
         res.status(200).json(result);
-    } catch (e) {
-        if (e instanceof Error) {
-            throw new Error(e.message);
-        }
-        throw new Error("An unexpected error occurred");
+    } catch (error) {
+        next(error)
     }
 }

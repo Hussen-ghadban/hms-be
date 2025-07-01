@@ -13,6 +13,7 @@ import {
   updateMaintenance,
   deleteMaintenance
 } from "./maintenance.controller";
+import { actionLogger } from "../../middleware/logger";
 
 const router = express.Router();
 
@@ -20,30 +21,35 @@ router.post(
   "/add",
   requirePermissions(["Maintenance.create"]),
   validateRequest({ body: createMaintenanceSchema }),
-  addMaintenance
+  addMaintenance,
+  actionLogger("add maintenance")
 );
 
 router.get(
   "/get/:id",
   requirePermissions(["Maintenance.read"]),
   validateRequest({ params: maintenanceParamsSchema }),
-  getMaintenance
+  getMaintenance,
+  actionLogger("get maintenance")
 );
 
-router.get("/get", requirePermissions(["Maintenance.read"]), getMaintenances);
+  
+router.get("/get", requirePermissions(["Maintenance.read"]), getMaintenances,actionLogger("get maintenances"));
 
 router.put(
   "/update/:id",
   requirePermissions(["Maintenance.update"]),
   validateRequest({ params: maintenanceParamsSchema, body: updateMaintenanceSchema }),
-  updateMaintenance
+  updateMaintenance,
+  actionLogger("update maintenance")
 );
 
 router.delete(
   "/delete/:id",
   requirePermissions(["Maintenance.delete"]),
   validateRequest({ params: maintenanceParamsSchema }),
-  deleteMaintenance
+  deleteMaintenance,
+  actionLogger("delete maintenance")
 );
 
 export default router;

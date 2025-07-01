@@ -106,17 +106,18 @@ class AuthService {
       return user;
     
   }
+
   async authenticate(token: string, requiredPermissions: string[] = []) {
     try {
       if (!token) {
-        throw new Error('No token provided');
+        throw new AppError('No token provided',401);
       }
 
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { sub: string; hid: string };
 
       if (!decoded || !decoded.sub || !decoded.hid) {
-        throw new Error("Invalid token structure");
+        throw new AppError("Invalid token structure",401);
       }
 
       const userId = decoded.sub;
@@ -134,11 +135,11 @@ class AuthService {
         },
       });
       if (!user) {
-        throw new Error("User not found");
+        throw new AppError("User not found",404);
       }
 
       if (!user.role) {
-        throw new Error("User has no role assigned");
+        throw new AppError("User has no role assigned",403);
       }
 
       // Map permissions from DB to Permission[]
@@ -157,7 +158,7 @@ class AuthService {
       for (const perm of requiredPermissions) {
         const [subject, action] = perm.split('.');
         if (!subject || !action) {
-          throw new Error(`Invalid permission format: ${perm}. Expected format: subject.action`);
+          throw new AppError(`Invalid permission format: ${perm}. Expected format: subject.action`);
         }
 
         if (!ability.can(action as AppActions, subject as AppSubjects)) {
@@ -182,19 +183,19 @@ class AuthService {
     } catch (e) {
       // Re-throw JWT errors with more specific messages
       if (e instanceof jwt.JsonWebTokenError) {
-        throw new Error('Invalid token');
+        throw new AppError('Invalid token',401);
       }
       if (e instanceof jwt.TokenExpiredError) {
-        throw new Error('Token expired');
+        throw new AppError('Token expired',401);
       }
       if (e instanceof jwt.NotBeforeError) {
-        throw new Error('Token not active');
+        throw new AppError('Token not active',401);
       }
 
-      if (e instanceof Error) {
+      if (e instanceof AppError) {
         throw e; // Re-throw our custom errors
       }
-      throw new Error("An unexpected error occurred during authentication");
+      throw new AppError("An unexpected error occurred during authentication",500);
     }
   }
 }
