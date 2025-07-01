@@ -2,7 +2,7 @@ import { Router } from "express";
 import { validateRequest } from "../../middleware/validation";
 import { createRoomTypeSchema, updateRoomTypeSchema, roomTypeParamsSchema } from "./roomType.validation";
 import { requirePermissions } from "../../middleware/requirePermissions";
-import { createRoomType, deleteRoomType, getRoomType, getRoomTypes, updateRoomType } from "./roomType.controller";
+import { createRoomType, deleteRoomType, getRoomType, getRoomTypes, updateRoomType } from "./roomtype.controller";
 
 const router = Router();
 

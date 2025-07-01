@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { AppError } from "../../utils/AppError";
-import RoomTypeService from "./roomType.service";
+import RoomTypeService from "./roomtype.service";
 
 const roomTypeService = new RoomTypeService();
 

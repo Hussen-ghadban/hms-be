@@ -2,7 +2,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
-import roomtypeRoutes from './features/roomType/roomType.routes';
+import roomtypeRoutes from './features/roomType/roomtype.routes';
 import roomRoutes from './features/room/room.routes'
 import ratePlanRouter from './features/ratePlan/ratePlan.routes';
 import exchangeRouter from './features/exchange/exchange.routes';
