@@ -24,6 +24,7 @@ export type AppSubjects =
   | "POSOutlet"
   | "RatePlan"
   | "HouseKeeping"
+  | "Maintenance"
   | "all";
 
 export type AppActions = "create" | "read" | "update" | "delete" | "manage";
@@ -90,6 +91,7 @@ function isValidSubject(subject: string): subject is AppSubjects {
     "POSOutlet",
     "RatePlan",
     "HouseKeeping",
+    "Maintenance",
     "all"
   ].includes(subject);
 }
