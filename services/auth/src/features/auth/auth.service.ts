@@ -5,7 +5,7 @@ import { AppActions, AppSubjects, defineAbilitiesForUser } from '../../utils/abi
 import { LogInput, Permission } from './auth.types';
 import { loggerService } from '../logger/logger.service';
 import { BusinessContext } from '../logger/logger.types';
-import { Permission ,addUserParams} from './auth.types';
+import { addUserParams } from './auth.types';
 import { AppError } from '../../utils/AppError';
 
 class AuthService {
