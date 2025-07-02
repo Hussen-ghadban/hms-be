@@ -31,3 +31,52 @@ model Guest {
 
   @@unique([email])
 }
+
+
+model GroupProfile {
+  id                 String   @id @default(cuid())
+  name               String
+  legalName          String?
+  
+  // Contact Information
+  email              String?
+  phone              String?
+  primaryContact     Json?
+  
+  // Address Information
+  address            Json?
+  billingAddress     Json?
+  
+  // Business Classification
+  businessType       BusinessType
+  
+  // Preferences & Requirements
+  specialRequirements String?
+  
+  // Status & Management
+  status             GroupStatus @default(ACTIVE)
+  isVip              Boolean     @default(false)
+  notes              String?
+  
+  // Multi-tenant Support
+  hotelId            String
+  
+  // Timestamps
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt 
+}
+
+enum BusinessType {
+  CORPORATE
+  TRAVEL_AGENCY
+  EVENT_PLANNER
+  GOVERNMENT
+  OTHER
+}
+
+
+enum GroupStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}

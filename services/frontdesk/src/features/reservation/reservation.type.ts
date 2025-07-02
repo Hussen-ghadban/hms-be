@@ -19,3 +19,11 @@ export interface CheckInParams {
     hotelId: string;
     deposit: number;
 }
+export interface createGroupBookingParams{
+  groupProfileId: string;
+  hotelId: string;
+  guestsAndRooms:Record<string,string[]>
+  checkIn: Date;
+  checkOut: Date;
+  ratePlanId: string;
+} 
