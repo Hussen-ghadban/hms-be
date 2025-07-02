@@ -18,6 +18,44 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  * 
  */
 export type Guest = $Result.DefaultSelection<Prisma.$GuestPayload>
+/**
+ * Model GroupProfile
+ * 
+ */
+export type GroupProfile = $Result.DefaultSelection<Prisma.$GroupProfilePayload>
+
+/**
+ * Enums
+ */
+export namespace $Enums {
+  export const BusinessType: {
+  CORPORATE: 'CORPORATE',
+  TRAVEL_AGENCY: 'TRAVEL_AGENCY',
+  EVENT_PLANNER: 'EVENT_PLANNER',
+  GOVERNMENT: 'GOVERNMENT',
+  OTHER: 'OTHER'
+};
+
+export type BusinessType = (typeof BusinessType)[keyof typeof BusinessType]
+
+
+export const GroupStatus: {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  SUSPENDED: 'SUSPENDED'
+};
+
+export type GroupStatus = (typeof GroupStatus)[keyof typeof GroupStatus]
+
+}
+
+export type BusinessType = $Enums.BusinessType
+
+export const BusinessType: typeof $Enums.BusinessType
+
+export type GroupStatus = $Enums.GroupStatus
+
+export const GroupStatus: typeof $Enums.GroupStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -153,6 +191,16 @@ export class PrismaClient<
     * ```
     */
   get guest(): Prisma.GuestDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.groupProfile`: Exposes CRUD operations for the **GroupProfile** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GroupProfiles
+    * const groupProfiles = await prisma.groupProfile.findMany()
+    * ```
+    */
+  get groupProfile(): Prisma.GroupProfileDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -593,7 +641,8 @@ export namespace Prisma {
 
 
   export const ModelName: {
-    Guest: 'Guest'
+    Guest: 'Guest',
+    GroupProfile: 'GroupProfile'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -612,7 +661,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "guest"
+      modelProps: "guest" | "groupProfile"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -687,6 +736,80 @@ export namespace Prisma {
           count: {
             args: Prisma.GuestCountArgs<ExtArgs>
             result: $Utils.Optional<GuestCountAggregateOutputType> | number
+          }
+        }
+      }
+      GroupProfile: {
+        payload: Prisma.$GroupProfilePayload<ExtArgs>
+        fields: Prisma.GroupProfileFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GroupProfileFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupProfilePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GroupProfileFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupProfilePayload>
+          }
+          findFirst: {
+            args: Prisma.GroupProfileFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupProfilePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GroupProfileFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupProfilePayload>
+          }
+          findMany: {
+            args: Prisma.GroupProfileFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupProfilePayload>[]
+          }
+          create: {
+            args: Prisma.GroupProfileCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupProfilePayload>
+          }
+          createMany: {
+            args: Prisma.GroupProfileCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GroupProfileCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupProfilePayload>[]
+          }
+          delete: {
+            args: Prisma.GroupProfileDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupProfilePayload>
+          }
+          update: {
+            args: Prisma.GroupProfileUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupProfilePayload>
+          }
+          deleteMany: {
+            args: Prisma.GroupProfileDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GroupProfileUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GroupProfileUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupProfilePayload>[]
+          }
+          upsert: {
+            args: Prisma.GroupProfileUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupProfilePayload>
+          }
+          aggregate: {
+            args: Prisma.GroupProfileAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGroupProfile>
+          }
+          groupBy: {
+            args: Prisma.GroupProfileGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GroupProfileGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GroupProfileCountArgs<ExtArgs>
+            result: $Utils.Optional<GroupProfileCountAggregateOutputType> | number
           }
         }
       }
@@ -775,6 +898,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     guest?: GuestOmit
+    groupProfile?: GroupProfileOmit
   }
 
   /* Types for Logging */
@@ -1961,6 +2085,1132 @@ export namespace Prisma {
 
 
   /**
+   * Model GroupProfile
+   */
+
+  export type AggregateGroupProfile = {
+    _count: GroupProfileCountAggregateOutputType | null
+    _min: GroupProfileMinAggregateOutputType | null
+    _max: GroupProfileMaxAggregateOutputType | null
+  }
+
+  export type GroupProfileMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    legalName: string | null
+    email: string | null
+    phone: string | null
+    businessType: $Enums.BusinessType | null
+    specialRequirements: string | null
+    status: $Enums.GroupStatus | null
+    isVip: boolean | null
+    notes: string | null
+    hotelId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GroupProfileMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    legalName: string | null
+    email: string | null
+    phone: string | null
+    businessType: $Enums.BusinessType | null
+    specialRequirements: string | null
+    status: $Enums.GroupStatus | null
+    isVip: boolean | null
+    notes: string | null
+    hotelId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GroupProfileCountAggregateOutputType = {
+    id: number
+    name: number
+    legalName: number
+    email: number
+    phone: number
+    primaryContact: number
+    address: number
+    billingAddress: number
+    businessType: number
+    specialRequirements: number
+    status: number
+    isVip: number
+    notes: number
+    hotelId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type GroupProfileMinAggregateInputType = {
+    id?: true
+    name?: true
+    legalName?: true
+    email?: true
+    phone?: true
+    businessType?: true
+    specialRequirements?: true
+    status?: true
+    isVip?: true
+    notes?: true
+    hotelId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GroupProfileMaxAggregateInputType = {
+    id?: true
+    name?: true
+    legalName?: true
+    email?: true
+    phone?: true
+    businessType?: true
+    specialRequirements?: true
+    status?: true
+    isVip?: true
+    notes?: true
+    hotelId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GroupProfileCountAggregateInputType = {
+    id?: true
+    name?: true
+    legalName?: true
+    email?: true
+    phone?: true
+    primaryContact?: true
+    address?: true
+    billingAddress?: true
+    businessType?: true
+    specialRequirements?: true
+    status?: true
+    isVip?: true
+    notes?: true
+    hotelId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type GroupProfileAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GroupProfile to aggregate.
+     */
+    where?: GroupProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupProfiles to fetch.
+     */
+    orderBy?: GroupProfileOrderByWithRelationInput | GroupProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GroupProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GroupProfiles
+    **/
+    _count?: true | GroupProfileCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GroupProfileMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GroupProfileMaxAggregateInputType
+  }
+
+  export type GetGroupProfileAggregateType<T extends GroupProfileAggregateArgs> = {
+        [P in keyof T & keyof AggregateGroupProfile]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGroupProfile[P]>
+      : GetScalarType<T[P], AggregateGroupProfile[P]>
+  }
+
+
+
+
+  export type GroupProfileGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GroupProfileWhereInput
+    orderBy?: GroupProfileOrderByWithAggregationInput | GroupProfileOrderByWithAggregationInput[]
+    by: GroupProfileScalarFieldEnum[] | GroupProfileScalarFieldEnum
+    having?: GroupProfileScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GroupProfileCountAggregateInputType | true
+    _min?: GroupProfileMinAggregateInputType
+    _max?: GroupProfileMaxAggregateInputType
+  }
+
+  export type GroupProfileGroupByOutputType = {
+    id: string
+    name: string
+    legalName: string | null
+    email: string | null
+    phone: string | null
+    primaryContact: JsonValue | null
+    address: JsonValue | null
+    billingAddress: JsonValue | null
+    businessType: $Enums.BusinessType
+    specialRequirements: string | null
+    status: $Enums.GroupStatus
+    isVip: boolean
+    notes: string | null
+    hotelId: string
+    createdAt: Date
+    updatedAt: Date
+    _count: GroupProfileCountAggregateOutputType | null
+    _min: GroupProfileMinAggregateOutputType | null
+    _max: GroupProfileMaxAggregateOutputType | null
+  }
+
+  type GetGroupProfileGroupByPayload<T extends GroupProfileGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GroupProfileGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GroupProfileGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GroupProfileGroupByOutputType[P]>
+            : GetScalarType<T[P], GroupProfileGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GroupProfileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    legalName?: boolean
+    email?: boolean
+    phone?: boolean
+    primaryContact?: boolean
+    address?: boolean
+    billingAddress?: boolean
+    businessType?: boolean
+    specialRequirements?: boolean
+    status?: boolean
+    isVip?: boolean
+    notes?: boolean
+    hotelId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["groupProfile"]>
+
+  export type GroupProfileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    legalName?: boolean
+    email?: boolean
+    phone?: boolean
+    primaryContact?: boolean
+    address?: boolean
+    billingAddress?: boolean
+    businessType?: boolean
+    specialRequirements?: boolean
+    status?: boolean
+    isVip?: boolean
+    notes?: boolean
+    hotelId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["groupProfile"]>
+
+  export type GroupProfileSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    legalName?: boolean
+    email?: boolean
+    phone?: boolean
+    primaryContact?: boolean
+    address?: boolean
+    billingAddress?: boolean
+    businessType?: boolean
+    specialRequirements?: boolean
+    status?: boolean
+    isVip?: boolean
+    notes?: boolean
+    hotelId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["groupProfile"]>
+
+  export type GroupProfileSelectScalar = {
+    id?: boolean
+    name?: boolean
+    legalName?: boolean
+    email?: boolean
+    phone?: boolean
+    primaryContact?: boolean
+    address?: boolean
+    billingAddress?: boolean
+    businessType?: boolean
+    specialRequirements?: boolean
+    status?: boolean
+    isVip?: boolean
+    notes?: boolean
+    hotelId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type GroupProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "legalName" | "email" | "phone" | "primaryContact" | "address" | "billingAddress" | "businessType" | "specialRequirements" | "status" | "isVip" | "notes" | "hotelId" | "createdAt" | "updatedAt", ExtArgs["result"]["groupProfile"]>
+
+  export type $GroupProfilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GroupProfile"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      legalName: string | null
+      email: string | null
+      phone: string | null
+      primaryContact: Prisma.JsonValue | null
+      address: Prisma.JsonValue | null
+      billingAddress: Prisma.JsonValue | null
+      businessType: $Enums.BusinessType
+      specialRequirements: string | null
+      status: $Enums.GroupStatus
+      isVip: boolean
+      notes: string | null
+      hotelId: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["groupProfile"]>
+    composites: {}
+  }
+
+  type GroupProfileGetPayload<S extends boolean | null | undefined | GroupProfileDefaultArgs> = $Result.GetResult<Prisma.$GroupProfilePayload, S>
+
+  type GroupProfileCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GroupProfileFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GroupProfileCountAggregateInputType | true
+    }
+
+  export interface GroupProfileDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GroupProfile'], meta: { name: 'GroupProfile' } }
+    /**
+     * Find zero or one GroupProfile that matches the filter.
+     * @param {GroupProfileFindUniqueArgs} args - Arguments to find a GroupProfile
+     * @example
+     * // Get one GroupProfile
+     * const groupProfile = await prisma.groupProfile.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GroupProfileFindUniqueArgs>(args: SelectSubset<T, GroupProfileFindUniqueArgs<ExtArgs>>): Prisma__GroupProfileClient<$Result.GetResult<Prisma.$GroupProfilePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GroupProfile that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GroupProfileFindUniqueOrThrowArgs} args - Arguments to find a GroupProfile
+     * @example
+     * // Get one GroupProfile
+     * const groupProfile = await prisma.groupProfile.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GroupProfileFindUniqueOrThrowArgs>(args: SelectSubset<T, GroupProfileFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GroupProfileClient<$Result.GetResult<Prisma.$GroupProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GroupProfile that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupProfileFindFirstArgs} args - Arguments to find a GroupProfile
+     * @example
+     * // Get one GroupProfile
+     * const groupProfile = await prisma.groupProfile.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GroupProfileFindFirstArgs>(args?: SelectSubset<T, GroupProfileFindFirstArgs<ExtArgs>>): Prisma__GroupProfileClient<$Result.GetResult<Prisma.$GroupProfilePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GroupProfile that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupProfileFindFirstOrThrowArgs} args - Arguments to find a GroupProfile
+     * @example
+     * // Get one GroupProfile
+     * const groupProfile = await prisma.groupProfile.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GroupProfileFindFirstOrThrowArgs>(args?: SelectSubset<T, GroupProfileFindFirstOrThrowArgs<ExtArgs>>): Prisma__GroupProfileClient<$Result.GetResult<Prisma.$GroupProfilePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GroupProfiles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupProfileFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GroupProfiles
+     * const groupProfiles = await prisma.groupProfile.findMany()
+     * 
+     * // Get first 10 GroupProfiles
+     * const groupProfiles = await prisma.groupProfile.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const groupProfileWithIdOnly = await prisma.groupProfile.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GroupProfileFindManyArgs>(args?: SelectSubset<T, GroupProfileFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GroupProfile.
+     * @param {GroupProfileCreateArgs} args - Arguments to create a GroupProfile.
+     * @example
+     * // Create one GroupProfile
+     * const GroupProfile = await prisma.groupProfile.create({
+     *   data: {
+     *     // ... data to create a GroupProfile
+     *   }
+     * })
+     * 
+     */
+    create<T extends GroupProfileCreateArgs>(args: SelectSubset<T, GroupProfileCreateArgs<ExtArgs>>): Prisma__GroupProfileClient<$Result.GetResult<Prisma.$GroupProfilePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GroupProfiles.
+     * @param {GroupProfileCreateManyArgs} args - Arguments to create many GroupProfiles.
+     * @example
+     * // Create many GroupProfiles
+     * const groupProfile = await prisma.groupProfile.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GroupProfileCreateManyArgs>(args?: SelectSubset<T, GroupProfileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GroupProfiles and returns the data saved in the database.
+     * @param {GroupProfileCreateManyAndReturnArgs} args - Arguments to create many GroupProfiles.
+     * @example
+     * // Create many GroupProfiles
+     * const groupProfile = await prisma.groupProfile.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GroupProfiles and only return the `id`
+     * const groupProfileWithIdOnly = await prisma.groupProfile.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GroupProfileCreateManyAndReturnArgs>(args?: SelectSubset<T, GroupProfileCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupProfilePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GroupProfile.
+     * @param {GroupProfileDeleteArgs} args - Arguments to delete one GroupProfile.
+     * @example
+     * // Delete one GroupProfile
+     * const GroupProfile = await prisma.groupProfile.delete({
+     *   where: {
+     *     // ... filter to delete one GroupProfile
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GroupProfileDeleteArgs>(args: SelectSubset<T, GroupProfileDeleteArgs<ExtArgs>>): Prisma__GroupProfileClient<$Result.GetResult<Prisma.$GroupProfilePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GroupProfile.
+     * @param {GroupProfileUpdateArgs} args - Arguments to update one GroupProfile.
+     * @example
+     * // Update one GroupProfile
+     * const groupProfile = await prisma.groupProfile.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GroupProfileUpdateArgs>(args: SelectSubset<T, GroupProfileUpdateArgs<ExtArgs>>): Prisma__GroupProfileClient<$Result.GetResult<Prisma.$GroupProfilePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GroupProfiles.
+     * @param {GroupProfileDeleteManyArgs} args - Arguments to filter GroupProfiles to delete.
+     * @example
+     * // Delete a few GroupProfiles
+     * const { count } = await prisma.groupProfile.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GroupProfileDeleteManyArgs>(args?: SelectSubset<T, GroupProfileDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GroupProfiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupProfileUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GroupProfiles
+     * const groupProfile = await prisma.groupProfile.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GroupProfileUpdateManyArgs>(args: SelectSubset<T, GroupProfileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GroupProfiles and returns the data updated in the database.
+     * @param {GroupProfileUpdateManyAndReturnArgs} args - Arguments to update many GroupProfiles.
+     * @example
+     * // Update many GroupProfiles
+     * const groupProfile = await prisma.groupProfile.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GroupProfiles and only return the `id`
+     * const groupProfileWithIdOnly = await prisma.groupProfile.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GroupProfileUpdateManyAndReturnArgs>(args: SelectSubset<T, GroupProfileUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupProfilePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GroupProfile.
+     * @param {GroupProfileUpsertArgs} args - Arguments to update or create a GroupProfile.
+     * @example
+     * // Update or create a GroupProfile
+     * const groupProfile = await prisma.groupProfile.upsert({
+     *   create: {
+     *     // ... data to create a GroupProfile
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GroupProfile we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GroupProfileUpsertArgs>(args: SelectSubset<T, GroupProfileUpsertArgs<ExtArgs>>): Prisma__GroupProfileClient<$Result.GetResult<Prisma.$GroupProfilePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GroupProfiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupProfileCountArgs} args - Arguments to filter GroupProfiles to count.
+     * @example
+     * // Count the number of GroupProfiles
+     * const count = await prisma.groupProfile.count({
+     *   where: {
+     *     // ... the filter for the GroupProfiles we want to count
+     *   }
+     * })
+    **/
+    count<T extends GroupProfileCountArgs>(
+      args?: Subset<T, GroupProfileCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GroupProfileCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GroupProfile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupProfileAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GroupProfileAggregateArgs>(args: Subset<T, GroupProfileAggregateArgs>): Prisma.PrismaPromise<GetGroupProfileAggregateType<T>>
+
+    /**
+     * Group by GroupProfile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupProfileGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GroupProfileGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GroupProfileGroupByArgs['orderBy'] }
+        : { orderBy?: GroupProfileGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GroupProfileGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGroupProfileGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GroupProfile model
+   */
+  readonly fields: GroupProfileFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GroupProfile.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GroupProfileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GroupProfile model
+   */
+  interface GroupProfileFieldRefs {
+    readonly id: FieldRef<"GroupProfile", 'String'>
+    readonly name: FieldRef<"GroupProfile", 'String'>
+    readonly legalName: FieldRef<"GroupProfile", 'String'>
+    readonly email: FieldRef<"GroupProfile", 'String'>
+    readonly phone: FieldRef<"GroupProfile", 'String'>
+    readonly primaryContact: FieldRef<"GroupProfile", 'Json'>
+    readonly address: FieldRef<"GroupProfile", 'Json'>
+    readonly billingAddress: FieldRef<"GroupProfile", 'Json'>
+    readonly businessType: FieldRef<"GroupProfile", 'BusinessType'>
+    readonly specialRequirements: FieldRef<"GroupProfile", 'String'>
+    readonly status: FieldRef<"GroupProfile", 'GroupStatus'>
+    readonly isVip: FieldRef<"GroupProfile", 'Boolean'>
+    readonly notes: FieldRef<"GroupProfile", 'String'>
+    readonly hotelId: FieldRef<"GroupProfile", 'String'>
+    readonly createdAt: FieldRef<"GroupProfile", 'DateTime'>
+    readonly updatedAt: FieldRef<"GroupProfile", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GroupProfile findUnique
+   */
+  export type GroupProfileFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupProfile
+     */
+    select?: GroupProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupProfile
+     */
+    omit?: GroupProfileOmit<ExtArgs> | null
+    /**
+     * Filter, which GroupProfile to fetch.
+     */
+    where: GroupProfileWhereUniqueInput
+  }
+
+  /**
+   * GroupProfile findUniqueOrThrow
+   */
+  export type GroupProfileFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupProfile
+     */
+    select?: GroupProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupProfile
+     */
+    omit?: GroupProfileOmit<ExtArgs> | null
+    /**
+     * Filter, which GroupProfile to fetch.
+     */
+    where: GroupProfileWhereUniqueInput
+  }
+
+  /**
+   * GroupProfile findFirst
+   */
+  export type GroupProfileFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupProfile
+     */
+    select?: GroupProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupProfile
+     */
+    omit?: GroupProfileOmit<ExtArgs> | null
+    /**
+     * Filter, which GroupProfile to fetch.
+     */
+    where?: GroupProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupProfiles to fetch.
+     */
+    orderBy?: GroupProfileOrderByWithRelationInput | GroupProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GroupProfiles.
+     */
+    cursor?: GroupProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GroupProfiles.
+     */
+    distinct?: GroupProfileScalarFieldEnum | GroupProfileScalarFieldEnum[]
+  }
+
+  /**
+   * GroupProfile findFirstOrThrow
+   */
+  export type GroupProfileFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupProfile
+     */
+    select?: GroupProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupProfile
+     */
+    omit?: GroupProfileOmit<ExtArgs> | null
+    /**
+     * Filter, which GroupProfile to fetch.
+     */
+    where?: GroupProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupProfiles to fetch.
+     */
+    orderBy?: GroupProfileOrderByWithRelationInput | GroupProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GroupProfiles.
+     */
+    cursor?: GroupProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GroupProfiles.
+     */
+    distinct?: GroupProfileScalarFieldEnum | GroupProfileScalarFieldEnum[]
+  }
+
+  /**
+   * GroupProfile findMany
+   */
+  export type GroupProfileFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupProfile
+     */
+    select?: GroupProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupProfile
+     */
+    omit?: GroupProfileOmit<ExtArgs> | null
+    /**
+     * Filter, which GroupProfiles to fetch.
+     */
+    where?: GroupProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupProfiles to fetch.
+     */
+    orderBy?: GroupProfileOrderByWithRelationInput | GroupProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GroupProfiles.
+     */
+    cursor?: GroupProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupProfiles.
+     */
+    skip?: number
+    distinct?: GroupProfileScalarFieldEnum | GroupProfileScalarFieldEnum[]
+  }
+
+  /**
+   * GroupProfile create
+   */
+  export type GroupProfileCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupProfile
+     */
+    select?: GroupProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupProfile
+     */
+    omit?: GroupProfileOmit<ExtArgs> | null
+    /**
+     * The data needed to create a GroupProfile.
+     */
+    data: XOR<GroupProfileCreateInput, GroupProfileUncheckedCreateInput>
+  }
+
+  /**
+   * GroupProfile createMany
+   */
+  export type GroupProfileCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GroupProfiles.
+     */
+    data: GroupProfileCreateManyInput | GroupProfileCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GroupProfile createManyAndReturn
+   */
+  export type GroupProfileCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupProfile
+     */
+    select?: GroupProfileSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupProfile
+     */
+    omit?: GroupProfileOmit<ExtArgs> | null
+    /**
+     * The data used to create many GroupProfiles.
+     */
+    data: GroupProfileCreateManyInput | GroupProfileCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GroupProfile update
+   */
+  export type GroupProfileUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupProfile
+     */
+    select?: GroupProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupProfile
+     */
+    omit?: GroupProfileOmit<ExtArgs> | null
+    /**
+     * The data needed to update a GroupProfile.
+     */
+    data: XOR<GroupProfileUpdateInput, GroupProfileUncheckedUpdateInput>
+    /**
+     * Choose, which GroupProfile to update.
+     */
+    where: GroupProfileWhereUniqueInput
+  }
+
+  /**
+   * GroupProfile updateMany
+   */
+  export type GroupProfileUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GroupProfiles.
+     */
+    data: XOR<GroupProfileUpdateManyMutationInput, GroupProfileUncheckedUpdateManyInput>
+    /**
+     * Filter which GroupProfiles to update
+     */
+    where?: GroupProfileWhereInput
+    /**
+     * Limit how many GroupProfiles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GroupProfile updateManyAndReturn
+   */
+  export type GroupProfileUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupProfile
+     */
+    select?: GroupProfileSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupProfile
+     */
+    omit?: GroupProfileOmit<ExtArgs> | null
+    /**
+     * The data used to update GroupProfiles.
+     */
+    data: XOR<GroupProfileUpdateManyMutationInput, GroupProfileUncheckedUpdateManyInput>
+    /**
+     * Filter which GroupProfiles to update
+     */
+    where?: GroupProfileWhereInput
+    /**
+     * Limit how many GroupProfiles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GroupProfile upsert
+   */
+  export type GroupProfileUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupProfile
+     */
+    select?: GroupProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupProfile
+     */
+    omit?: GroupProfileOmit<ExtArgs> | null
+    /**
+     * The filter to search for the GroupProfile to update in case it exists.
+     */
+    where: GroupProfileWhereUniqueInput
+    /**
+     * In case the GroupProfile found by the `where` argument doesn't exist, create a new GroupProfile with this data.
+     */
+    create: XOR<GroupProfileCreateInput, GroupProfileUncheckedCreateInput>
+    /**
+     * In case the GroupProfile was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GroupProfileUpdateInput, GroupProfileUncheckedUpdateInput>
+  }
+
+  /**
+   * GroupProfile delete
+   */
+  export type GroupProfileDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupProfile
+     */
+    select?: GroupProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupProfile
+     */
+    omit?: GroupProfileOmit<ExtArgs> | null
+    /**
+     * Filter which GroupProfile to delete.
+     */
+    where: GroupProfileWhereUniqueInput
+  }
+
+  /**
+   * GroupProfile deleteMany
+   */
+  export type GroupProfileDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GroupProfiles to delete
+     */
+    where?: GroupProfileWhereInput
+    /**
+     * Limit how many GroupProfiles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GroupProfile without action
+   */
+  export type GroupProfileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupProfile
+     */
+    select?: GroupProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupProfile
+     */
+    omit?: GroupProfileOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -1991,6 +3241,28 @@ export namespace Prisma {
   };
 
   export type GuestScalarFieldEnum = (typeof GuestScalarFieldEnum)[keyof typeof GuestScalarFieldEnum]
+
+
+  export const GroupProfileScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    legalName: 'legalName',
+    email: 'email',
+    phone: 'phone',
+    primaryContact: 'primaryContact',
+    address: 'address',
+    billingAddress: 'billingAddress',
+    businessType: 'businessType',
+    specialRequirements: 'specialRequirements',
+    status: 'status',
+    isVip: 'isVip',
+    notes: 'notes',
+    hotelId: 'hotelId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type GroupProfileScalarFieldEnum = (typeof GroupProfileScalarFieldEnum)[keyof typeof GroupProfileScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -2085,6 +3357,41 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'BusinessType'
+   */
+  export type EnumBusinessTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BusinessType'>
+    
+
+
+  /**
+   * Reference to a field of type 'BusinessType[]'
+   */
+  export type ListEnumBusinessTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BusinessType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'GroupStatus'
+   */
+  export type EnumGroupStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GroupStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'GroupStatus[]'
+   */
+  export type ListEnumGroupStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GroupStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -2197,6 +3504,113 @@ export namespace Prisma {
     hotelId?: StringWithAggregatesFilter<"Guest"> | string
   }
 
+  export type GroupProfileWhereInput = {
+    AND?: GroupProfileWhereInput | GroupProfileWhereInput[]
+    OR?: GroupProfileWhereInput[]
+    NOT?: GroupProfileWhereInput | GroupProfileWhereInput[]
+    id?: StringFilter<"GroupProfile"> | string
+    name?: StringFilter<"GroupProfile"> | string
+    legalName?: StringNullableFilter<"GroupProfile"> | string | null
+    email?: StringNullableFilter<"GroupProfile"> | string | null
+    phone?: StringNullableFilter<"GroupProfile"> | string | null
+    primaryContact?: JsonNullableFilter<"GroupProfile">
+    address?: JsonNullableFilter<"GroupProfile">
+    billingAddress?: JsonNullableFilter<"GroupProfile">
+    businessType?: EnumBusinessTypeFilter<"GroupProfile"> | $Enums.BusinessType
+    specialRequirements?: StringNullableFilter<"GroupProfile"> | string | null
+    status?: EnumGroupStatusFilter<"GroupProfile"> | $Enums.GroupStatus
+    isVip?: BoolFilter<"GroupProfile"> | boolean
+    notes?: StringNullableFilter<"GroupProfile"> | string | null
+    hotelId?: StringFilter<"GroupProfile"> | string
+    createdAt?: DateTimeFilter<"GroupProfile"> | Date | string
+    updatedAt?: DateTimeFilter<"GroupProfile"> | Date | string
+  }
+
+  export type GroupProfileOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    legalName?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    primaryContact?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    billingAddress?: SortOrderInput | SortOrder
+    businessType?: SortOrder
+    specialRequirements?: SortOrderInput | SortOrder
+    status?: SortOrder
+    isVip?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    hotelId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GroupProfileWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: GroupProfileWhereInput | GroupProfileWhereInput[]
+    OR?: GroupProfileWhereInput[]
+    NOT?: GroupProfileWhereInput | GroupProfileWhereInput[]
+    name?: StringFilter<"GroupProfile"> | string
+    legalName?: StringNullableFilter<"GroupProfile"> | string | null
+    email?: StringNullableFilter<"GroupProfile"> | string | null
+    phone?: StringNullableFilter<"GroupProfile"> | string | null
+    primaryContact?: JsonNullableFilter<"GroupProfile">
+    address?: JsonNullableFilter<"GroupProfile">
+    billingAddress?: JsonNullableFilter<"GroupProfile">
+    businessType?: EnumBusinessTypeFilter<"GroupProfile"> | $Enums.BusinessType
+    specialRequirements?: StringNullableFilter<"GroupProfile"> | string | null
+    status?: EnumGroupStatusFilter<"GroupProfile"> | $Enums.GroupStatus
+    isVip?: BoolFilter<"GroupProfile"> | boolean
+    notes?: StringNullableFilter<"GroupProfile"> | string | null
+    hotelId?: StringFilter<"GroupProfile"> | string
+    createdAt?: DateTimeFilter<"GroupProfile"> | Date | string
+    updatedAt?: DateTimeFilter<"GroupProfile"> | Date | string
+  }, "id">
+
+  export type GroupProfileOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    legalName?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    primaryContact?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    billingAddress?: SortOrderInput | SortOrder
+    businessType?: SortOrder
+    specialRequirements?: SortOrderInput | SortOrder
+    status?: SortOrder
+    isVip?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    hotelId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: GroupProfileCountOrderByAggregateInput
+    _max?: GroupProfileMaxOrderByAggregateInput
+    _min?: GroupProfileMinOrderByAggregateInput
+  }
+
+  export type GroupProfileScalarWhereWithAggregatesInput = {
+    AND?: GroupProfileScalarWhereWithAggregatesInput | GroupProfileScalarWhereWithAggregatesInput[]
+    OR?: GroupProfileScalarWhereWithAggregatesInput[]
+    NOT?: GroupProfileScalarWhereWithAggregatesInput | GroupProfileScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GroupProfile"> | string
+    name?: StringWithAggregatesFilter<"GroupProfile"> | string
+    legalName?: StringNullableWithAggregatesFilter<"GroupProfile"> | string | null
+    email?: StringNullableWithAggregatesFilter<"GroupProfile"> | string | null
+    phone?: StringNullableWithAggregatesFilter<"GroupProfile"> | string | null
+    primaryContact?: JsonNullableWithAggregatesFilter<"GroupProfile">
+    address?: JsonNullableWithAggregatesFilter<"GroupProfile">
+    billingAddress?: JsonNullableWithAggregatesFilter<"GroupProfile">
+    businessType?: EnumBusinessTypeWithAggregatesFilter<"GroupProfile"> | $Enums.BusinessType
+    specialRequirements?: StringNullableWithAggregatesFilter<"GroupProfile"> | string | null
+    status?: EnumGroupStatusWithAggregatesFilter<"GroupProfile"> | $Enums.GroupStatus
+    isVip?: BoolWithAggregatesFilter<"GroupProfile"> | boolean
+    notes?: StringNullableWithAggregatesFilter<"GroupProfile"> | string | null
+    hotelId?: StringWithAggregatesFilter<"GroupProfile"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"GroupProfile"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"GroupProfile"> | Date | string
+  }
+
   export type GuestCreateInput = {
     id?: string
     gid: string
@@ -2307,6 +3721,139 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hotelId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GroupProfileCreateInput = {
+    id?: string
+    name: string
+    legalName?: string | null
+    email?: string | null
+    phone?: string | null
+    primaryContact?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    billingAddress?: NullableJsonNullValueInput | InputJsonValue
+    businessType: $Enums.BusinessType
+    specialRequirements?: string | null
+    status?: $Enums.GroupStatus
+    isVip?: boolean
+    notes?: string | null
+    hotelId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GroupProfileUncheckedCreateInput = {
+    id?: string
+    name: string
+    legalName?: string | null
+    email?: string | null
+    phone?: string | null
+    primaryContact?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    billingAddress?: NullableJsonNullValueInput | InputJsonValue
+    businessType: $Enums.BusinessType
+    specialRequirements?: string | null
+    status?: $Enums.GroupStatus
+    isVip?: boolean
+    notes?: string | null
+    hotelId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GroupProfileUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    legalName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryContact?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    billingAddress?: NullableJsonNullValueInput | InputJsonValue
+    businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
+    specialRequirements?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumGroupStatusFieldUpdateOperationsInput | $Enums.GroupStatus
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    hotelId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupProfileUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    legalName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryContact?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    billingAddress?: NullableJsonNullValueInput | InputJsonValue
+    businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
+    specialRequirements?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumGroupStatusFieldUpdateOperationsInput | $Enums.GroupStatus
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    hotelId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupProfileCreateManyInput = {
+    id?: string
+    name: string
+    legalName?: string | null
+    email?: string | null
+    phone?: string | null
+    primaryContact?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    billingAddress?: NullableJsonNullValueInput | InputJsonValue
+    businessType: $Enums.BusinessType
+    specialRequirements?: string | null
+    status?: $Enums.GroupStatus
+    isVip?: boolean
+    notes?: string | null
+    hotelId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GroupProfileUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    legalName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryContact?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    billingAddress?: NullableJsonNullValueInput | InputJsonValue
+    businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
+    specialRequirements?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumGroupStatusFieldUpdateOperationsInput | $Enums.GroupStatus
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    hotelId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupProfileUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    legalName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryContact?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    billingAddress?: NullableJsonNullValueInput | InputJsonValue
+    businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
+    specialRequirements?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumGroupStatusFieldUpdateOperationsInput | $Enums.GroupStatus
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    hotelId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -2572,6 +4119,104 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type EnumBusinessTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.BusinessType | EnumBusinessTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.BusinessType[] | ListEnumBusinessTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BusinessType[] | ListEnumBusinessTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumBusinessTypeFilter<$PrismaModel> | $Enums.BusinessType
+  }
+
+  export type EnumGroupStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.GroupStatus | EnumGroupStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.GroupStatus[] | ListEnumGroupStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GroupStatus[] | ListEnumGroupStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumGroupStatusFilter<$PrismaModel> | $Enums.GroupStatus
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type GroupProfileCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    legalName?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    primaryContact?: SortOrder
+    address?: SortOrder
+    billingAddress?: SortOrder
+    businessType?: SortOrder
+    specialRequirements?: SortOrder
+    status?: SortOrder
+    isVip?: SortOrder
+    notes?: SortOrder
+    hotelId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GroupProfileMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    legalName?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    businessType?: SortOrder
+    specialRequirements?: SortOrder
+    status?: SortOrder
+    isVip?: SortOrder
+    notes?: SortOrder
+    hotelId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GroupProfileMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    legalName?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    businessType?: SortOrder
+    specialRequirements?: SortOrder
+    status?: SortOrder
+    isVip?: SortOrder
+    notes?: SortOrder
+    hotelId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumBusinessTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BusinessType | EnumBusinessTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.BusinessType[] | ListEnumBusinessTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BusinessType[] | ListEnumBusinessTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumBusinessTypeWithAggregatesFilter<$PrismaModel> | $Enums.BusinessType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBusinessTypeFilter<$PrismaModel>
+    _max?: NestedEnumBusinessTypeFilter<$PrismaModel>
+  }
+
+  export type EnumGroupStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GroupStatus | EnumGroupStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.GroupStatus[] | ListEnumGroupStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GroupStatus[] | ListEnumGroupStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumGroupStatusWithAggregatesFilter<$PrismaModel> | $Enums.GroupStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGroupStatusFilter<$PrismaModel>
+    _max?: NestedEnumGroupStatusFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -2586,6 +4231,18 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type EnumBusinessTypeFieldUpdateOperationsInput = {
+    set?: $Enums.BusinessType
+  }
+
+  export type EnumGroupStatusFieldUpdateOperationsInput = {
+    set?: $Enums.GroupStatus
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -2766,6 +4423,53 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumBusinessTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.BusinessType | EnumBusinessTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.BusinessType[] | ListEnumBusinessTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BusinessType[] | ListEnumBusinessTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumBusinessTypeFilter<$PrismaModel> | $Enums.BusinessType
+  }
+
+  export type NestedEnumGroupStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.GroupStatus | EnumGroupStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.GroupStatus[] | ListEnumGroupStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GroupStatus[] | ListEnumGroupStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumGroupStatusFilter<$PrismaModel> | $Enums.GroupStatus
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedEnumBusinessTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BusinessType | EnumBusinessTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.BusinessType[] | ListEnumBusinessTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BusinessType[] | ListEnumBusinessTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumBusinessTypeWithAggregatesFilter<$PrismaModel> | $Enums.BusinessType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBusinessTypeFilter<$PrismaModel>
+    _max?: NestedEnumBusinessTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumGroupStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GroupStatus | EnumGroupStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.GroupStatus[] | ListEnumGroupStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GroupStatus[] | ListEnumGroupStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumGroupStatusWithAggregatesFilter<$PrismaModel> | $Enums.GroupStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGroupStatusFilter<$PrismaModel>
+    _max?: NestedEnumGroupStatusFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
 
