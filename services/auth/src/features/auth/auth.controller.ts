@@ -9,6 +9,9 @@ const authService = new AuthService();
 export const login = async (req: Request, res: Response,next:NextFunction) => {
     try {
         const { username, password } = req.body;
+        if(!username || !password) {
+            throw new AppError("Username and password are required", 400);
+        }
         const token = await authService.login(username, password);
         res.status(200).json({ accessToken: token });
     } catch (error) {
