@@ -11,7 +11,8 @@ router.post('/add',
     
     requirePermissions(["Amenity.create"]),
     validateRequest({ body: createAmenitySchema }),
-    addAmenity
+    addAmenity,
+    actionLogger("add Amenity")
 );
 
 router.get('/get/:id',
@@ -36,14 +37,16 @@ router.put('/update/:id',
         params: amenityParamsSchema,
         body: updateAmenitySchema
     }),
-    updateAmenity
+    updateAmenity,
+    actionLogger("update Amenity")
 );
 
 router.delete('/delete/:id',
     
     requirePermissions(["Amenity.delete"]),
     validateRequest({ params: amenityParamsSchema }),
-    deleteAmenity
+    deleteAmenity,
+    actionLogger("delete Amenity")
 );
 
 export default router;

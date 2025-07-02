@@ -4,24 +4,28 @@ import { validateRequest } from '../../middleware/validation';
 import { addExchangeRateSchema, exchangeRateIdSchema, updateExchangeRateSchema } from './exchange.validation';
 import { addExchangeRate, deleteExchangeRate, getExchangeRate, getExchangeRates, updateExchangeRate } from './exchange.controller';
 import { requirePermissions } from '../../middleware/requirePermissions';
+import { actionLogger } from '../../middleware/logger';
 
 const router=express.Router();
 router.post('/add',
     
      requirePermissions(["Exchange.create"]),
     validateRequest({ body: addExchangeRateSchema }),
-    addExchangeRate
+    addExchangeRate,
+    actionLogger("add Exchange")
 );
 router.get('/get',
     
      requirePermissions(["Guest.read"]),
-    getExchangeRates
+    getExchangeRates,
+    actionLogger("get Exchanges")
 );
 router.get('/get/:id',
     
      requirePermissions(["Guest.read"]),
     validateRequest({ params: exchangeRateIdSchema }),
-    getExchangeRate
+    getExchangeRate,
+    actionLogger("get Exchange")
 );
 router.put('/update/:id',
     
@@ -30,12 +34,14 @@ router.put('/update/:id',
         params: exchangeRateIdSchema,
         body: updateExchangeRateSchema
     }),
-    updateExchangeRate
+    updateExchangeRate,
+    actionLogger("update Exchange")
 );
 router.delete('/delete/:id',
     
      requirePermissions(["Guest.delete"]),
     validateRequest({ params: exchangeRateIdSchema }),
-    deleteExchangeRate
+    deleteExchangeRate,
+    actionLogger("delete Exchange")
 );
 export default router;
