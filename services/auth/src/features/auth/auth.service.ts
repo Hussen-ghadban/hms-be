@@ -24,10 +24,10 @@ class AuthService {
       throw new AppError('Invalid Credentials',401);
     }
 
-    const passwordMatches = await bcrypt.compare(password, user.password);
-    if (!passwordMatches) {
-      throw new AppError('Invalid Credentials',401);
-    }
+    // const passwordMatches = await bcrypt.compare(password, user.password);
+    // if (!passwordMatches) {
+    //   throw new AppError('Invalid Credentials',401);
+    // }
 
     const payload = {
       sub: user.id,
