@@ -136,6 +136,25 @@ exports.Prisma.GuestScalarFieldEnum = {
   hotelId: 'hotelId'
 };
 
+exports.Prisma.GroupProfileScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  legalName: 'legalName',
+  email: 'email',
+  phone: 'phone',
+  primaryContact: 'primaryContact',
+  address: 'address',
+  billingAddress: 'billingAddress',
+  businessType: 'businessType',
+  specialRequirements: 'specialRequirements',
+  status: 'status',
+  isVip: 'isVip',
+  notes: 'notes',
+  hotelId: 'hotelId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -165,10 +184,23 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.BusinessType = exports.$Enums.BusinessType = {
+  CORPORATE: 'CORPORATE',
+  TRAVEL_AGENCY: 'TRAVEL_AGENCY',
+  EVENT_PLANNER: 'EVENT_PLANNER',
+  GOVERNMENT: 'GOVERNMENT',
+  OTHER: 'OTHER'
+};
 
+exports.GroupStatus = exports.$Enums.GroupStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  SUSPENDED: 'SUSPENDED'
+};
 
 exports.Prisma.ModelName = {
-  Guest: 'Guest'
+  Guest: 'Guest',
+  GroupProfile: 'GroupProfile'
 };
 
 /**
