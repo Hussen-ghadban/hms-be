@@ -10,6 +10,7 @@ import amenityRouter from './features/amenity/amenity.routes';
 import reservationRouter from './features/reservation/reservation.routes';
 import housekeepingRouter from './features/houseKeeping/houseKeeping.routes'
 import maintenanceRouter from './features/maintenance/maintenance.routes'
+import folioItemRouter from './features/folioItem/folioItem.routes'
 import { errorHandler } from "./middleware/errorHandler";
 import cors from 'cors';
 
@@ -29,6 +30,8 @@ app.use("/amenity",amenityRouter)
 app.use("/reservation",reservationRouter)
 app.use("/housekeeping",housekeepingRouter)
 app.use("/maintenance",maintenanceRouter)
+app.use("/folio-item",folioItemRouter)
+
 
 
 
