@@ -108,8 +108,22 @@ model Folio {
   balance       Decimal      @default(0) @db.Decimal(10, 4)
   folioItems    FolioItem[]
   hotelId       String
-  reservationId String       @unique
+  reservationId String?       @unique
   reservation   Reservation? @relation(fields: [reservationId], references: [id])
+  // Master folio for group bookings (new)
+  groupBookingId String?     @unique
+  groupBooking   GroupBooking? @relation("GroupMasterFolio", fields: [groupBookingId], references: [id])
+  
+  // Folio hierarchy for charge routing
+  parentFolioId String?
+  parentFolio   Folio?       @relation("FolioHierarchy", fields: [parentFolioId], references: [id])
+  childFolios   Folio[]      @relation("FolioHierarchy")
+  
+  // Folio type to distinguish between individual and master
+  folioType     FolioCreationType    @default(INDIVIDUAL)
+  
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 }
 
 model FolioItem {
@@ -138,6 +152,16 @@ model Reservation {
   ratePlan   RatePlan          @relation(fields: [ratePlanId], references: [id])
   folio      Folio?
   price      Decimal           @db.Decimal(10, 2)
+
+  // Group booking relationship
+  groupBookingId  String?
+  groupBooking    GroupBooking?     @relation(fields: [groupBookingId], references: [id])
+
+    // Charge routing preference
+  chargeRouting   ChargeRouting     @default(OWN_FOLIO)
+  
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 }
 
 model HouseKeepingTask {
@@ -164,7 +188,27 @@ model Maintenance {
   updatedAt   DateTime @updatedAt
 }
 
+model GroupBooking{
+  id            String  @id @default(cuid())
+  groupProfileId String
+  checkIn       DateTime
+  checkOut      DateTime
+  status        GroupBookingStatus    @default(DRAFT)
+  specialRequests String?
+  notes         String?
+  hotelId       String
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  
+  // Relations
+  reservations  Reservation[]
+  masterFolio   Folio?                @relation("GroupMasterFolio")
+}
 
+enum FolioCreationType {
+  INDIVIDUAL
+  MASTER
+}
 
 enum RoomCleaningStatus {
   PENDING
@@ -225,4 +269,20 @@ enum ReservationStatus {
   CANCELLED
   NO_SHOW
   HELD
+}
+
+enum GroupBookingStatus {
+  DRAFT
+  CONFIRMED
+  PARTIALLY_CHECKED_IN
+  CHECKED_IN
+  PARTIALLY_CHECKED_OUT
+  CHECKED_OUT
+  CANCELLED
+}
+
+enum ChargeRouting {
+  OWN_FOLIO      // Charges go to individual folio
+  MASTER_FOLIO   // Charges go to master folio
+  SPLIT          // Some charges to individual, some to master
 }
