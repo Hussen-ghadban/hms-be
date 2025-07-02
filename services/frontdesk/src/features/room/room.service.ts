@@ -99,6 +99,11 @@ export default class RoomService {
             where: { id, hotelId },
             include: {
                 roomType: true,
+                Amenities:{
+                    select:{
+                        id:true,
+                    }
+                }
             }
         });
 
