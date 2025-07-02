@@ -26,6 +26,7 @@ export type AppSubjects =
   | "HouseKeeping"
   | "Maintenance"
   | "GroupProfile"
+  | "GroupBooking"
   | "all";
 
 export type AppActions = "create" | "read" | "update" | "delete" | "manage";
@@ -94,6 +95,7 @@ function isValidSubject(subject: string): subject is AppSubjects {
     "HouseKeeping",
     "Maintenance",
     "GroupProfile",
+    "GroupBooking",
     "all"
   ].includes(subject);
 }
