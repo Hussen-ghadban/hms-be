@@ -90,3 +90,41 @@ export const checkInReservation = async (req: Request, res: Response, next: Next
     next(error);
   }
 };
+
+export const createGroupBookingController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    if (!req.user || !req.user.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
+    }
+
+    const token = req.headers.authorization || "";
+    const hotelId = req.user.hotelId;
+
+    // Destructure fields from body
+    const { checkIn, checkOut, guestsAndRooms, groupProfileId, ratePlanId } = req.body;
+
+    const data = {
+      checkIn,
+      checkOut,
+      guestsAndRooms,
+      groupProfileId,
+      ratePlanId,
+      hotelId, // override
+    };
+
+    const groupBooking = await reservationService.createGroupBooking(data, token);
+
+    res.status(201).json({
+      status: 201,
+      message: "Group booking created successfully",
+      data: groupBooking,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};

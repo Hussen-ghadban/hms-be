@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addReservation, checkInReservation, updateReservation } from "./reservation.controller";
+import { addReservation, checkInReservation, createGroupBookingController, updateReservation } from "./reservation.controller";
 import { requirePermissions } from "../../middleware/requirePermissions";
 import { actionLogger } from "../../middleware/logger";
 
@@ -9,4 +9,9 @@ router.post("/add", requirePermissions(["Reservation.create","Guest.read"]),addR
 router.put("/update/:reservationId", requirePermissions(["Reservation.update"]),updateReservation,actionLogger("update reservation"));
 
 router.post("/check-in/:reservationId",requirePermissions([]),checkInReservation,actionLogger("add check-in"));
+router.post(
+  "/create",
+  requirePermissions(["GroupBooking.create"]),
+  createGroupBookingController
+);
 export default router;

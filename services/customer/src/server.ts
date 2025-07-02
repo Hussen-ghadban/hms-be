@@ -16,7 +16,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 }));
 app.use("/guest", guestRouter);
-app.use("/groupProfile", groupProfileRouter);
+app.use("/group-profile", groupProfileRouter);
 
 
 
