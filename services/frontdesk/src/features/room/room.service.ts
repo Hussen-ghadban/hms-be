@@ -13,7 +13,9 @@ export default class RoomService {
         childOccupancy,
         adultOccupancy,
         amenities,
-        connectedRoomIds
+        connectedRoomIds,
+        description,
+        photos
     }: CreateRoomParams) {
         try {
             const existing = await prisma.room.findUnique({
@@ -61,6 +63,8 @@ export default class RoomService {
                     maxOccupancy,
                     adultOccupancy,
                     childOccupancy,
+                    description,
+                    photos,
                     Amenities: amenities && amenities.length > 0
                         ? {
                             connect: amenities.map((id: string) => ({ id }))
@@ -124,7 +128,10 @@ export default class RoomService {
         childOccupancy,
         adultOccupancy,
         amenities,
-        connectedRoomIds
+        connectedRoomIds,
+        status,
+        description,
+        photos,
     }: UpdateRoomParams) {
         // Check existence and ownership
         const room = await prisma.room.findFirst({
@@ -183,6 +190,9 @@ export default class RoomService {
             maxOccupancy,
             childOccupancy,
             adultOccupancy,
+            status,
+            description,
+            photos
         };
 
         if (amenities !== undefined) {
