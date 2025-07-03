@@ -1,16 +1,25 @@
 import z from "zod";
 
+export const maintenanceStatusEnum = z.enum([
+  "PENDING",
+  "IN_PROGRESS",
+  "COMPLETED",
+  "CANCELED"
+]);
+
 export const createMaintenanceSchema = z.object({
   description: z.string().min(1, "Description is required"),
   priority: z.string().min(1, "Priority is required"),
-  roomId: z.string().min(1, "Room ID is required")
+  roomId: z.string().min(1, "Room ID is required").optional(),
 });
 
 export const updateMaintenanceSchema = z.object({
   description: z.string().optional(),
   priority: z.string().optional(),
   roomId: z.string().optional(),
-  status: z.string().optional()
+  status: maintenanceStatusEnum.optional(),
+  startedAt: z.coerce.date().optional(),
+  completedAt: z.coerce.date().optional()
 });
 
 export const maintenanceParamsSchema = z.object({

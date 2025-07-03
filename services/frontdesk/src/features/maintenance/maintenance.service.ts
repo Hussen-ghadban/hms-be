@@ -1,3 +1,4 @@
+import { maintenanceStatus, RoomStatus } from "../../../generated/prisma";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import { CreateMaintenanceParams, UpdateMaintenanceParams } from "./maintenance.type";
@@ -11,6 +12,56 @@ export default class MaintenanceService {
       data: { description, priority, roomId }
     });
   }
+async startMaintenance(id: string, hotelId: string) {
+  const existing = await prisma.maintenance.findFirst({
+    where: { id, room: { hotelId } },
+    include: { room: true }
+  });
+
+  if (!existing) throw new AppError("Maintenance not found", 404);
+  if (!existing.roomId) throw new AppError("Maintenance not linked to a room", 400);
+
+  // Update both maintenance status and room status
+  return prisma.$transaction([
+    prisma.maintenance.update({
+      where: { id },
+      data: {
+        status: maintenanceStatus.IN_PROGRESS,
+        startedAt: new Date()
+      }
+    }),
+    prisma.room.update({
+      where: { id: existing.roomId },
+      data: { status: RoomStatus.MAINTENANCE }
+    })
+  ]);
+}
+
+
+async completeMaintenance(id: string, hotelId: string) {
+  const existing = await prisma.maintenance.findFirst({
+    where: { id, room: { hotelId } },
+    include: { room: true }
+  });
+
+  if (!existing) throw new AppError("Maintenance not found", 404);
+  if (!existing.roomId) throw new AppError("Maintenance not linked to a room", 400);
+
+  return prisma.$transaction([
+    prisma.maintenance.update({
+      where: { id },
+      data: {
+        status: maintenanceStatus.COMPLETED,
+        completedAt:  new Date()
+      }
+    }),
+    prisma.room.update({
+      where: { id: existing.roomId },
+      data: { status: RoomStatus.AVAILABLE }
+    })
+  ]);
+}
+
 
   async getMaintenances(hotelId: string) {
     return prisma.maintenance.findMany({

@@ -18,6 +18,31 @@ export const createHouseKeepingTask = async (req: Request, res: Response, next: 
     next(err);
   }
 };
+export const startHouseKeepingTask = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user?.hotelId) throw new AppError("Hotel ID is required", 400);
+
+    const { id } = req.params;
+    const startedTask = await houseKeepingService.startTask(id, req.user.hotelId);
+
+    res.json({ status: 200, message: "Housekeeping task started", data: startedTask });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const completeHouseKeepingTask = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user?.hotelId) throw new AppError("Hotel ID is required", 400);
+
+    const { id } = req.params;
+    const completedTask = await houseKeepingService.completeTask(id, req.user.hotelId);
+
+    res.json({ status: 200, message: "Housekeeping task completed", data: completedTask });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const getHouseKeepingTasks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

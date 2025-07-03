@@ -1,3 +1,5 @@
+import { maintenanceStatus } from "../../../generated/prisma";
+
 export interface CreateMaintenanceParams {
   description: string;
   priority: string;
@@ -10,6 +12,6 @@ export interface UpdateMaintenanceParams {
   description?: string;
   priority?: string;
   roomId?: string;
-  status?: string;
+  status?: maintenanceStatus;
   hotelId: string;
 }

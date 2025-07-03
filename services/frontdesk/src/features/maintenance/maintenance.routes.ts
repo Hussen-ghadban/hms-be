@@ -11,7 +11,9 @@ import {
   getMaintenances,
   getMaintenance,
   updateMaintenance,
-  deleteMaintenance
+  deleteMaintenance,
+  startMaintenance,
+  completeMaintenance
 } from "./maintenance.controller";
 import { actionLogger } from "../../middleware/logger";
 
@@ -23,6 +25,22 @@ router.post(
   validateRequest({ body: createMaintenanceSchema }),
   addMaintenance,
   actionLogger("add maintenance")
+);
+
+router.post(
+  "/start/:id",
+  requirePermissions(["Maintenance.update"]),
+  validateRequest({ params: maintenanceParamsSchema }),
+  startMaintenance,
+  actionLogger("start maintenance")
+);
+
+router.post(
+  "/complete/:id",
+  requirePermissions(["Maintenance.update"]),
+  validateRequest({ params: maintenanceParamsSchema }),
+  completeMaintenance,
+  actionLogger("complete maintenance")
 );
 
 router.get(
