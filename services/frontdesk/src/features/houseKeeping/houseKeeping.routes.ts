@@ -2,7 +2,7 @@ import { Router } from "express";
 import { requirePermissions } from "../../middleware/requirePermissions";
 import { validateRequest } from "../../middleware/validation";
 import { createHouseKeepingTaskSchema, houseKeepingTaskParamsSchema, updateHouseKeepingTaskSchema } from "./houseKeeping.validation";
-import { createHouseKeepingTask, deleteHouseKeepingTasks, getHouseKeepingTask, getHouseKeepingTasks, updateHouseKeepingTasks } from "./houseKeeping.controller";
+import { completeHouseKeepingTask, createHouseKeepingTask, deleteHouseKeepingTasks, getHouseKeepingTask, getHouseKeepingTasks, startHouseKeepingTask, updateHouseKeepingTasks } from "./houseKeeping.controller";
 import { actionLogger } from "../../middleware/logger";
 
 const router=Router();
@@ -13,6 +13,21 @@ router.post('/add',
     validateRequest({ body: createHouseKeepingTaskSchema }),
     createHouseKeepingTask,
     actionLogger("add HouseKeeping")
+);
+router.post(
+  "/start/:id",
+  requirePermissions(["HouseKeeping.update"]),
+  validateRequest({ params: houseKeepingTaskParamsSchema }),
+  startHouseKeepingTask,
+  actionLogger("start housekeeping task")
+);
+
+router.post(
+  "/complete/:id",
+  requirePermissions(["HouseKeeping.update"]),
+  validateRequest({ params: houseKeepingTaskParamsSchema }),
+  completeHouseKeepingTask,
+  actionLogger("complete housekeeping task")
 );
 
 router.get('/get/:id',

@@ -23,6 +23,31 @@ export const addMaintenance = async (req: Request, res: Response, next: NextFunc
   }
 };
 
+export const startMaintenance = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user?.hotelId) throw new AppError("Hotel ID is required", 400);
+    const { id } = req.params;
+
+    const updated = await maintenanceService.startMaintenance(id, req.user.hotelId);
+    res.json({ status: 200, message: "Maintenance started", data: updated });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const completeMaintenance = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user?.hotelId) throw new AppError("Hotel ID is required", 400);
+    const { id } = req.params;
+
+    const updated = await maintenanceService.completeMaintenance(id, req.user.hotelId);
+    res.json({ status: 200, message: "Maintenance completed", data: updated });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 export const getMaintenances = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.user?.hotelId) throw new AppError("Hotel ID is required", 400);
@@ -47,14 +72,32 @@ export const getMaintenance = async (req: Request, res: Response, next: NextFunc
 export const updateMaintenance = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.user?.hotelId) throw new AppError("Hotel ID is required", 400);
+
     const { id } = req.params;
-    const updates = req.body;
-    const updated = await maintenanceService.updateMaintenance({ id, hotelId: req.user.hotelId, ...updates });
+    const { description, priority, roomId, status, startedAt, completedAt } = req.body;
+
+    // Build updates object with keys directly from req.body
+    const updates = {
+      description,
+      priority,
+      roomId,
+      status,
+      startedAt,
+      completedAt,
+    };
+
+    const updated = await maintenanceService.updateMaintenance({
+      id,
+      hotelId: req.user.hotelId,
+      ...updates,
+    });
+
     res.json({ status: 200, message: "Maintenance updated", data: updated });
   } catch (error) {
     next(error);
   }
 };
+
 
 export const deleteMaintenance = async (req: Request, res: Response, next: NextFunction) => {
   try {

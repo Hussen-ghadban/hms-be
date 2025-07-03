@@ -181,14 +181,15 @@ model Maintenance {
   id          String   @id @default(cuid())
   description String
   priority    String
-  status      String   @default("PENDING")
+  status      maintenanceStatus @default(PENDING)
   
   roomId      String? // optional foreign key
   outletId    String? // optional foreign key
 
   room        Room?    @relation(fields: [roomId], references: [id])
   // outlet      Outlet?  @relation(fields: [outletId], references: [id])
-
+  startedAt DateTime?
+  completedAt DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -222,6 +223,12 @@ enum FolioCreationType {
 }
 
 enum RoomCleaningStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+}
+enum maintenanceStatus  {
   PENDING
   IN_PROGRESS
   COMPLETED
