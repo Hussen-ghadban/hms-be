@@ -14,7 +14,6 @@ export default class RoomService {
         adultOccupancy,
         amenities,
         connectedRoomIds,
-        status,
         description,
         photos
     }: CreateRoomParams) {
@@ -64,8 +63,8 @@ export default class RoomService {
                     maxOccupancy,
                     adultOccupancy,
                     childOccupancy,
-                    description: description ?? undefined,
-                    photos: photos ?? [],
+                    description,
+                    photos,
                     Amenities: amenities && amenities.length > 0
                         ? {
                             connect: amenities.map((id: string) => ({ id }))
@@ -191,10 +190,10 @@ export default class RoomService {
             maxOccupancy,
             childOccupancy,
             adultOccupancy,
+            status,
+            description,
+            photos
         };
-        if (status !== undefined) updateData.status = status;
-if (description !== undefined) updateData.description = description;
-if (photos !== undefined) updateData.photos = photos;
 
         if (amenities !== undefined) {
             updateData.Amenities = {

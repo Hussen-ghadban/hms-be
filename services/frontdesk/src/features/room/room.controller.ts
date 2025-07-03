@@ -21,7 +21,6 @@ export const addRoom = async (req: Request, res: Response, next: NextFunction) =
         adultOccupancy,
         amenities,
         connectedRoomIds,
-        status,
         description,
         photos
         } = req.body;
@@ -36,7 +35,6 @@ export const addRoom = async (req: Request, res: Response, next: NextFunction) =
         adultOccupancy,
         amenities,
         connectedRoomIds,
-        status,
         description,
         photos
         });
