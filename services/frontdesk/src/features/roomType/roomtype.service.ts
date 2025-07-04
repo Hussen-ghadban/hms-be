@@ -5,7 +5,7 @@ import { CreateRoomTypeParams, UpdateRoomTypeParams } from "./roomType.type";
 
 
 export default class RoomTypeService {
-  async createRoomType({ hotelId, name, description, baseRate }: CreateRoomTypeParams) {
+  async createRoomType({ hotelId, name, description, baseRate, maxOccupancy, childOccupancy, adultOccupancy}: CreateRoomTypeParams) {
     // Check duplicate
     const existing = await prisma.roomType.findFirst({
       where: {
@@ -18,12 +18,16 @@ export default class RoomTypeService {
       throw new AppError("RoomType with this name already exists", 409);
     }
 
+    console.log(adultOccupancy,childOccupancy,maxOccupancy)
     const roomType = await prisma.roomType.create({
       data: {
         hotelId,
         name,
         description,
-        baseRate: baseRate ?? "0",
+        baseRate,
+        maxOccupancy, 
+        childOccupancy,
+        adultOccupancy
       },
     });
 
@@ -49,7 +53,7 @@ export default class RoomTypeService {
     return roomType;
   }
 
-  async updateRoomType({ id, hotelId, name, description, baseRate }: UpdateRoomTypeParams) {
+  async updateRoomType({ id, hotelId, name, description, baseRate, maxOccupancy, childOccupancy, adultOccupancy}: UpdateRoomTypeParams) {
     const existing = await prisma.roomType.findFirst({
       where: { id, hotelId },
     });
@@ -69,7 +73,7 @@ export default class RoomTypeService {
 
     const updated = await prisma.roomType.update({
       where: { id },
-      data: { name, description, baseRate },
+      data: { name, description, baseRate, maxOccupancy, childOccupancy, adultOccupancy},
     });
 
     return updated;
