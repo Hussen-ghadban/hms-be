@@ -15,14 +15,17 @@ datasource db {
 }
 
 model RoomType {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  baseRate    Decimal  @default(0) @db.Decimal(10, 2)
-  hotelId     String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  Room        Room[]
+  id             String   @id @default(cuid())
+  name           String
+  description    String?
+  maxOccupancy   Int @default(1)
+  adultOccupancy Int @default(1)
+  childOccupancy Int @default(1)
+  baseRate       Decimal  @default(0) @db.Decimal(10, 2)
+  hotelId        String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  Room           Room[]
 
   @@unique([hotelId, name])
 }
@@ -32,9 +35,6 @@ model Room {
   roomNumber        String
   status            RoomStatus         @default(AVAILABLE)
   floor             Int
-  maxOccupancy      Int
-  adultOccupancy    Int
-  childOccupancy    Int
   description       String?
   roomTypeId        String
   connectedRooms    Room[]             @relation("RoomConnections")
@@ -103,27 +103,27 @@ model Amenity {
 }
 
 model Folio {
-  id            String       @id @default(cuid())
-  status        FolioStatus  @default(OPEN)
-  balance       Decimal      @default(0) @db.Decimal(10, 4)
-  folioItems    FolioItem[]
-  hotelId       String
-  reservationId String?       @unique
-  reservation   Reservation? @relation(fields: [reservationId], references: [id])
+  id             String        @id @default(cuid())
+  status         FolioStatus   @default(OPEN)
+  balance        Decimal       @default(0) @db.Decimal(10, 4)
+  folioItems     FolioItem[]
+  hotelId        String
+  reservationId  String?       @unique
+  reservation    Reservation?  @relation(fields: [reservationId], references: [id])
   // Master folio for group bookings (new)
-  groupBookingId String?     @unique
+  groupBookingId String?       @unique
   groupBooking   GroupBooking? @relation("GroupMasterFolio", fields: [groupBookingId], references: [id])
-  
+
   // Folio hierarchy for charge routing
   parentFolioId String?
-  parentFolio   Folio?       @relation("FolioHierarchy", fields: [parentFolioId], references: [id])
-  childFolios   Folio[]      @relation("FolioHierarchy")
-  
+  parentFolio   Folio?  @relation("FolioHierarchy", fields: [parentFolioId], references: [id])
+  childFolios   Folio[] @relation("FolioHierarchy")
+
   // Folio type to distinguish between individual and master
-  folioType     FolioCreationType    @default(INDIVIDUAL)
-  
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  folioType FolioCreationType @default(INDIVIDUAL)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model FolioItem {
@@ -154,61 +154,61 @@ model Reservation {
   price      Decimal           @db.Decimal(10, 2)
 
   // Group booking relationship
-  groupBookingId  String?
-  groupBooking    GroupBooking?     @relation(fields: [groupBookingId], references: [id])
+  groupBookingId String?
+  groupBooking   GroupBooking? @relation(fields: [groupBookingId], references: [id])
 
-    // Charge routing preference
-  chargeRouting   ChargeRouting     @default(OWN_FOLIO)
-  
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
+  // Charge routing preference
+  chargeRouting ChargeRouting @default(OWN_FOLIO)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model HouseKeepingTask {
-  id     String             @id @default(cuid())
-  roomId String
-  userId String
-  room   Room               @relation(fields: [roomId], references: [id])
-  priority  Priority          @default(MEDIUM)
-  status RoomCleaningStatus
-  startedAt DateTime?
+  id          String             @id @default(cuid())
+  roomId      String
+  userId      String
+  room        Room               @relation(fields: [roomId], references: [id])
+  priority    Priority           @default(MEDIUM)
+  status      RoomCleaningStatus
+  startedAt   DateTime?
   completedAt DateTime?
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
 }
 
 model Maintenance {
-  id          String   @id @default(cuid())
+  id          String            @id @default(cuid())
   description String
   priority    String
   status      maintenanceStatus @default(PENDING)
-  
-  roomId      String? // optional foreign key
-  outletId    String? // optional foreign key
 
-  room        Room?    @relation(fields: [roomId], references: [id])
+  roomId   String? // optional foreign key
+  outletId String? // optional foreign key
+
+  room        Room?     @relation(fields: [roomId], references: [id])
   // outlet      Outlet?  @relation(fields: [outletId], references: [id])
-  startedAt DateTime?
+  startedAt   DateTime?
   completedAt DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
-model GroupBooking{
-  id            String  @id @default(cuid())
-  groupProfileId String
-  checkIn       DateTime
-  checkOut      DateTime
-  status        GroupBookingStatus    @default(DRAFT)
+model GroupBooking {
+  id              String             @id @default(cuid())
+  groupProfileId  String
+  checkIn         DateTime
+  checkOut        DateTime
+  status          GroupBookingStatus @default(DRAFT)
   specialRequests String?
-  notes         String?
-  hotelId       String
-  createdAt     DateTime              @default(now())
-  updatedAt     DateTime              @updatedAt
-  
+  notes           String?
+  hotelId         String
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
   // Relations
-  reservations  Reservation[]
-  masterFolio   Folio?                @relation("GroupMasterFolio")
+  reservations Reservation[]
+  masterFolio  Folio?        @relation("GroupMasterFolio")
 }
 
 enum Priority {
@@ -228,7 +228,8 @@ enum RoomCleaningStatus {
   COMPLETED
   CANCELED
 }
-enum maintenanceStatus  {
+
+enum maintenanceStatus {
   PENDING
   IN_PROGRESS
   COMPLETED
@@ -300,7 +301,7 @@ enum GroupBookingStatus {
 }
 
 enum ChargeRouting {
-  OWN_FOLIO      // Charges go to individual folio
-  MASTER_FOLIO   // Charges go to master folio
-  SPLIT          // Some charges to individual, some to master
+  OWN_FOLIO // Charges go to individual folio
+  MASTER_FOLIO // Charges go to master folio
+  SPLIT // Some charges to individual, some to master
 }

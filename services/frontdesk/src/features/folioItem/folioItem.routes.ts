@@ -1,15 +1,19 @@
 // folioItem.routes.ts
 import express from "express";
 import { validateRequest } from "../../middleware/validation";
-import { addFolioItem, getFolioItem, getFolioItemsByFolio, updateFolioItem, deleteFolioItem, getFolioItems } from "./folioItem.controller";
+import { getFolioItem, getFolioItemsByFolio, updateFolioItem, deleteFolioItem, getFolioItems, TransferFolioItems, addChargeFolioItem, addPaymentFolioItem, voidFolioItem } from "./folioItem.controller";
 import { requirePermissions } from "../../middleware/requirePermissions";
 import { actionLogger } from "../../middleware/logger";
-import { addFolioItemSchema, folioItemIdSchema, updateFolioItemSchema } from "./folioItem.validation";
+import { addFolioItemSchema, TransferFolioItemsSchema, folioItemIdSchema, updateFolioItemSchema } from "./folioItem.validation";
 
 const router = express.Router();
 
-router.post("/add", requirePermissions(["FolioItem.create"]), validateRequest({ body: addFolioItemSchema }), addFolioItem, actionLogger("add folioItem"));
+router.post("/add-charge", requirePermissions(["FolioItem.create"]), validateRequest({ body: addFolioItemSchema }), addChargeFolioItem, actionLogger("add charge folioItem"));
+router.post("/add-payment", requirePermissions(["FolioItem.create"]), validateRequest({ body: addFolioItemSchema }), addPaymentFolioItem, actionLogger("add payment folioItem"));
+
 router.get("/get", requirePermissions(["FolioItem.read"]), getFolioItems, actionLogger("get folioItems by folio"));
+router.post("/transfer", requirePermissions(["Folio.update"]), validateRequest({ body: TransferFolioItemsSchema }), TransferFolioItems, actionLogger("Copy Folio Items"));
+router.put("/void/:id", requirePermissions(["FolioItem.update"]), voidFolioItem, actionLogger("void folio item"));
 
 router.get("/get-by-folio", requirePermissions(["FolioItem.read"]), getFolioItemsByFolio, actionLogger("get folioItems by folio"));
 router.get("/get/:id", requirePermissions(["FolioItem.read"]), validateRequest({ params: folioItemIdSchema }), getFolioItem, actionLogger("get folioItem"));

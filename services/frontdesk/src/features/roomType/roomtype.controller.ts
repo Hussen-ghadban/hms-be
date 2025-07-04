@@ -9,9 +9,11 @@ export const createRoomType = async (req: Request, res: Response, next: NextFunc
     if (!req.user || !req.user.hotelId) throw new AppError("Hotel ID is required", 400);
 
     const { hotelId } = req.user;
-    const { name, description, baseRate } = req.body;
+    const { name, description, baseRate, maxOccupancy, childOccupancy, adultOccupancy } = req.body;
 
-    const roomType = await roomTypeService.createRoomType({ hotelId, name, description, baseRate });
+    console.log(req.body);
+
+    const roomType = await roomTypeService.createRoomType({ hotelId, name, description, baseRate, maxOccupancy, childOccupancy, adultOccupancy });
 
     res.status(201).json({ status: 200, message: "RoomType created successfully", data: roomType });
   } catch (err) {
@@ -53,9 +55,9 @@ export const updateRoomType = async (req: Request, res: Response, next: NextFunc
 
     const { hotelId } = req.user;
     const { id } = req.params;
-    const { name, description, baseRate } = req.body;
+    const { name, description, baseRate, maxOccupancy, childOccupancy, adultOccupancy} = req.body;
 
-    const updated = await roomTypeService.updateRoomType({ id, hotelId, name, description, baseRate });
+    const updated = await roomTypeService.updateRoomType({ id, hotelId, name, description, baseRate, maxOccupancy, childOccupancy, adultOccupancy });
 
     res.json({ status: 200, message: "RoomType updated successfully", data: updated });
   } catch (err) {
