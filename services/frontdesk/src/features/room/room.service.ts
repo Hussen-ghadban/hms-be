@@ -89,6 +89,12 @@ export default class RoomService {
             where: { hotelId },
             include: {
                 roomType: true,
+                connectedRooms:{
+                    select:{
+                        id:true,
+                        roomNumber:true
+                    }
+                }
             },
             orderBy: { roomNumber: "asc" },
         });
@@ -102,6 +108,12 @@ export default class RoomService {
                 Amenities:{
                     select:{
                         id:true,
+                    },
+                },
+                connectedRooms:{
+                    select:{
+                        id:true,
+                        roomNumber:true
                     }
                 }
             }
