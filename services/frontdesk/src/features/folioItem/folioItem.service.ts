@@ -1,3 +1,4 @@
+import { FolioStatus } from "../../../generated/prisma";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import { CreateFolioItemParams, UpdateFolioItemParams } from "./folioItem.types";
@@ -76,7 +77,7 @@ async TransferFolioItems(fromFolioId: string, toFolioId: string, hotelId: string
     // Set source folio status to TRANSFERRED
     await tx.folio.update({
       where: { id: fromFolioId },
-      data: { status: "TRANSFERRED" },
+      data: { status: FolioStatus.TRANSFERRED },
     });
 
     return { message: `${itemsToCopy.length} items copied`, totalAmount };
