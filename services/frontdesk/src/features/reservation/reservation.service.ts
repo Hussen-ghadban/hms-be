@@ -249,6 +249,29 @@ export default class ReservationService {
     // Check if we visited all rooms
     return visited.size === roomIds.length;
   }
+async getReservation(hotelId: string, startDate: string, endDate: string) {
+if (!startDate || !endDate) {
+  throw new AppError("startDate and endDate are required", 400);
+}
+  const result = await prisma.roomType.findMany({
+    where: { hotelId },
+    include: {
+      Room: {
+        include: {
+          reservations: {
+            where: {
+              checkIn: { gte: new Date(startDate) },
+              checkOut: { lte: new Date(endDate) },
+            },
+          }
+        }
+      }
+    }
+  });
+
+  return result;
+}
+
 
   async checkIn({ reservationId, hotelId, deposit }: CheckInParams) {
     return await prisma.$transaction(async (tx) => {
