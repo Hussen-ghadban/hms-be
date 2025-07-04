@@ -117,6 +117,12 @@ export default class RoomService {
 
         return room;
     }
+    async getRoomsByRoomType(id:string,hotelId:string){
+        const rooms =await prisma.room.findMany({
+            where:{roomTypeId:id,hotelId}
+        })
+        return rooms;
+    }
 
     async updateRoom({
         id,

@@ -1,6 +1,6 @@
 import express from 'express';
 import { validateRequest } from "../../middleware/validation";
-import { addRoom, getRooms, getRoom, updateRoom, deleteRoom, getRoomsByStatus } from "./room.controller";
+import { addRoom, getRooms, getRoom, updateRoom, deleteRoom, getRoomsByStatus, getRoomByRoomType } from "./room.controller";
 import { createRoomSchema, updateRoomSchema, roomParamsSchema } from "./room.validation";
 import { requirePermissions } from '../../middleware/requirePermissions';
 import { actionLogger } from '../../middleware/logger';
@@ -20,6 +20,13 @@ router.get('/get/:id',
     requirePermissions(["Room.read"]),
     validateRequest({ params: roomParamsSchema }),
     getRoom,
+    actionLogger("get room")
+);
+
+router.get('/get-by-room-type/:id',
+    requirePermissions(["Room.read"]),
+    validateRequest({ params: roomParamsSchema }),
+    getRoomByRoomType,
     actionLogger("get room")
 );
 
