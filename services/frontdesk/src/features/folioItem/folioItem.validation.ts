@@ -6,7 +6,6 @@ export const addFolioItemSchema = z.object({
   itemType: z.nativeEnum(FolioType),
   quantity: z.number().min(1),
   unitPrice: z.number().optional(),
-  amount: z.number().optional(),
 });
 
 export const updateFolioItemSchema = z.object({
@@ -22,6 +21,13 @@ export const updateFolioItemSchema = z.object({
 export const folioItemIdSchema = z.object({
   id: z.string().min(1),
 });
+export const TransferFolioItemsSchema = z.object({
+  fromFolioId: z.string().min(1, "Source folio ID is required"),
+  toFolioId: z.string().min(1, "Target folio ID is required"),
+});
+// export const maintenanceParamsSchema = z.object({
+//   id: z.string().min(1, "ID is required"),
+// });
 
 export type AddFolioItemInput = z.infer<typeof addFolioItemSchema>;
 export type UpdateFolioItemInput = z.infer<typeof updateFolioItemSchema>;
