@@ -16,9 +16,6 @@ export const addRoom = async (req: Request, res: Response, next: NextFunction) =
         roomNumber,
         roomTypeId,
         floor,
-        maxOccupancy,
-        childOccupancy,
-        adultOccupancy,
         amenities,
         connectedRoomIds,
         description,
@@ -30,9 +27,6 @@ export const addRoom = async (req: Request, res: Response, next: NextFunction) =
         roomTypeId,
         hotelId,
         floor,
-        maxOccupancy,
-        childOccupancy,
-        adultOccupancy,
         amenities,
         connectedRoomIds,
         description,
@@ -87,7 +81,24 @@ export const getRoom = async (req: Request, res: Response, next: NextFunction) =
         next(error);
     }
 };
+export const getRoomByRoomType=async(req:Request,res:Response,next:NextFunction)=>{
+    try{
+                if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
+        }
 
+        const { hotelId } = req.user;
+        const { id } = req.params;
+        const rooms=await roomService.getRoomsByRoomType(id,hotelId);
+        res.json({
+            status:200,
+            message:"rooms were fetched successfully",
+            data:rooms,
+        });
+    }catch(error){
+        next(error)
+    }
+}
 export const updateRoom = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if (!req.user || !req.user.hotelId) {
@@ -97,7 +108,7 @@ export const updateRoom = async (req: Request, res: Response, next: NextFunction
         const { hotelId } = req.user;
         const { id } = req.params;
 
-        const { roomNumber, status, roomTypeId, floor, maxOccupancy, childOccupancy, adultOccupancy, amenities, connectedRoomIds, description, photos   } = req.body;
+        const { roomNumber, status, roomTypeId, floor, amenities, connectedRoomIds, description, photos   } = req.body;
 
         const updatedRoom = await roomService.updateRoom({
             id,
@@ -105,9 +116,6 @@ export const updateRoom = async (req: Request, res: Response, next: NextFunction
             roomTypeId,
             hotelId,
             floor,
-            maxOccupancy,
-            childOccupancy,
-            adultOccupancy,
             amenities,
             connectedRoomIds,
             status,

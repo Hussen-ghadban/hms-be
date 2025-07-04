@@ -5,8 +5,10 @@ export const createRoomTypeSchema = z.object({
   description: z.string().optional(),
   baseRate: z
     .union([z.string(), z.number()])
-    .transform((val) => val.toString())
-    .optional(),
+    .transform((val) => val.toString()),
+  maxOccupancy: z.number({ required_error: "Max occupancy is required" }),
+  adultOccupancy: z.number({ required_error: "Adult occupancy is required" }),
+  childOccupancy: z.number({ required_error: "Child occupancy is required" }),
 });
 
 export const updateRoomTypeSchema = z.object({
@@ -16,6 +18,9 @@ export const updateRoomTypeSchema = z.object({
     .union([z.string(), z.number()])
     .transform((val) => val.toString())
     .optional(),
+  maxOccupancy: z.number({ required_error: "Max occupancy is required" }).optional(),
+  adultOccupancy: z.number({ required_error: "Adult occupancy is required" }).optional(),
+  childOccupancy: z.number({ required_error: "Child occupancy is required" }).optional(),
 });
 
 export const roomTypeParamsSchema = z.object({

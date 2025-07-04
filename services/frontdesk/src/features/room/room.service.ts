@@ -9,9 +9,6 @@ export default class RoomService {
         roomTypeId,
         hotelId,
         floor,
-        maxOccupancy,
-        childOccupancy,
-        adultOccupancy,
         amenities,
         connectedRoomIds,
         description,
@@ -60,9 +57,6 @@ export default class RoomService {
                     status: RoomStatus.AVAILABLE,
                     roomTypeId,
                     hotelId,
-                    maxOccupancy,
-                    adultOccupancy,
-                    childOccupancy,
                     description,
                     photos,
                     Amenities: amenities && amenities.length > 0
@@ -117,6 +111,12 @@ export default class RoomService {
 
         return room;
     }
+    async getRoomsByRoomType(id:string,hotelId:string){
+        const rooms =await prisma.room.findMany({
+            where:{roomTypeId:id,hotelId}
+        })
+        return rooms;
+    }
 
     async updateRoom({
         id,
@@ -124,9 +124,6 @@ export default class RoomService {
         roomTypeId,
         hotelId,
         floor,
-        maxOccupancy,
-        childOccupancy,
-        adultOccupancy,
         amenities,
         connectedRoomIds,
         status,
@@ -187,9 +184,6 @@ export default class RoomService {
             roomNumber,
             roomTypeId,
             floor,
-            maxOccupancy,
-            childOccupancy,
-            adultOccupancy,
             status,
             description,
             photos
