@@ -2,8 +2,8 @@ import { Router } from "express";
 import { addRole, getRole, getRoles, updateRole, deleteRole } from "./role.controller";
 import { validateRequest } from "../../middleware/validation";
 import { createRoleSchema, updateRoleSchema, roleIdSchema } from "./role.validation";
-import { requirePermissions } from "../../middleware/requirePermissions";
 import { actionLogger } from "../../middleware/logger";
+import { requirePermissions } from "../../middleware/authenticate";
 
 const router = Router();
 
