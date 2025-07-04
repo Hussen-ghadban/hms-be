@@ -73,6 +73,13 @@ class AuthService {
     if (existing) {
       throw new AppError('User already exists');
     }
+    const existingUser = await prisma.user.findUnique({
+  where: { username },
+});
+
+if (existingUser) {
+  throw new AppError("Username already exists", 409);
+}
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
