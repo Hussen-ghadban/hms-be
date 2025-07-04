@@ -1,3 +1,4 @@
+import { FolioStatus, ReservationStatus, RoomStatus } from "../../../generated/prisma";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import { checkRoomAvailability } from "../../utils/availability";
@@ -399,5 +400,54 @@ export default class ReservationService {
       throw new Error("An unexpected error occurred");
     }
   }
+
+  async validateCheckout(reservationId:string, hotelId:string){
+    const reservation = await prisma.reservation.findUnique({
+      where: { id: reservationId , hotelId},
+      include: { rooms: true, folio: true },
+    });
+
+    if(!reservation) {
+      throw new AppError("Reservation not found", 404);
+    }
+
+    if(reservation.status != ReservationStatus.CHECKED_IN){
+      throw new AppError("This reservation cannot be checked out.",405);
+    }
+
+    return reservation;
+  }
+  async checkout(reservationId: string, hotelId: string) {
+    const reservation = await this.validateCheckout(reservationId, hotelId);
+    const roomIds = reservation.rooms.map(room => room.id);
+
+    const result = await prisma.$transaction(async (tx) => {
+      // Update reservation status to CHECKED_OUT
+      const updatedReservation = await tx.reservation.update({
+        where: { id: reservationId },
+        data: { status: ReservationStatus.CHECKED_OUT },
+      });
+
+      if(reservation.folio?.balance && !reservation.folio.balance.equals(0)) {
+        throw new AppError("Folio balance must be settled before checkout", 400);
+      }
+
+      // Update all rooms' status to AVAILABLE
+      await tx.room.updateMany({
+        where: { id: { in: roomIds } },
+        data: { status: RoomStatus.DIRTY },
+      });
+
+      const settledFolio = await tx.folio.update({
+        where: { id: reservation.folio?.id },
+        data: { status: FolioStatus.CLOSED },
+      });
+      return {
+        reservation: updatedReservation,
+        folio: settledFolio,
+      };
+    }); 
+  }
 }
+
 
