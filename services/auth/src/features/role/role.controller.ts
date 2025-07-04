@@ -27,6 +27,22 @@ export const getRoles = async (req: Request, res: Response, next: NextFunction) 
   }
 };
 
+export const getPermissions=async(req:Request,res:Response,next:NextFunction)=>{
+  try{
+            if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
+        }
+        const { hotelId } = req.user;
+        const permissions=await roleService.getPermissions(hotelId);
+        res.json({
+          status:200,
+          message:"permissions was retrieved successfully",
+          data:permissions
+        })
+  }catch(error){
+    next(error)
+  }
+}
 export const getRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
