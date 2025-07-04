@@ -205,6 +205,23 @@ if (existingUser) {
       throw new AppError("An unexpected error occurred during authentication",500);
     }
   }
+
+  async getUsers(userId:string,hotelId:string){
+    const users = await prisma.user.findMany({
+      where: {
+       hotel:{
+        some:{
+          id: hotelId
+        }
+       }
+      },
+      include: {
+        role: true,
+        hotel: true,
+      },
+    });
+    return users;
+  }
 }
 
 export const authService = new AuthService();
