@@ -7,7 +7,7 @@ const router=Router();
 
 router.post("/add", requirePermissions(["Reservation.create","Guest.read"]),addReservation,actionLogger("add reservation"));
 router.put("/update/:reservationId", requirePermissions(["Reservation.update"]),updateReservation,actionLogger("update reservation"));
-router.post("/get-reservation",requirePermissions(["Reservation.read","Room.read","RoomType.read"]),getReservation,actionLogger("get reservations"))
+router.get("/get-reservation",requirePermissions(["Reservation.read","Room.read","RoomType.read"]),getReservation,actionLogger("get reservations"))
 router.post("/check-in/:reservationId",requirePermissions([]),checkInReservation,actionLogger("add check-in"));
 router.post(
   "/create",

@@ -70,19 +70,24 @@ export const getReservation = async (req: Request, res: Response, next: NextFunc
     }
 
     const { hotelId } = req.user;
-    const { startDate, endDate } = req.body;
+    const { startDate, endDate } = req.query;
+
+    if (typeof startDate !== 'string' || typeof endDate !== 'string') {
+      throw new AppError("startDate and endDate must be provided as query parameters", 400);
+    }
 
     const result = await reservationService.getReservation(hotelId, startDate, endDate);
 
     res.status(200).json({
       status: 200,
       message: "Reservations fetched successfully",
-      data: result
+      data: result,
     });
   } catch (error) {
     next(error);
   }
 };
+
 
 
 export const checkInReservation = async (req: Request, res: Response, next: NextFunction) => {
