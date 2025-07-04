@@ -6,8 +6,12 @@ import {
   MongoQuery,
   Subject,
 } from "@casl/ability";
-import { Permission } from "../middleware/introspect";
 
+
+interface Permission{
+  subject:string,
+  action:string
+}
 
 // Define proper types based on your schema
 export type AppSubjects = 
