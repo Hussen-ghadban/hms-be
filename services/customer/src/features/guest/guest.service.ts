@@ -41,12 +41,20 @@ export default class GuestService {
     }
   }
 
-  async getGuests(hotelId: string) {
-    return prisma.guest.findMany({
-      where: { hotelId },
-      orderBy: { createdAt: "desc" },
-    });
-  }
+async getGuests(hotelId: string, skip: number, take: number) {
+  return prisma.guest.findMany({
+    where: { hotelId },
+    orderBy: { createdAt: "desc" },
+    skip,
+    take,
+  });
+}
+
+async countGuests(hotelId: string) {
+  return prisma.guest.count({
+    where: { hotelId },
+  });
+}
 
   async getGuest(id: string, hotelId: string) {
     const guest = await prisma.guest.findFirst({

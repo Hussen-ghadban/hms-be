@@ -59,19 +59,31 @@ export const getGroupProfiles = async (req: Request, res: Response, next: NextFu
       throw new AppError("Hotel ID is required", 400);
     }
 
-    const { hotelId } = req.user;
+    if (!req.pagination) {
+      throw new AppError("Pagination middleware not initialized", 500);
+    }
 
-    const groupProfiles = await groupProfileService.getGroupProfiles(hotelId);
+    const { hotelId } = req.user;
+    const { skip, limit } = req.pagination;
+
+    const result = await req.pagination.getPaginationResult(
+      () => groupProfileService.getGroupProfiles(hotelId, skip, limit),
+      () => groupProfileService.countGroupProfiles(hotelId)
+    );
 
     res.json({
       status: 200,
       message: "Group profiles retrieved successfully",
-      data: groupProfiles,
+      data: {
+        groupProfiles: result.data,
+      },
+      pagination: result.pagination,
     });
   } catch (error) {
     next(error);
   }
 };
+
 
 export const getGroupProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {

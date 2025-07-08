@@ -85,9 +85,7 @@ export const employees = async (req: Request, res: Response, next: NextFunction)
     res.status(200).json({
       status: 200,
       message: "Employees fetched successfully",
-      data: {
-        employees: result.data,
-      },
+      data:  result.data,
       pagination: result.pagination,
     });
   } catch (error) {
