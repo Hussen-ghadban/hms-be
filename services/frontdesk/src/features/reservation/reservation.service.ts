@@ -1,4 +1,4 @@
-import { FolioStatus, ReservationStatus, RoomStatus } from "../../../generated/prisma";
+import { FolioStatus, GroupBookingStatus, ReservationStatus, RoomStatus } from "../../../generated/prisma";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import { checkRoomAvailability } from "../../utils/availability";
@@ -401,18 +401,22 @@ export default class ReservationService {
     }
   }
 
-  async validateCheckout(reservationId:string, hotelId:string){
+  async validateCheckout(reservationId: string, hotelId: string) {
     const reservation = await prisma.reservation.findUnique({
-      where: { id: reservationId , hotelId},
+      where: { id: reservationId, hotelId },
       include: { rooms: true, folio: true },
     });
 
-    if(!reservation) {
+    if (!reservation) {
       throw new AppError("Reservation not found", 404);
     }
 
-    if(reservation.status != ReservationStatus.CHECKED_IN){
-      throw new AppError("This reservation cannot be checked out.",405);
+    if (reservation.status != ReservationStatus.CHECKED_IN) {
+      throw new AppError("This reservation cannot be checked out.", 405);
+    }
+
+    if (reservation.folio?.balance && !reservation.folio.balance.equals(0)) {
+      throw new AppError("Folio balance must be settled before checkout", 400);
     }
 
     return reservation;
@@ -428,7 +432,7 @@ export default class ReservationService {
         data: { status: ReservationStatus.CHECKED_OUT },
       });
 
-      if(reservation.folio?.balance && !reservation.folio.balance.equals(0)) {
+      if (reservation.folio?.balance && !reservation.folio.balance.equals(0)) {
         throw new AppError("Folio balance must be settled before checkout", 400);
       }
 
@@ -442,11 +446,37 @@ export default class ReservationService {
         where: { id: reservation.folio?.id },
         data: { status: FolioStatus.CLOSED },
       });
+
+      if (reservation.groupBookingId) {
+        const groupBooking = await tx.groupBooking.findUnique({
+          where: { id: reservation.groupBookingId },
+          include: { reservations: true },
+        });
+        if (!groupBooking) {
+          throw new AppError("Group booking not found", 404);
+        }
+
+        const allReservationsCheckedOut = groupBooking.reservations.every(
+          res => res.id === reservationId || res.status === ReservationStatus.CHECKED_OUT
+        );
+        if(allReservationsCheckedOut) {
+          await tx.groupBooking.update({
+            where: { id: groupBooking.id },
+            data: { status: GroupBookingStatus.CHECKED_OUT }, // Assuming "COMPLETED" is a valid status
+          });
+        }
+        else{
+          await tx.groupBooking.update({
+            where: { id: groupBooking.id },
+            data: { status: GroupBookingStatus.PARTIALLY_CHECKED_OUT }, // Assuming this is a valid status
+          });
+        }
+      }
       return {
         reservation: updatedReservation,
         folio: settledFolio,
       };
-    }); 
+    });
   }
 }
 

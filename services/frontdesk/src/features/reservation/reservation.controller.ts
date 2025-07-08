@@ -76,8 +76,7 @@ export const checkInReservation = async (req: Request, res: Response, next: Next
     const { reservationId } = req.params;
 
     if (!reservationId) {
-      res.status(400).json({ message: "Reservation ID is required" });
-      return;
+      throw new AppError("Reservation ID is required", 400);
     }
 
     const result = await reservationService.checkIn({reservationId, hotelId, deposit});
@@ -128,3 +127,27 @@ export const createGroupBookingController = async (
     next(error);
   }
 };
+
+export const checkoutReservation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user || !req.user.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
+    }
+
+    const { hotelId } = req.user;
+    const { reservationId } = req.params;
+
+    if (!reservationId) {
+      throw new AppError("Reservation ID is required", 400);
+    }
+
+    const result = await reservationService.checkout( reservationId, hotelId );
+
+    res.status(200).json({
+      message: "Guest checked out successfully",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
