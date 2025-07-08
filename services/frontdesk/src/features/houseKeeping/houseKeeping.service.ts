@@ -114,7 +114,13 @@ async getTasks(hotelId: string, skip: number, take: number) {
       },
     },
     include: {
-      room: true,
+      room: {
+        select:{
+          id:true,
+          roomNumber:true,
+        },
+      },
+      
     },
     orderBy: {
       createdAt: "desc",

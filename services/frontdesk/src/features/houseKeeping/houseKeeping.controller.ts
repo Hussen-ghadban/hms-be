@@ -44,6 +44,8 @@ export const completeHouseKeepingTask = async (req: Request, res: Response, next
   }
 };
 
+const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL;
+
 export const getHouseKeepingTasks = async (
   req: Request,
   res: Response,
@@ -66,17 +68,53 @@ export const getHouseKeepingTasks = async (
       () => houseKeepingService.countTasks(hotelId)
     );
 
-    res.status(200).json({
+    const uniqueUserIds = [...new Set(result.data.map(task => task.userId))];
+
+    const userMap = new Map<string, { id: string; firstName: string; lastName: string } | null>();
+
+    await Promise.all(
+      uniqueUserIds.map(async (userId) => {
+        try {
+          const response = await fetch(`${AUTH_SERVICE_URL}/auth/get-user/${userId}`, {
+            headers: {
+              Authorization: req.headers.authorization || "",
+              "Content-Type": "application/json",
+            },
+          });
+          if (!response.ok) throw new Error(`Failed to fetch user ${userId}`);
+
+          const userData = await response.json();
+
+          // Extract only id, firstName, lastName
+          const userInfo = {
+            id: userData.data.id,
+            firstName: userData.data.firstName,
+            lastName: userData.data.lastName,
+          };
+
+          userMap.set(userId, userInfo);
+        } catch (error) {
+          console.error(`Failed to fetch user ${userId}:`, error);
+          userMap.set(userId, null);
+        }
+      })
+    );
+
+    const enrichedTasks = result.data.map(task => ({
+      ...task,
+      user: userMap.get(task.userId),
+    }));
+
+    res.json({
       status: 200,
       message: "Housekeeping tasks retrieved successfully",
-      data: result.data,
+      data: enrichedTasks,
       pagination: result.pagination,
     });
   } catch (err) {
     next(err);
   }
 };
-
 
 export const getHouseKeepingTask = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
