@@ -6,7 +6,11 @@ const roleService = new RoleService();
 
 export const addRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { name, hotelId, permissionIds } = req.body;
+     if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
+        }
+        const { hotelId } = req.user;
+    const { name, permissionIds } = req.body;
     const role = await roleService.createRole({ name, hotelId, permissionIds });
     res.status(201).json({ status: 201, message: "Role created", data: role });
   } catch (error) {
