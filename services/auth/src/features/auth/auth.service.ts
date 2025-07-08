@@ -205,23 +205,36 @@ if (existingUser) {
       throw new AppError("An unexpected error occurred during authentication",500);
     }
   }
+async getUsers(userId: string, hotelId: string, skip: number, take: number) {
+  return prisma.user.findMany({
+    where: {
+      hotel: {
+        some: {
+          id: hotelId,
+        },
+      },
+    },
+    include: {
+      role: true,
+      hotel: true,
+    },
+    skip,
+    take,
+  });
+}
 
-  async getUsers(userId:string,hotelId:string){
-    const users = await prisma.user.findMany({
-      where: {
-       hotel:{
-        some:{
-          id: hotelId
-        }
-       }
+async countUsers(hotelId: string) {
+  return prisma.user.count({
+    where: {
+      hotel: {
+        some: {
+          id: hotelId,
+        },
       },
-      include: {
-        role: true,
-        hotel: true,
-      },
-    });
-    return users;
-  }
+    },
+  });
+}
+
 }
 
 export const authService = new AuthService();

@@ -4,6 +4,7 @@ import { addRoom, getRooms, getRoom, updateRoom, deleteRoom, getRoomsByStatus, g
 import { createRoomSchema, updateRoomSchema, roomParamsSchema } from "./room.validation";
 import { requirePermissions } from '../../middleware/requirePermissions';
 import { actionLogger } from '../../middleware/logger';
+import { paginateResults } from '../../middleware/pagination.middleware';
 
 const router = express.Router();
 
@@ -26,6 +27,7 @@ router.get('/get/:id',
 router.get('/get-by-room-type/:id',
     requirePermissions(["Room.read"]),
     validateRequest({ params: roomParamsSchema }),
+    paginateResults,
     getRoomByRoomType,
     actionLogger("get room")
 );
@@ -34,6 +36,7 @@ router.get('/get-by-room-type/:id',
 router.get('/get',
     
     requirePermissions(["Room.read"]),
+    paginateResults,
     getRooms,
     actionLogger("get rooms")
 );

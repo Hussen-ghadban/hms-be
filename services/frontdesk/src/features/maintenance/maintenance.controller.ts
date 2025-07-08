@@ -48,15 +48,39 @@ export const completeMaintenance = async (req: Request, res: Response, next: Nex
 };
 
 
-export const getMaintenances = async (req: Request, res: Response, next: NextFunction) => {
+export const getMaintenances = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
-    if (!req.user?.hotelId) throw new AppError("Hotel ID is required", 400);
-    const maintenances = await maintenanceService.getMaintenances(req.user.hotelId);
-    res.json({ status: 200, message:"Maintenances were fetched successfully",data: maintenances });
+    if (!req.user?.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
+    }
+
+    if (!req.pagination) {
+      throw new AppError("Pagination middleware not initialized", 500);
+    }
+
+    const { hotelId } = req.user;
+    const { skip, limit } = req.pagination;
+
+    const result = await req.pagination.getPaginationResult(
+      () => maintenanceService.getMaintenances(hotelId, skip, limit),
+      () => maintenanceService.countMaintenances(hotelId)
+    );
+
+    res.status(200).json({
+      status: 200,
+      message: "Maintenances were fetched successfully",
+      data: result.data,
+      pagination: result.pagination,
+    });
   } catch (error) {
     next(error);
   }
 };
+
 
 export const getMaintenance = async (req: Request, res: Response, next: NextFunction) => {
   try {

@@ -34,12 +34,18 @@ export default class RoomTypeService {
     return roomType;
   }
 
-  async getRoomTypes(hotelId: string) {
-    return prisma.roomType.findMany({
-      where: { hotelId },
-      orderBy: { createdAt: "desc" },
-    });
-  }
+async getRoomTypes(hotelId: string, skip: number, take: number) {
+  return prisma.roomType.findMany({
+    where: { hotelId },
+    orderBy: { createdAt: 'desc' },
+    skip,
+    take,
+  });
+}
+
+async countRoomTypes(hotelId: string) {
+  return prisma.roomType.count({ where: { hotelId } });
+}
 
   async getRoomType(id: string, hotelId: string) {
     const roomType = await prisma.roomType.findFirst({

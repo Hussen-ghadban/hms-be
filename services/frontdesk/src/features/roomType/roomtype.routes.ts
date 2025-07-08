@@ -4,6 +4,7 @@ import { createRoomTypeSchema, updateRoomTypeSchema, roomTypeParamsSchema } from
 import { requirePermissions } from "../../middleware/requirePermissions";
 import { createRoomType, deleteRoomType, getRoomType, getRoomTypes, updateRoomType } from "./roomtype.controller";
 import { actionLogger } from "../../middleware/logger";
+import { paginateResults } from "../../middleware/pagination.middleware";
 
 const router = Router();
 
@@ -19,6 +20,7 @@ router.post(
 router.get(
   "/get",
   requirePermissions(["RoomType.read"]),
+  paginateResults,
   getRoomTypes,
   actionLogger("get room-type")
 );

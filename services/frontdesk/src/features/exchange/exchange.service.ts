@@ -26,12 +26,21 @@ export default class ExchangeRateService {
         }
   }
 
-  async getExchangeRates( hotelId: string) {
-    return prisma.exchangeRate.findMany({
-      where: { hotelId },
-      orderBy: { createdAt: "desc" },
-    });
-  }
+async getExchangeRates(hotelId: string, skip: number, take: number) {
+  return prisma.exchangeRate.findMany({
+    where: { hotelId },
+    orderBy: { createdAt: "desc" },
+    skip,
+    take,
+  });
+}
+
+async countExchangeRates(hotelId: string) {
+  return prisma.exchangeRate.count({
+    where: { hotelId },
+  });
+}
+
 
   async getExchangeRate(id: string, hotelId: string) {
     const rate = await prisma.exchangeRate.findFirst({

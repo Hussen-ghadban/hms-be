@@ -34,12 +34,24 @@ export default class RatePlanService {
 
 
 
-  async getRatePlans(hotelId: string) {
-    return await prisma.ratePlan.findMany({
-      where: { hotelId },
-      orderBy: { createdAt: "desc" },
-    });
-  }
+
+// Paginated list
+async getRatePlans(hotelId: string, skip: number, take: number) {
+  return await prisma.ratePlan.findMany({
+    where: { hotelId },
+    orderBy: { createdAt: "desc" },
+    skip,
+    take,
+  });
+}
+
+// Count for pagination
+async countRatePlans(hotelId: string) {
+  return await prisma.ratePlan.count({
+    where: { hotelId },
+  });
+}
+
 
   async getRatePlan(id: string,hotelId: string) {
     return await prisma.ratePlan.findFirst({

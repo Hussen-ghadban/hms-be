@@ -16,6 +16,7 @@ import {
   completeMaintenance
 } from "./maintenance.controller";
 import { actionLogger } from "../../middleware/logger";
+import { paginateResults } from "../../middleware/pagination.middleware";
 
 const router = express.Router();
 
@@ -52,7 +53,7 @@ router.get(
 );
 
   
-router.get("/get", requirePermissions(["Maintenance.read"]), getMaintenances,actionLogger("get maintenances"));
+router.get("/get", requirePermissions(["Maintenance.read"]), paginateResults,getMaintenances,actionLogger("get maintenances"));
 
 router.put(
   "/update/:id",

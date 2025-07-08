@@ -44,18 +44,39 @@ export const completeHouseKeepingTask = async (req: Request, res: Response, next
   }
 };
 
-export const getHouseKeepingTasks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getHouseKeepingTasks = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
-    if (!req.user || !req.user.hotelId) throw new AppError("Hotel ID is required", 400);
+    if (!req.user || !req.user.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
+    }
+
+    if (!req.pagination) {
+      throw new AppError("Pagination middleware not initialized", 500);
+    }
 
     const { hotelId } = req.user;
-    const tasks = await houseKeepingService.getTasks(hotelId);
+    const { skip, limit } = req.pagination;
 
-    res.json({ status: 200, data: tasks });
+    const result = await req.pagination.getPaginationResult(
+      () => houseKeepingService.getTasks(hotelId, skip, limit),
+      () => houseKeepingService.countTasks(hotelId)
+    );
+
+    res.status(200).json({
+      status: 200,
+      message: "Housekeeping tasks retrieved successfully",
+      data: result.data,
+      pagination: result.pagination,
+    });
   } catch (err) {
     next(err);
   }
 };
+
 
 export const getHouseKeepingTask = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

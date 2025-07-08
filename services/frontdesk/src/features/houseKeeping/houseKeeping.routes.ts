@@ -4,6 +4,7 @@ import { validateRequest } from "../../middleware/validation";
 import { createHouseKeepingTaskSchema, houseKeepingTaskParamsSchema, updateHouseKeepingTaskSchema } from "./houseKeeping.validation";
 import { completeHouseKeepingTask, createHouseKeepingTask, deleteHouseKeepingTasks, getHouseKeepingTask, getHouseKeepingTasks, startHouseKeepingTask, updateHouseKeepingTasks } from "./houseKeeping.controller";
 import { actionLogger } from "../../middleware/logger";
+import { paginateResults } from "../../middleware/pagination.middleware";
 
 const router=Router();
 
@@ -39,6 +40,7 @@ router.get('/get/:id',
 
 router.get('/get',
     requirePermissions(["HouseKeeping.read"]),
+    paginateResults,
     getHouseKeepingTasks,
     actionLogger("get HouseKeepings")
 );
