@@ -63,13 +63,35 @@ async completeMaintenance(id: string, hotelId: string) {
 }
 
 
-  async getMaintenances(hotelId: string) {
-    return prisma.maintenance.findMany({
-      where: { room: { hotelId } },
-      include: { room: true },
-      orderBy: { createdAt: "desc" }
-    });
-  }
+// Get paginated maintenances
+async getMaintenances(hotelId: string, skip: number, take: number) {
+  return await prisma.maintenance.findMany({
+    where: {
+      room: {
+        hotelId,
+      },
+    },
+    include: {
+      room: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    skip,
+    take,
+  });
+}
+
+// Count total maintenances for pagination
+async countMaintenances(hotelId: string) {
+  return await prisma.maintenance.count({
+    where: {
+      room: {
+        hotelId,
+      },
+    },
+  });
+}
 
   async getMaintenance(id: string, hotelId: string) {
     const maintenance = await prisma.maintenance.findFirst({

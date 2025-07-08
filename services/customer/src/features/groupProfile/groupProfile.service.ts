@@ -15,12 +15,20 @@ export default class GroupProfileService {
     });
   }
 
-  async getGroupProfiles(hotelId: string) {
-    return prisma.groupProfile.findMany({
-      where: { hotelId },
-      orderBy: { createdAt: "desc" },
-    });
-  }
+async getGroupProfiles(hotelId: string, skip: number, take: number) {
+  return prisma.groupProfile.findMany({
+    where: { hotelId },
+    orderBy: { createdAt: "desc" },
+    skip,
+    take,
+  });
+}
+
+async countGroupProfiles(hotelId: string) {
+  return prisma.groupProfile.count({
+    where: { hotelId },
+  });
+}
 
   async getGroupProfile(id: string, hotelId: string) {
     const profile = await prisma.groupProfile.findFirst({ where: { id, hotelId } });

@@ -5,6 +5,7 @@ import { addExchangeRateSchema, exchangeRateIdSchema, updateExchangeRateSchema }
 import { addExchangeRate, deleteExchangeRate, getExchangeRate, getExchangeRates, updateExchangeRate } from './exchange.controller';
 import { requirePermissions } from '../../middleware/requirePermissions';
 import { actionLogger } from '../../middleware/logger';
+import { paginateResults } from '../../middleware/pagination.middleware';
 
 const router=express.Router();
 router.post('/add',
@@ -17,6 +18,7 @@ router.post('/add',
 router.get('/get',
     
      requirePermissions(["Guest.read"]),
+     paginateResults,
     getExchangeRates,
     actionLogger("get Exchanges")
 );

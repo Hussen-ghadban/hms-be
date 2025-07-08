@@ -20,17 +20,36 @@ export const addExchangeRate = async (req: Request, res: Response, next: NextFun
   }
 };
 
-export const getExchangeRates = async (req: Request, res: Response, next: NextFunction) => {
+export const getExchangeRates = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
-        if (!req.user || !req.user.hotelId) {
-        throw new AppError("Hotel ID is required", 400);
-        }
+    if (!req.user || !req.user.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
+    }
 
-        const { hotelId } = req.user;
-    const data = await service.getExchangeRates(hotelId);
-    res.json({ status: 200, message: "Exchange rates retrieved successfully", data });
+    if (!req.pagination) {
+      throw new AppError("Pagination middleware not initialized", 500);
+    }
+
+    const { hotelId } = req.user;
+    const { skip, limit } = req.pagination;
+
+    const result = await req.pagination.getPaginationResult(
+      () => service.getExchangeRates(hotelId, skip, limit),
+      () => service.countExchangeRates(hotelId)
+    );
+
+    res.status(200).json({
+      status: 200,
+      message: "Exchange rates retrieved successfully",
+      data: result.data,
+      pagination: result.pagination,
+    });
   } catch (err) {
-    next(err)
+    next(err);
   }
 };
 

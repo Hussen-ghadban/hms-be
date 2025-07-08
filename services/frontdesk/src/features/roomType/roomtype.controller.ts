@@ -21,18 +21,34 @@ export const createRoomType = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-export const getRoomTypes = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getRoomTypes = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     if (!req.user || !req.user.hotelId) throw new AppError("Hotel ID is required", 400);
+    if (!req.pagination) throw new AppError("Pagination middleware not initialized", 500);
 
     const { hotelId } = req.user;
-    const roomTypes = await roomTypeService.getRoomTypes(hotelId);
+    const { skip, limit } = req.pagination;
 
-    res.json({ status: 200, data: roomTypes });
+    const result = await req.pagination.getPaginationResult(
+      () => roomTypeService.getRoomTypes(hotelId, skip, limit),
+      () => roomTypeService.countRoomTypes(hotelId)
+    );
+
+    res.status(200).json({
+      status: 200,
+      message: 'Room types fetched successfully',
+      data: result.data,
+      pagination: result.pagination,
+    });
   } catch (err) {
     next(err);
   }
 };
+
 
 export const getRoomType = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

@@ -42,24 +42,37 @@ export const addRoom = async (req: Request, res: Response, next: NextFunction) =
         next(error);
     }
 };
-
-export const getRooms = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        if (!req.user || !req.user.hotelId) {
-        throw new AppError("Hotel ID is required", 400);
-        }
-
-        const { hotelId } = req.user;
-
-        const rooms = await roomService.getRooms(hotelId);
-
-        res.json({
-            status: 200,
-            data: rooms,
-        });
-    } catch (error) {
-        next(error);
+export const getRooms = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    if (!req.user || !req.user.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
     }
+
+    if (!req.pagination) {
+      throw new AppError("Pagination middleware not initialized", 500);
+    }
+
+    const { hotelId } = req.user;
+    const { skip, limit } = req.pagination;
+
+    const result = await req.pagination.getPaginationResult(
+      () => roomService.getRooms(hotelId, skip, limit),
+      () => roomService.countRooms(hotelId)
+    );
+
+    res.status(200).json({
+      status: 200,
+      message: "Rooms retrieved successfully",
+      data: result.data,
+      pagination: result.pagination,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const getRoom = async (req: Request, res: Response, next: NextFunction) => {
@@ -81,24 +94,40 @@ export const getRoom = async (req: Request, res: Response, next: NextFunction) =
         next(error);
     }
 };
-export const getRoomByRoomType=async(req:Request,res:Response,next:NextFunction)=>{
-    try{
-                if (!req.user || !req.user.hotelId) {
-        throw new AppError("Hotel ID is required", 400);
-        }
-
-        const { hotelId } = req.user;
-        const { id } = req.params;
-        const rooms=await roomService.getRoomsByRoomType(id,hotelId);
-        res.json({
-            status:200,
-            message:"rooms were fetched successfully",
-            data:rooms,
-        });
-    }catch(error){
-        next(error)
+export const getRoomByRoomType = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    if (!req.user || !req.user.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
     }
-}
+
+    if (!req.pagination) {
+      throw new AppError("Pagination middleware not initialized", 500);
+    }
+
+    const { hotelId } = req.user;
+    const { id } = req.params; // roomTypeId
+    const { skip, limit } = req.pagination;
+
+    const result = await req.pagination.getPaginationResult(
+      () => roomService.getRoomsByRoomType(id, hotelId, skip, limit),
+      () => roomService.countRoomsByRoomType(id, hotelId)
+    );
+
+    res.status(200).json({
+      status: 200,
+      message: "Rooms were fetched successfully",
+      data: result.data,
+      pagination: result.pagination,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const updateRoom = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if (!req.user || !req.user.hotelId) {

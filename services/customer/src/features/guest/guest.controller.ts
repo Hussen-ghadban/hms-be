@@ -39,25 +39,36 @@ export const addGuest = async (req: Request, res: Response, next: NextFunction):
     }
 }
 export const getGuests = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        if (!req.user || !req.user.hotelId) {
-        throw new AppError("Hotel ID is required", 400);
-        }
-
-        const { hotelId } = req.user;
-
-        // Assuming guestService is defined and has a method to get guests
-        const guests = await guestService.getGuests(hotelId);
-
-        res.json({
-            status: 200,
-            message: "Guests retrieved successfully",
-            data: guests,
-        });
-    } catch (error) {
-        next(error);
+  try {
+    if (!req.user || !req.user.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
     }
-}
+
+    if (!req.pagination) {
+      throw new AppError("Pagination middleware not initialized", 500);
+    }
+
+    const { hotelId } = req.user;
+    const { skip, limit } = req.pagination;
+
+    const result = await req.pagination.getPaginationResult(
+      () => guestService.getGuests(hotelId, skip, limit),
+      () => guestService.countGuests(hotelId)
+    );
+
+    res.json({
+      status: 200,
+      message: "Guests retrieved successfully",
+      data: {
+        guests: result.data,
+      },
+      pagination: result.pagination,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getGuest = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if (!req.user || !req.user.hotelId) {

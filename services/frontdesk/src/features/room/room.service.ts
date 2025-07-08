@@ -81,22 +81,28 @@ export default class RoomService {
               throw new AppError("Failed to create room type", 500);
             }
     }
-
-    async getRooms(hotelId: string) {
-        return prisma.room.findMany({
-            where: { hotelId },
-            include: {
-                roomType: true,
-                connectedRooms:{
-                    select:{
-                        id:true,
-                        roomNumber:true
-                    }
-                }
-            },
-            orderBy: { roomNumber: "asc" },
-        });
-    }
+async getRooms(hotelId: string, skip: number, take: number) {
+  return prisma.room.findMany({
+    where: { hotelId },
+    include: {
+      roomType: true,
+      connectedRooms: {
+        select: {
+          id: true,
+          roomNumber: true,
+        },
+      },
+    },
+    orderBy: { roomNumber: "asc" },
+    skip,
+    take,
+  });
+}
+async countRooms(hotelId: string) {
+  return prisma.room.count({
+    where: { hotelId },
+  });
+}
 
     async getRoom(id: string, hotelId: string) {
         const room = await prisma.room.findFirst({
@@ -123,12 +129,31 @@ export default class RoomService {
 
         return room;
     }
-    async getRoomsByRoomType(id:string,hotelId:string){
-        const rooms =await prisma.room.findMany({
-            where:{roomTypeId:id,hotelId}
-        })
-        return rooms;
-    }
+async getRoomsByRoomType(
+  roomTypeId: string,
+  hotelId: string,
+  skip: number,
+  take: number
+) {
+  return prisma.room.findMany({
+    where: {
+      roomTypeId,
+      hotelId,
+    },
+    skip,
+    take,
+  });
+}
+
+async countRoomsByRoomType(roomTypeId: string, hotelId: string) {
+  return prisma.room.count({
+    where: {
+      roomTypeId,
+      hotelId,
+    },
+  });
+}
+
 
     async updateRoom({
         id,

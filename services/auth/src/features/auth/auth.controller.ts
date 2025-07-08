@@ -63,22 +63,33 @@ export const authenticate = async (req: Request, res: Response,next:NextFunction
     }
 }
 
-export const employees = async (req: Request, res: Response,next:NextFunction) => {
-    const {id, hotelId} = req.user!
+export const employees = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id, hotelId } = req.user!;
 
-    // Ensure hotelId is provided
-    if(!hotelId || !id) {
-        throw new AppError("Hotel ID is required", 400);
+    if (!hotelId || !id) {
+      throw new AppError("Hotel ID is required", 400);
     }
-    try {
-        const employees = await authService.getUsers(id,hotelId);
-        res.status(200).json({
-            status: 200,
-            message: "Employees fetched successfully",
-            data: employees
-        });
-    } catch (error) {
-        console.error('Get employees error:', error);
-        next(error);
+
+    if (!req.pagination) {
+      throw new AppError("Pagination middleware not initialized", 500);
     }
-}
+
+    const { skip, limit } = req.pagination;
+
+    const result = await req.pagination.getPaginationResult(
+      () => authService.getUsers(id, hotelId, skip, limit),
+      () => authService.countUsers(hotelId)
+    );
+
+    res.status(200).json({
+      status: 200,
+      message: "Employees fetched successfully",
+      data:  result.data,
+      pagination: result.pagination,
+    });
+  } catch (error) {
+    console.error('Get employees error:', error);
+    next(error);
+  }
+};

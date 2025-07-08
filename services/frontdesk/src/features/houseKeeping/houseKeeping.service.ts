@@ -104,12 +104,37 @@ export default class HouseKeepingService {
     return completedTask;
   }
 
-  async getTasks(hotelId: string) {
-    return prisma.houseKeepingTask.findMany({
-      where: { room: { hotelId } },
-      include: { room: true },
-    });
-  }
+
+// Paginated fetch
+async getTasks(hotelId: string, skip: number, take: number) {
+  return prisma.houseKeepingTask.findMany({
+    where: {
+      room: {
+        hotelId,
+      },
+    },
+    include: {
+      room: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    skip,
+    take,
+  });
+}
+
+// Count total tasks for pagination
+async countTasks(hotelId: string) {
+  return prisma.houseKeepingTask.count({
+    where: {
+      room: {
+        hotelId,
+      },
+    },
+  });
+}
+
 
   async getTask(id: string, hotelId: string) {
     const task = await prisma.houseKeepingTask.findFirst({
