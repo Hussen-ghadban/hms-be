@@ -4,14 +4,43 @@ import { AppError } from "../../utils/AppError";
 import { CreateMaintenanceParams, UpdateMaintenanceParams } from "./maintenance.type";
 
 export default class MaintenanceService {
-  async createMaintenance({ description, priority, roomId, hotelId }: CreateMaintenanceParams) {
-    const room = await prisma.room.findFirst({ where: { id: roomId, hotelId } });
-    if (!room) throw new AppError("Room not found in hotel", 404);
-
-    return prisma.maintenance.create({
-      data: { description, priority, roomId }
-    });
+async createMaintenance({
+  description,
+  priority,
+  roomId,
+  areaId,
+  userId,
+  hotelId,
+}: CreateMaintenanceParams) {
+  if (!roomId && !areaId) {
+    throw new AppError("Either roomId or areaId must be provided", 400);
   }
+
+  if (roomId) {
+    const room = await prisma.room.findFirst({
+      where: { id: roomId, hotelId },
+    });
+    if (!room) throw new AppError("Room not found in hotel", 404);
+  }
+
+  if (areaId) {
+    const area = await prisma.area.findFirst({
+      where: { id: areaId, hotelId },
+    });
+    if (!area) throw new AppError("Area not found in hotel", 404);
+  }
+
+  return prisma.maintenance.create({
+    data: {
+      description,
+      priority,
+      roomId: roomId || undefined,
+      areaId: areaId || undefined,
+      userId,
+    },
+  });
+}
+
 async startMaintenance(id: string, hotelId: string) {
   const existing = await prisma.maintenance.findFirst({
     where: { id, room: { hotelId } },
@@ -72,7 +101,12 @@ async getMaintenances(hotelId: string, skip: number, take: number) {
       },
     },
     include: {
-      room: true,
+      room: {
+        select:{
+          id:true,
+          roomNumber:true,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",

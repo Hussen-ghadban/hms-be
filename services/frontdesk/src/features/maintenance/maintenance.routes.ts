@@ -51,7 +51,6 @@ router.get(
   getMaintenance,
   actionLogger("get maintenance")
 );
-
   
 router.get("/get", requirePermissions(["Maintenance.read"]), paginateResults,getMaintenances,actionLogger("get maintenances"));
 
