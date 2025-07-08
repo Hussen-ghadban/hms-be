@@ -27,6 +27,10 @@ export default class RoleService {
       include: { permissions: true },
     });
   }
+  
+  async getPermissions(hotelId:string){
+    return prisma.permission.findMany();
+  }
 
   async getRole(id: string, hotelId: string) {
     const role = await prisma.role.findFirst({

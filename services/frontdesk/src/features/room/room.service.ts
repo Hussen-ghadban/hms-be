@@ -9,11 +9,10 @@ export default class RoomService {
         roomTypeId,
         hotelId,
         floor,
-        maxOccupancy,
-        childOccupancy,
-        adultOccupancy,
         amenities,
-        connectedRoomIds
+        connectedRoomIds,
+        description,
+        photos
     }: CreateRoomParams) {
         try {
             const existing = await prisma.room.findUnique({
@@ -58,9 +57,8 @@ export default class RoomService {
                     status: RoomStatus.AVAILABLE,
                     roomTypeId,
                     hotelId,
-                    maxOccupancy,
-                    adultOccupancy,
-                    childOccupancy,
+                    description,
+                    photos,
                     Amenities: amenities && amenities.length > 0
                         ? {
                             connect: amenities.map((id: string) => ({ id }))
@@ -89,6 +87,12 @@ export default class RoomService {
             where: { hotelId },
             include: {
                 roomType: true,
+                connectedRooms:{
+                    select:{
+                        id:true,
+                        roomNumber:true
+                    }
+                }
             },
             orderBy: { roomNumber: "asc" },
         });
@@ -102,6 +106,12 @@ export default class RoomService {
                 Amenities:{
                     select:{
                         id:true,
+                    },
+                },
+                connectedRooms:{
+                    select:{
+                        id:true,
+                        roomNumber:true
                     }
                 }
             }
@@ -113,6 +123,12 @@ export default class RoomService {
 
         return room;
     }
+    async getRoomsByRoomType(id:string,hotelId:string){
+        const rooms =await prisma.room.findMany({
+            where:{roomTypeId:id,hotelId}
+        })
+        return rooms;
+    }
 
     async updateRoom({
         id,
@@ -120,11 +136,11 @@ export default class RoomService {
         roomTypeId,
         hotelId,
         floor,
-        maxOccupancy,
-        childOccupancy,
-        adultOccupancy,
         amenities,
-        connectedRoomIds
+        connectedRoomIds,
+        status,
+        description,
+        photos,
     }: UpdateRoomParams) {
         // Check existence and ownership
         const room = await prisma.room.findFirst({
@@ -180,9 +196,9 @@ export default class RoomService {
             roomNumber,
             roomTypeId,
             floor,
-            maxOccupancy,
-            childOccupancy,
-            adultOccupancy,
+            status,
+            description,
+            photos
         };
 
         if (amenities !== undefined) {

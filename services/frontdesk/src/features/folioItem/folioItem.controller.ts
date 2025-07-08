@@ -5,32 +5,100 @@ import { AppError } from "../../utils/AppError";
 
 const folioItemService = new FolioItemService();
 
-export const addFolioItem = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const addChargeFolioItem = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    if (!req.user || !req.user.hotelId) throw new AppError("Hotel ID is required", 400);
-
+    if (!req.user?.hotelId) throw new AppError("Hotel ID is required", 400);
     const { hotelId } = req.user;
-    const { folioId, itemType, quantity, unitPrice, amount } = req.body;
+    const { folioId, itemType, quantity, unitPrice } = req.body;
 
     const item = await folioItemService.createFolioItem({
       folioId,
       itemType,
       quantity,
       unitPrice,
-      amount,
       hotelId,
+      isPayment: false, // charge
     });
 
     res.status(201).json({
       status: 201,
-      message: "Folio item created successfully",
+      message: "Charge item added successfully",
       data: item,
     });
   } catch (err) {
-    console.error("Error creating folio item:", err);
+    console.error("Error creating charge folio item:", err);
     next(err);
   }
 };
+
+export const addPaymentFolioItem = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    if (!req.user?.hotelId) throw new AppError("Hotel ID is required", 400);
+    const { hotelId } = req.user;
+    const { folioId, itemType, quantity, unitPrice } = req.body;
+
+    const item = await folioItemService.createFolioItem({
+      folioId,
+      itemType,
+      quantity,
+      unitPrice,
+      hotelId,
+      isPayment: true, // payment
+    });
+
+    res.status(201).json({
+      status: 201,
+      message: "Payment item added successfully",
+      data: item,
+    });
+  } catch (err) {
+    console.error("Error creating payment folio item:", err);
+    next(err);
+  }
+};
+export const TransferFolioItems = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user?.hotelId) throw new AppError("Hotel ID is required", 400);
+
+    const { fromFolioId, toFolioId } = req.body;
+    const result = await folioItemService.TransferFolioItems(fromFolioId, toFolioId, req.user.hotelId);
+
+    res.status(200).json({
+      status: 200,
+      message: result.message,
+      totalAmount: result.totalAmount,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const voidFolioItem = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user?.hotelId || !req.user?.id) {
+      throw new AppError("Authentication required", 401);
+    }
+
+    const { id } = req.params; // folio item id
+    const { voidReason } = req.body;
+    const userId = req.user.id;
+
+    if (!voidReason || voidReason.trim() === "") {
+      throw new AppError("Void reason is required", 400);
+    }
+
+    // Call your service method to void the item here
+    const updatedItem = await folioItemService.voidFolioItem(id, voidReason, userId, req.user.hotelId);
+
+    res.json({
+      status: 200,
+      message: "Folio item voided successfully",
+      data: updatedItem,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
 export const getFolioItems = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     if (!req.user || !req.user.hotelId) throw new AppError("Hotel ID is required", 400);

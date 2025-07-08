@@ -63,6 +63,31 @@ export const updateReservation = async (
     next(error);
   }
 };
+export const getReservation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user || !req.user.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
+    }
+
+    const { hotelId } = req.user;
+    const { startDate, endDate } = req.query;
+
+    if (typeof startDate !== 'string' || typeof endDate !== 'string') {
+      throw new AppError("startDate and endDate must be provided as query parameters", 400);
+    }
+
+    const result = await reservationService.getReservation(hotelId, startDate, endDate);
+
+    res.status(200).json({
+      status: 200,
+      message: "Reservations fetched successfully",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 
 export const checkInReservation = async (req: Request, res: Response, next: NextFunction) => {

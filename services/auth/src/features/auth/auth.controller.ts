@@ -62,3 +62,23 @@ export const authenticate = async (req: Request, res: Response,next:NextFunction
         next(error)
     }
 }
+
+export const employees = async (req: Request, res: Response,next:NextFunction) => {
+    const {id, hotelId} = req.user!
+
+    // Ensure hotelId is provided
+    if(!hotelId || !id) {
+        throw new AppError("Hotel ID is required", 400);
+    }
+    try {
+        const employees = await authService.getUsers(id,hotelId);
+        res.status(200).json({
+            status: 200,
+            message: "Employees fetched successfully",
+            data: employees
+        });
+    } catch (error) {
+        console.error('Get employees error:', error);
+        next(error);
+    }
+}

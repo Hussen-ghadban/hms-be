@@ -1,13 +1,16 @@
 // src/routes/auth.ts
 import { Router } from 'express';
-import { authenticate, login, addUser, getUser } from './auth.controller';
-import { requirePermissions } from "../../middleware/requirePermissions";
+import { authenticate, login, addUser, getUser, employees } from './auth.controller';
 import { actionLogger } from '../../middleware/logger';
+import { requirePermissions } from '../../middleware/authenticate';
+import { validateRequest } from '../../middleware/validation';
+import { createUserSchema } from './auth.validation';
 
 const router = Router();
 
 router.post('/login', login,actionLogger("login"));
-router.post('/add-user',requirePermissions(["User.create"]), addUser,actionLogger("add user"));
+router.post('/add-user',requirePermissions(["User.create"]), validateRequest({ body: createUserSchema }),  addUser,actionLogger("add user"));
 router.get('/get-user/:id',requirePermissions(["User.read"]), getUser, actionLogger("get user"))
 router.post('/services/authenticate',authenticate);
+router.get('/employees', requirePermissions(["User.read"]),employees, actionLogger("Query Employees")); 
 export default router;

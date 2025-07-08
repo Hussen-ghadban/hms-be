@@ -73,6 +73,13 @@ class AuthService {
     if (existing) {
       throw new AppError('User already exists');
     }
+    const existingUser = await prisma.user.findUnique({
+  where: { username },
+});
+
+if (existingUser) {
+  throw new AppError("Username already exists", 409);
+}
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -197,6 +204,23 @@ class AuthService {
       }
       throw new AppError("An unexpected error occurred during authentication",500);
     }
+  }
+
+  async getUsers(userId:string,hotelId:string){
+    const users = await prisma.user.findMany({
+      where: {
+       hotel:{
+        some:{
+          id: hotelId
+        }
+       }
+      },
+      include: {
+        role: true,
+        hotel: true,
+      },
+    });
+    return users;
   }
 }
 
