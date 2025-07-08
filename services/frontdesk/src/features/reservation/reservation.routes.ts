@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addReservation, checkInReservation, createGroupBookingController, updateReservation, checkoutReservation } from "./reservation.controller";
+import { addReservation, checkInReservation, createGroupBookingController, updateReservation, checkoutReservation, getReservation } from "./reservation.controller";
 
 import { requirePermissions } from "../../middleware/requirePermissions";
 import { actionLogger } from "../../middleware/logger";
