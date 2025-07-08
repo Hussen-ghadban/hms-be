@@ -59,9 +59,7 @@ export const getGuests = async (req: Request, res: Response, next: NextFunction)
     res.json({
       status: 200,
       message: "Guests retrieved successfully",
-      data: {
-        guests: result.data,
-      },
+      data:result.data,
       pagination: result.pagination,
     });
   } catch (error) {
