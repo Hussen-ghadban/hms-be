@@ -11,7 +11,7 @@ export const createHouseKeepingTask = async (req: Request, res: Response, next: 
     const { hotelId } = req.user;
     const { roomId, userId, status } = req.body;
 
-    const task = await houseKeepingService.createTask({ hotelId, roomId, userId, status,authorization: req.headers.authorization });
+    const task = await houseKeepingService.createTask({ hotelId, roomId, userId, authorization: req.headers.authorization });
 
     res.status(201).json({ status: 200, message: "Task created successfully", data: task });
   } catch (err) {

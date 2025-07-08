@@ -74,9 +74,7 @@ export const getGroupProfiles = async (req: Request, res: Response, next: NextFu
     res.json({
       status: 200,
       message: "Group profiles retrieved successfully",
-      data: {
-        groupProfiles: result.data,
-      },
+      data:result.data,
       pagination: result.pagination,
     });
   } catch (error) {
