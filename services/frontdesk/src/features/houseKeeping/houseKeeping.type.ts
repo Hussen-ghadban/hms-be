@@ -6,7 +6,6 @@ export interface CreateHouseKeepingTaskParams {
   roomId: string;
   userId: string;
   hotelId: string;
-  status: RoomCleaningStatus;
 }
 
 export interface UpdateHouseKeepingTaskParams {

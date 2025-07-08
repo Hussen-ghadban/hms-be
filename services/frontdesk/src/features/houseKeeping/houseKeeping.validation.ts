@@ -12,7 +12,6 @@ export const roomCleaningStatusEnum = z.enum([
 export const createHouseKeepingTaskSchema = z.object({
   roomId: z.string().min(1, "Room ID is required"),
   userId: z.string().min(1, "User ID is required"),
-  status: roomCleaningStatusEnum
 });
 
 // Schema for updating a HouseKeepingTask (all fields optional)
