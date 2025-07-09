@@ -1,4 +1,4 @@
-import { FolioStatus } from "../../../generated/prisma";
+import { FolioItemStatus, FolioStatus } from "../../../generated/prisma";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import { CreateFolioItemParams, UpdateFolioItemParams } from "./folioItem.types";
@@ -10,24 +10,26 @@ async createFolioItem({
   quantity,
   unitPrice,
   hotelId,
-  isPayment = false,
-}: CreateFolioItemParams & { isPayment?: boolean }) {
+}: CreateFolioItemParams) {
   const finalUnitPrice = unitPrice!;
   const calculatedAmount = finalUnitPrice * quantity;
 
-  // Save amount negative if payment, positive if charge
-  const amountToSave = isPayment ? -Math.abs(calculatedAmount) : calculatedAmount;
-
   return await prisma.$transaction(async (tx) => {
     const item = await tx.folioItem.create({
-      data: { folioId, itemType, quantity, unitPrice: finalUnitPrice, amount: amountToSave },
+      data: {
+        folioId,
+        itemType,
+        quantity,
+        unitPrice: finalUnitPrice,
+        amount: calculatedAmount,
+      },
     });
 
     await tx.folio.update({
       where: { id: folioId },
       data: {
         balance: {
-          [isPayment ? "decrement" : "increment"]: Math.abs(calculatedAmount),
+          increment: calculatedAmount,
         },
       },
     });
@@ -35,6 +37,7 @@ async createFolioItem({
     return item;
   });
 }
+
 
 
 
@@ -98,17 +101,13 @@ async voidFolioItem(id: string, voidReason: string, voidedBy: string, hotelId: s
     throw new AppError("Folio item not found", 404);
   }
 
-  if (folioItem.isVoided) {
-    throw new AppError("Folio item is already voided", 400);
-  }
-
   // Start transaction: update folio item and adjust folio balance
   return await prisma.$transaction(async (tx) => {
     // Mark the item as voided
     const updatedItem = await tx.folioItem.update({
       where: { id },
       data: {
-        isVoided: true,
+        status: FolioItemStatus.VOIDED,
         voidReason,
         voidedAt: new Date(),
         voidedBy,

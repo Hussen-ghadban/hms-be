@@ -127,18 +127,26 @@ model Folio {
 }
 
 model FolioItem {
-  id         String    @id @default(cuid())
+  id         String          @id @default(cuid())
   folioId    String
-  Folio      Folio     @relation(fields: [folioId], references: [id])
+  Folio      Folio           @relation(fields: [folioId], references: [id])
   itemType   FolioType
-  amount     Decimal   @db.Decimal(10, 4)
-  quantity   Int       @default(1)
-  unitPrice  Decimal?  @db.Decimal(10, 4)
-  isVoided   Boolean   @default(false)
+  amount     Decimal         @db.Decimal(10, 4)
+  quantity   Int             @default(1)
+  unitPrice  Decimal?        @db.Decimal(10, 4)
+  status     FolioItemStatus @default(UNPAID)
   voidReason String?
   voidedAt   DateTime?
   voidedBy   String?
 }
+
+enum FolioItemStatus {
+  UNPAID
+  PAID
+  REFUNDED
+  VOIDED
+}
+
 
 model Reservation {
   id         String            @id @default(cuid())

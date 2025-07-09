@@ -1019,6 +1019,7 @@ export namespace Prisma {
   export type PaymentMinAggregateOutputType = {
     id: string | null
     amount: number | null
+    hotelId: string | null
     currency: string | null
     reason: string | null
     type: $Enums.PaymentType | null
@@ -1031,6 +1032,7 @@ export namespace Prisma {
   export type PaymentMaxAggregateOutputType = {
     id: string | null
     amount: number | null
+    hotelId: string | null
     currency: string | null
     reason: string | null
     type: $Enums.PaymentType | null
@@ -1043,6 +1045,7 @@ export namespace Prisma {
   export type PaymentCountAggregateOutputType = {
     id: number
     amount: number
+    hotelId: number
     currency: number
     reason: number
     type: number
@@ -1065,6 +1068,7 @@ export namespace Prisma {
   export type PaymentMinAggregateInputType = {
     id?: true
     amount?: true
+    hotelId?: true
     currency?: true
     reason?: true
     type?: true
@@ -1077,6 +1081,7 @@ export namespace Prisma {
   export type PaymentMaxAggregateInputType = {
     id?: true
     amount?: true
+    hotelId?: true
     currency?: true
     reason?: true
     type?: true
@@ -1089,6 +1094,7 @@ export namespace Prisma {
   export type PaymentCountAggregateInputType = {
     id?: true
     amount?: true
+    hotelId?: true
     currency?: true
     reason?: true
     type?: true
@@ -1188,6 +1194,7 @@ export namespace Prisma {
   export type PaymentGroupByOutputType = {
     id: string
     amount: number
+    hotelId: string
     currency: string
     reason: string
     type: $Enums.PaymentType
@@ -1219,6 +1226,7 @@ export namespace Prisma {
   export type PaymentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     amount?: boolean
+    hotelId?: boolean
     currency?: boolean
     reason?: boolean
     type?: boolean
@@ -1231,6 +1239,7 @@ export namespace Prisma {
   export type PaymentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     amount?: boolean
+    hotelId?: boolean
     currency?: boolean
     reason?: boolean
     type?: boolean
@@ -1243,6 +1252,7 @@ export namespace Prisma {
   export type PaymentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     amount?: boolean
+    hotelId?: boolean
     currency?: boolean
     reason?: boolean
     type?: boolean
@@ -1255,6 +1265,7 @@ export namespace Prisma {
   export type PaymentSelectScalar = {
     id?: boolean
     amount?: boolean
+    hotelId?: boolean
     currency?: boolean
     reason?: boolean
     type?: boolean
@@ -1264,7 +1275,7 @@ export namespace Prisma {
     guestId?: boolean
   }
 
-  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "amount" | "currency" | "reason" | "type" | "recipient" | "createdAt" | "updatedAt" | "guestId", ExtArgs["result"]["payment"]>
+  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "amount" | "hotelId" | "currency" | "reason" | "type" | "recipient" | "createdAt" | "updatedAt" | "guestId", ExtArgs["result"]["payment"]>
 
   export type $PaymentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Payment"
@@ -1272,6 +1283,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       amount: number
+      hotelId: string
       currency: string
       reason: string
       type: $Enums.PaymentType
@@ -1704,6 +1716,7 @@ export namespace Prisma {
   interface PaymentFieldRefs {
     readonly id: FieldRef<"Payment", 'String'>
     readonly amount: FieldRef<"Payment", 'Float'>
+    readonly hotelId: FieldRef<"Payment", 'String'>
     readonly currency: FieldRef<"Payment", 'String'>
     readonly reason: FieldRef<"Payment", 'String'>
     readonly type: FieldRef<"Payment", 'PaymentType'>
@@ -2100,7 +2113,8 @@ export namespace Prisma {
   export type PayoutMinAggregateOutputType = {
     id: string | null
     amount: number | null
-    currency: string | null
+    hotelId: string | null
+    currencyId: string | null
     source: string | null
     type: $Enums.PayoutType | null
     reference: string | null
@@ -2112,7 +2126,8 @@ export namespace Prisma {
   export type PayoutMaxAggregateOutputType = {
     id: string | null
     amount: number | null
-    currency: string | null
+    hotelId: string | null
+    currencyId: string | null
     source: string | null
     type: $Enums.PayoutType | null
     reference: string | null
@@ -2124,13 +2139,15 @@ export namespace Prisma {
   export type PayoutCountAggregateOutputType = {
     id: number
     amount: number
-    currency: number
+    hotelId: number
+    currencyId: number
     source: number
     type: number
     reference: number
     createdAt: number
     updatedAt: number
     guestId: number
+    folioItemIds: number
     _all: number
   }
 
@@ -2146,7 +2163,8 @@ export namespace Prisma {
   export type PayoutMinAggregateInputType = {
     id?: true
     amount?: true
-    currency?: true
+    hotelId?: true
+    currencyId?: true
     source?: true
     type?: true
     reference?: true
@@ -2158,7 +2176,8 @@ export namespace Prisma {
   export type PayoutMaxAggregateInputType = {
     id?: true
     amount?: true
-    currency?: true
+    hotelId?: true
+    currencyId?: true
     source?: true
     type?: true
     reference?: true
@@ -2170,13 +2189,15 @@ export namespace Prisma {
   export type PayoutCountAggregateInputType = {
     id?: true
     amount?: true
-    currency?: true
+    hotelId?: true
+    currencyId?: true
     source?: true
     type?: true
     reference?: true
     createdAt?: true
     updatedAt?: true
     guestId?: true
+    folioItemIds?: true
     _all?: true
   }
 
@@ -2269,13 +2290,15 @@ export namespace Prisma {
   export type PayoutGroupByOutputType = {
     id: string
     amount: number
-    currency: string
+    hotelId: string
+    currencyId: string
     source: string
     type: $Enums.PayoutType
     reference: string | null
     createdAt: Date
     updatedAt: Date
     guestId: string | null
+    folioItemIds: string[]
     _count: PayoutCountAggregateOutputType | null
     _avg: PayoutAvgAggregateOutputType | null
     _sum: PayoutSumAggregateOutputType | null
@@ -2300,52 +2323,60 @@ export namespace Prisma {
   export type PayoutSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     amount?: boolean
-    currency?: boolean
+    hotelId?: boolean
+    currencyId?: boolean
     source?: boolean
     type?: boolean
     reference?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     guestId?: boolean
+    folioItemIds?: boolean
   }, ExtArgs["result"]["payout"]>
 
   export type PayoutSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     amount?: boolean
-    currency?: boolean
+    hotelId?: boolean
+    currencyId?: boolean
     source?: boolean
     type?: boolean
     reference?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     guestId?: boolean
+    folioItemIds?: boolean
   }, ExtArgs["result"]["payout"]>
 
   export type PayoutSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     amount?: boolean
-    currency?: boolean
+    hotelId?: boolean
+    currencyId?: boolean
     source?: boolean
     type?: boolean
     reference?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     guestId?: boolean
+    folioItemIds?: boolean
   }, ExtArgs["result"]["payout"]>
 
   export type PayoutSelectScalar = {
     id?: boolean
     amount?: boolean
-    currency?: boolean
+    hotelId?: boolean
+    currencyId?: boolean
     source?: boolean
     type?: boolean
     reference?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     guestId?: boolean
+    folioItemIds?: boolean
   }
 
-  export type PayoutOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "amount" | "currency" | "source" | "type" | "reference" | "createdAt" | "updatedAt" | "guestId", ExtArgs["result"]["payout"]>
+  export type PayoutOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "amount" | "hotelId" | "currencyId" | "source" | "type" | "reference" | "createdAt" | "updatedAt" | "guestId" | "folioItemIds", ExtArgs["result"]["payout"]>
 
   export type $PayoutPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Payout"
@@ -2353,13 +2384,15 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       amount: number
-      currency: string
+      hotelId: string
+      currencyId: string
       source: string
       type: $Enums.PayoutType
       reference: string | null
       createdAt: Date
       updatedAt: Date
       guestId: string | null
+      folioItemIds: string[]
     }, ExtArgs["result"]["payout"]>
     composites: {}
   }
@@ -2785,13 +2818,15 @@ export namespace Prisma {
   interface PayoutFieldRefs {
     readonly id: FieldRef<"Payout", 'String'>
     readonly amount: FieldRef<"Payout", 'Float'>
-    readonly currency: FieldRef<"Payout", 'String'>
+    readonly hotelId: FieldRef<"Payout", 'String'>
+    readonly currencyId: FieldRef<"Payout", 'String'>
     readonly source: FieldRef<"Payout", 'String'>
     readonly type: FieldRef<"Payout", 'PayoutType'>
     readonly reference: FieldRef<"Payout", 'String'>
     readonly createdAt: FieldRef<"Payout", 'DateTime'>
     readonly updatedAt: FieldRef<"Payout", 'DateTime'>
     readonly guestId: FieldRef<"Payout", 'String'>
+    readonly folioItemIds: FieldRef<"Payout", 'String[]'>
   }
     
 
@@ -3175,6 +3210,7 @@ export namespace Prisma {
   export const PaymentScalarFieldEnum: {
     id: 'id',
     amount: 'amount',
+    hotelId: 'hotelId',
     currency: 'currency',
     reason: 'reason',
     type: 'type',
@@ -3190,13 +3226,15 @@ export namespace Prisma {
   export const PayoutScalarFieldEnum: {
     id: 'id',
     amount: 'amount',
-    currency: 'currency',
+    hotelId: 'hotelId',
+    currencyId: 'currencyId',
     source: 'source',
     type: 'type',
     reference: 'reference',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    guestId: 'guestId'
+    guestId: 'guestId',
+    folioItemIds: 'folioItemIds'
   };
 
   export type PayoutScalarFieldEnum = (typeof PayoutScalarFieldEnum)[keyof typeof PayoutScalarFieldEnum]
@@ -3324,6 +3362,7 @@ export namespace Prisma {
     NOT?: PaymentWhereInput | PaymentWhereInput[]
     id?: StringFilter<"Payment"> | string
     amount?: FloatFilter<"Payment"> | number
+    hotelId?: StringFilter<"Payment"> | string
     currency?: StringFilter<"Payment"> | string
     reason?: StringFilter<"Payment"> | string
     type?: EnumPaymentTypeFilter<"Payment"> | $Enums.PaymentType
@@ -3336,6 +3375,7 @@ export namespace Prisma {
   export type PaymentOrderByWithRelationInput = {
     id?: SortOrder
     amount?: SortOrder
+    hotelId?: SortOrder
     currency?: SortOrder
     reason?: SortOrder
     type?: SortOrder
@@ -3351,6 +3391,7 @@ export namespace Prisma {
     OR?: PaymentWhereInput[]
     NOT?: PaymentWhereInput | PaymentWhereInput[]
     amount?: FloatFilter<"Payment"> | number
+    hotelId?: StringFilter<"Payment"> | string
     currency?: StringFilter<"Payment"> | string
     reason?: StringFilter<"Payment"> | string
     type?: EnumPaymentTypeFilter<"Payment"> | $Enums.PaymentType
@@ -3363,6 +3404,7 @@ export namespace Prisma {
   export type PaymentOrderByWithAggregationInput = {
     id?: SortOrder
     amount?: SortOrder
+    hotelId?: SortOrder
     currency?: SortOrder
     reason?: SortOrder
     type?: SortOrder
@@ -3383,6 +3425,7 @@ export namespace Prisma {
     NOT?: PaymentScalarWhereWithAggregatesInput | PaymentScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Payment"> | string
     amount?: FloatWithAggregatesFilter<"Payment"> | number
+    hotelId?: StringWithAggregatesFilter<"Payment"> | string
     currency?: StringWithAggregatesFilter<"Payment"> | string
     reason?: StringWithAggregatesFilter<"Payment"> | string
     type?: EnumPaymentTypeWithAggregatesFilter<"Payment"> | $Enums.PaymentType
@@ -3398,25 +3441,29 @@ export namespace Prisma {
     NOT?: PayoutWhereInput | PayoutWhereInput[]
     id?: StringFilter<"Payout"> | string
     amount?: FloatFilter<"Payout"> | number
-    currency?: StringFilter<"Payout"> | string
+    hotelId?: StringFilter<"Payout"> | string
+    currencyId?: StringFilter<"Payout"> | string
     source?: StringFilter<"Payout"> | string
     type?: EnumPayoutTypeFilter<"Payout"> | $Enums.PayoutType
     reference?: StringNullableFilter<"Payout"> | string | null
     createdAt?: DateTimeFilter<"Payout"> | Date | string
     updatedAt?: DateTimeFilter<"Payout"> | Date | string
     guestId?: StringNullableFilter<"Payout"> | string | null
+    folioItemIds?: StringNullableListFilter<"Payout">
   }
 
   export type PayoutOrderByWithRelationInput = {
     id?: SortOrder
     amount?: SortOrder
-    currency?: SortOrder
+    hotelId?: SortOrder
+    currencyId?: SortOrder
     source?: SortOrder
     type?: SortOrder
     reference?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     guestId?: SortOrderInput | SortOrder
+    folioItemIds?: SortOrder
   }
 
   export type PayoutWhereUniqueInput = Prisma.AtLeast<{
@@ -3425,25 +3472,29 @@ export namespace Prisma {
     OR?: PayoutWhereInput[]
     NOT?: PayoutWhereInput | PayoutWhereInput[]
     amount?: FloatFilter<"Payout"> | number
-    currency?: StringFilter<"Payout"> | string
+    hotelId?: StringFilter<"Payout"> | string
+    currencyId?: StringFilter<"Payout"> | string
     source?: StringFilter<"Payout"> | string
     type?: EnumPayoutTypeFilter<"Payout"> | $Enums.PayoutType
     reference?: StringNullableFilter<"Payout"> | string | null
     createdAt?: DateTimeFilter<"Payout"> | Date | string
     updatedAt?: DateTimeFilter<"Payout"> | Date | string
     guestId?: StringNullableFilter<"Payout"> | string | null
+    folioItemIds?: StringNullableListFilter<"Payout">
   }, "id">
 
   export type PayoutOrderByWithAggregationInput = {
     id?: SortOrder
     amount?: SortOrder
-    currency?: SortOrder
+    hotelId?: SortOrder
+    currencyId?: SortOrder
     source?: SortOrder
     type?: SortOrder
     reference?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     guestId?: SortOrderInput | SortOrder
+    folioItemIds?: SortOrder
     _count?: PayoutCountOrderByAggregateInput
     _avg?: PayoutAvgOrderByAggregateInput
     _max?: PayoutMaxOrderByAggregateInput
@@ -3457,18 +3508,21 @@ export namespace Prisma {
     NOT?: PayoutScalarWhereWithAggregatesInput | PayoutScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Payout"> | string
     amount?: FloatWithAggregatesFilter<"Payout"> | number
-    currency?: StringWithAggregatesFilter<"Payout"> | string
+    hotelId?: StringWithAggregatesFilter<"Payout"> | string
+    currencyId?: StringWithAggregatesFilter<"Payout"> | string
     source?: StringWithAggregatesFilter<"Payout"> | string
     type?: EnumPayoutTypeWithAggregatesFilter<"Payout"> | $Enums.PayoutType
     reference?: StringNullableWithAggregatesFilter<"Payout"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Payout"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Payout"> | Date | string
     guestId?: StringNullableWithAggregatesFilter<"Payout"> | string | null
+    folioItemIds?: StringNullableListFilter<"Payout">
   }
 
   export type PaymentCreateInput = {
     id?: string
     amount: number
+    hotelId: string
     currency: string
     reason: string
     type: $Enums.PaymentType
@@ -3481,6 +3535,7 @@ export namespace Prisma {
   export type PaymentUncheckedCreateInput = {
     id?: string
     amount: number
+    hotelId: string
     currency: string
     reason: string
     type: $Enums.PaymentType
@@ -3493,6 +3548,7 @@ export namespace Prisma {
   export type PaymentUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
+    hotelId?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
     reason?: StringFieldUpdateOperationsInput | string
     type?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
@@ -3505,6 +3561,7 @@ export namespace Prisma {
   export type PaymentUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
+    hotelId?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
     reason?: StringFieldUpdateOperationsInput | string
     type?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
@@ -3517,6 +3574,7 @@ export namespace Prisma {
   export type PaymentCreateManyInput = {
     id?: string
     amount: number
+    hotelId: string
     currency: string
     reason: string
     type: $Enums.PaymentType
@@ -3529,6 +3587,7 @@ export namespace Prisma {
   export type PaymentUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
+    hotelId?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
     reason?: StringFieldUpdateOperationsInput | string
     type?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
@@ -3541,6 +3600,7 @@ export namespace Prisma {
   export type PaymentUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
+    hotelId?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
     reason?: StringFieldUpdateOperationsInput | string
     type?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
@@ -3553,85 +3613,99 @@ export namespace Prisma {
   export type PayoutCreateInput = {
     id?: string
     amount: number
-    currency: string
+    hotelId: string
+    currencyId: string
     source: string
     type: $Enums.PayoutType
     reference?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     guestId?: string | null
+    folioItemIds?: PayoutCreatefolioItemIdsInput | string[]
   }
 
   export type PayoutUncheckedCreateInput = {
     id?: string
     amount: number
-    currency: string
+    hotelId: string
+    currencyId: string
     source: string
     type: $Enums.PayoutType
     reference?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     guestId?: string | null
+    folioItemIds?: PayoutCreatefolioItemIdsInput | string[]
   }
 
   export type PayoutUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
-    currency?: StringFieldUpdateOperationsInput | string
+    hotelId?: StringFieldUpdateOperationsInput | string
+    currencyId?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     type?: EnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     guestId?: NullableStringFieldUpdateOperationsInput | string | null
+    folioItemIds?: PayoutUpdatefolioItemIdsInput | string[]
   }
 
   export type PayoutUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
-    currency?: StringFieldUpdateOperationsInput | string
+    hotelId?: StringFieldUpdateOperationsInput | string
+    currencyId?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     type?: EnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     guestId?: NullableStringFieldUpdateOperationsInput | string | null
+    folioItemIds?: PayoutUpdatefolioItemIdsInput | string[]
   }
 
   export type PayoutCreateManyInput = {
     id?: string
     amount: number
-    currency: string
+    hotelId: string
+    currencyId: string
     source: string
     type: $Enums.PayoutType
     reference?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     guestId?: string | null
+    folioItemIds?: PayoutCreatefolioItemIdsInput | string[]
   }
 
   export type PayoutUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
-    currency?: StringFieldUpdateOperationsInput | string
+    hotelId?: StringFieldUpdateOperationsInput | string
+    currencyId?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     type?: EnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     guestId?: NullableStringFieldUpdateOperationsInput | string | null
+    folioItemIds?: PayoutUpdatefolioItemIdsInput | string[]
   }
 
   export type PayoutUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
-    currency?: StringFieldUpdateOperationsInput | string
+    hotelId?: StringFieldUpdateOperationsInput | string
+    currencyId?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     type?: EnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     guestId?: NullableStringFieldUpdateOperationsInput | string | null
+    folioItemIds?: PayoutUpdatefolioItemIdsInput | string[]
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -3701,6 +3775,7 @@ export namespace Prisma {
   export type PaymentCountOrderByAggregateInput = {
     id?: SortOrder
     amount?: SortOrder
+    hotelId?: SortOrder
     currency?: SortOrder
     reason?: SortOrder
     type?: SortOrder
@@ -3717,6 +3792,7 @@ export namespace Prisma {
   export type PaymentMaxOrderByAggregateInput = {
     id?: SortOrder
     amount?: SortOrder
+    hotelId?: SortOrder
     currency?: SortOrder
     reason?: SortOrder
     type?: SortOrder
@@ -3729,6 +3805,7 @@ export namespace Prisma {
   export type PaymentMinOrderByAggregateInput = {
     id?: SortOrder
     amount?: SortOrder
+    hotelId?: SortOrder
     currency?: SortOrder
     reason?: SortOrder
     type?: SortOrder
@@ -3825,16 +3902,26 @@ export namespace Prisma {
     not?: NestedEnumPayoutTypeFilter<$PrismaModel> | $Enums.PayoutType
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type PayoutCountOrderByAggregateInput = {
     id?: SortOrder
     amount?: SortOrder
-    currency?: SortOrder
+    hotelId?: SortOrder
+    currencyId?: SortOrder
     source?: SortOrder
     type?: SortOrder
     reference?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     guestId?: SortOrder
+    folioItemIds?: SortOrder
   }
 
   export type PayoutAvgOrderByAggregateInput = {
@@ -3844,7 +3931,8 @@ export namespace Prisma {
   export type PayoutMaxOrderByAggregateInput = {
     id?: SortOrder
     amount?: SortOrder
-    currency?: SortOrder
+    hotelId?: SortOrder
+    currencyId?: SortOrder
     source?: SortOrder
     type?: SortOrder
     reference?: SortOrder
@@ -3856,7 +3944,8 @@ export namespace Prisma {
   export type PayoutMinOrderByAggregateInput = {
     id?: SortOrder
     amount?: SortOrder
-    currency?: SortOrder
+    hotelId?: SortOrder
+    currencyId?: SortOrder
     source?: SortOrder
     type?: SortOrder
     reference?: SortOrder
@@ -3903,8 +3992,17 @@ export namespace Prisma {
     set?: Date | string
   }
 
+  export type PayoutCreatefolioItemIdsInput = {
+    set: string[]
+  }
+
   export type EnumPayoutTypeFieldUpdateOperationsInput = {
     set?: $Enums.PayoutType
+  }
+
+  export type PayoutUpdatefolioItemIdsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {

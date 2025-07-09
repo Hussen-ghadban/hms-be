@@ -17,7 +17,6 @@ export const addChargeFolioItem = async (req: Request, res: Response, next: Next
       quantity,
       unitPrice,
       hotelId,
-      isPayment: false, // charge
     });
 
     res.status(201).json({
@@ -31,31 +30,6 @@ export const addChargeFolioItem = async (req: Request, res: Response, next: Next
   }
 };
 
-export const addPaymentFolioItem = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    if (!req.user?.hotelId) throw new AppError("Hotel ID is required", 400);
-    const { hotelId } = req.user;
-    const { folioId, itemType, quantity, unitPrice } = req.body;
-
-    const item = await folioItemService.createFolioItem({
-      folioId,
-      itemType,
-      quantity,
-      unitPrice,
-      hotelId,
-      isPayment: true, // payment
-    });
-
-    res.status(201).json({
-      status: 201,
-      message: "Payment item added successfully",
-      data: item,
-    });
-  } catch (err) {
-    console.error("Error creating payment folio item:", err);
-    next(err);
-  }
-};
 export const TransferFolioItems = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.user?.hotelId) throw new AppError("Hotel ID is required", 400);

@@ -123,6 +123,7 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.PaymentScalarFieldEnum = {
   id: 'id',
   amount: 'amount',
+  hotelId: 'hotelId',
   currency: 'currency',
   reason: 'reason',
   type: 'type',
@@ -135,13 +136,15 @@ exports.Prisma.PaymentScalarFieldEnum = {
 exports.Prisma.PayoutScalarFieldEnum = {
   id: 'id',
   amount: 'amount',
-  currency: 'currency',
+  hotelId: 'hotelId',
+  currencyId: 'currencyId',
   source: 'source',
   type: 'type',
   reference: 'reference',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  guestId: 'guestId'
+  guestId: 'guestId',
+  folioItemIds: 'folioItemIds'
 };
 
 exports.Prisma.SortOrder = {

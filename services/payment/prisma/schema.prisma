@@ -15,29 +15,33 @@ datasource db {
 }
 
 model Payment {
-  id           String    @id @default(uuid())
-  amount       Float
-  currency     String
-  reason       String        // e.g., "Maintenance", "Supplies", "Guest Refund"
-  type         PaymentType   // e.g., REFUND, EXPENSE, SALARY
-  recipient    String?       // e.g., person or vendor name
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id        String      @id @default(cuid())
+  amount    Float
+  hotelId       String
+  currency  String
+  reason    String // e.g., "Maintenance", "Supplies", "Guest Refund"
+  type      PaymentType // e.g., REFUND, EXPENSE, SALARY
+  recipient String? // e.g., person or vendor name
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 
-  guestId      String?
+  guestId String?
 }
+
 model Payout {
-  id           String    @id @default(uuid())
+  id           String     @id @default(cuid())
   amount       Float
-  currency     String
-  source       String        // e.g., "Guest", "Partner", "OTA"
-  type         PayoutType    // e.g., GUEST_PAYMENT, CREDIT, SUBSIDY
-  reference    String?       // e.g., invoice, transaction code
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
+  hotelId       String
+  currencyId     String
+  source       String // e.g., "Guest", "Partner", "OTA"
+  type         PayoutType // e.g., GUEST_PAYMENT, CREDIT, SUBSIDY
+  reference    String? // e.g., invoice, transaction code
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
   guestId      String?
+  folioItemIds String[]
 }
+
 enum PaymentType {
   REFUND
   EXPENSE

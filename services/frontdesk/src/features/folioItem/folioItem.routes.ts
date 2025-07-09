@@ -1,7 +1,7 @@
 // folioItem.routes.ts
 import express from "express";
 import { validateRequest } from "../../middleware/validation";
-import { getFolioItem, getFolioItemsByFolio, updateFolioItem, deleteFolioItem, getFolioItems, TransferFolioItems, addChargeFolioItem, addPaymentFolioItem, voidFolioItem } from "./folioItem.controller";
+import { getFolioItem, getFolioItemsByFolio, updateFolioItem, deleteFolioItem, getFolioItems, TransferFolioItems, addChargeFolioItem, voidFolioItem } from "./folioItem.controller";
 import { requirePermissions } from "../../middleware/requirePermissions";
 import { actionLogger } from "../../middleware/logger";
 import { addFolioItemSchema, TransferFolioItemsSchema, folioItemIdSchema, updateFolioItemSchema } from "./folioItem.validation";
@@ -9,7 +9,6 @@ import { addFolioItemSchema, TransferFolioItemsSchema, folioItemIdSchema, update
 const router = express.Router();
 
 router.post("/add-charge", requirePermissions(["FolioItem.create"]), validateRequest({ body: addFolioItemSchema }), addChargeFolioItem, actionLogger("add charge folioItem"));
-router.post("/add-payment", requirePermissions(["FolioItem.create"]), validateRequest({ body: addFolioItemSchema }), addPaymentFolioItem, actionLogger("add payment folioItem"));
 
 router.get("/get", requirePermissions(["FolioItem.read"]), getFolioItems, actionLogger("get folioItems by folio"));
 router.post("/transfer", requirePermissions(["Folio.update"]), validateRequest({ body: TransferFolioItemsSchema }), TransferFolioItems, actionLogger("Copy Folio Items"));
