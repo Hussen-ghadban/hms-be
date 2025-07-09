@@ -18,9 +18,9 @@ model RoomType {
   id             String   @id @default(cuid())
   name           String
   description    String?
-  maxOccupancy   Int @default(1)
-  adultOccupancy Int @default(1)
-  childOccupancy Int @default(1)
+  maxOccupancy   Int      @default(1)
+  adultOccupancy Int      @default(1)
+  childOccupancy Int      @default(1)
   baseRate       Decimal  @default(0) @db.Decimal(10, 2)
   hotelId        String
   createdAt      DateTime @default(now())
@@ -177,17 +177,27 @@ model HouseKeepingTask {
   updatedAt   DateTime           @updatedAt
 }
 
+model Area {
+  id              String        @id @default(cuid())
+  name            String
+  hotelId           String
+  maintenanceTask Maintenance[]
+  @@unique([hotelId])
+
+}
+
 model Maintenance {
   id          String            @id @default(cuid())
   description String
   priority    String
   status      maintenanceStatus @default(PENDING)
+  userId      String?
 
-  roomId   String? // optional foreign key
-  outletId String? // optional foreign key
+  roomId String? // optional foreign key
+  areaId String? // optional foreign key
 
   room        Room?     @relation(fields: [roomId], references: [id])
-  // outlet      Outlet?  @relation(fields: [outletId], references: [id])
+  area        Area?     @relation(fields: [areaId], references: [id])
   startedAt   DateTime?
   completedAt DateTime?
   createdAt   DateTime  @default(now())
