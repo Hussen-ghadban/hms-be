@@ -1,42 +1,45 @@
-import { FolioStatus } from "../../../generated/prisma";
+import { FolioItemStatus, FolioStatus } from "../../../generated/prisma";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
+import { recalculateFolioBalance } from "../../utils/recalculateFolioBalance";
 import { CreateFolioItemParams, UpdateFolioItemParams } from "./folioItem.types";
 
+const PAYMENT_SERVICE_URL = process.env.PAYMENT_SERVICE_URL;
+export enum PayoutStatus {
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+  VOIDED = "VOIDED",
+}
+
 export default class FolioItemService {
+
 async createFolioItem({
   folioId,
   itemType,
   quantity,
   unitPrice,
   hotelId,
-  isPayment = false,
-}: CreateFolioItemParams & { isPayment?: boolean }) {
+}: CreateFolioItemParams) {
   const finalUnitPrice = unitPrice!;
   const calculatedAmount = finalUnitPrice * quantity;
 
-  // Save amount negative if payment, positive if charge
-  const amountToSave = isPayment ? -Math.abs(calculatedAmount) : calculatedAmount;
-
   return await prisma.$transaction(async (tx) => {
     const item = await tx.folioItem.create({
-      data: { folioId, itemType, quantity, unitPrice: finalUnitPrice, amount: amountToSave },
-    });
-
-    await tx.folio.update({
-      where: { id: folioId },
       data: {
-        balance: {
-          [isPayment ? "decrement" : "increment"]: Math.abs(calculatedAmount),
-        },
+        folioId,
+        itemType,
+        quantity,
+        unitPrice: finalUnitPrice,
+        amount: calculatedAmount,
       },
     });
+
+    // Call balance recalculation
+    await recalculateFolioBalance(folioId);
 
     return item;
   });
 }
-
-
 
 async TransferFolioItems(fromFolioId: string, toFolioId: string, hotelId: string) {
   const sourceFolio = await prisma.folio.findFirst({
@@ -84,48 +87,173 @@ async TransferFolioItems(fromFolioId: string, toFolioId: string, hotelId: string
   });
 }
 
-async voidFolioItem(id: string, voidReason: string, voidedBy: string, hotelId: string) {
-  // Find the folio item including folio to check hotel ownership
-  const folioItem = await prisma.folioItem.findFirst({
+async settleCharge(
+  folioItemIds: string[],
+  hotelId: string,
+  authToken: string,
+  payoutData: {
+    currencyId?: string;
+    type?: string;
+    source?: string;
+    reference?: string;
+  }
+) {
+  const folioItems = await prisma.folioItem.findMany({
     where: {
-      id,
-      Folio: { hotelId }
+      id: { in: folioItemIds },
+      status: "UNPAID",
+      Folio: { hotelId },
     },
+    select: {
+      id: true,
+      folioId: true,
+      amount: true,
+      Folio: {
+        select: {
+          reservation: {
+            select: {
+              guestId: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (folioItems.length === 0) {
+    throw new AppError("No valid unpaid folio items found", 400);
+  }
+
+  await prisma.folioItem.updateMany({
+    where: {
+      id: { in: folioItems.map((item) => item.id) },
+      status: "UNPAID",
+    },
+    data: { status: "PAID" },
+  });
+
+  const affectedFolioIds = [...new Set(folioItems.map((item) => item.folioId))];
+  console.log("folioItems",folioItems)
+  for (const item of folioItems) {
+    try {
+const res = await fetch(`${PAYMENT_SERVICE_URL}/payout/add`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: authToken,
+  },
+  body: JSON.stringify({
+    amount: Number(item.amount),
+    currencyId: payoutData.currencyId,
+    source: payoutData.source,
+    status:PayoutStatus.COMPLETED,
+    type: payoutData.type,
+    reference: payoutData.reference,
+    guestId: item.Folio?.reservation?.guestId || null,
+    itemId: item.id,
+  }),
+});
+
+if (!res.ok) {
+  const errBody = await res.text();
+  console.error(`Payout failed for item ${item.id}:`, errBody);
+}
+
+    } catch (err) {
+      console.error(`Failed to create payout for folioItem ${item.id}`, err);
+    }
+  }
+
+  for (const folioId of affectedFolioIds) {
+    await recalculateFolioBalance(folioId);
+  }
+
+  return {
+    message: `${folioItems.length} folio items settled and payouts created`,
+    folioIds: affectedFolioIds,
+  };
+}
+
+async voidFolioItem(
+  id: string,
+  voidReason: string,
+  voidedBy: string,
+  hotelId: string,
+  authToken: string
+) {
+  const folioItem = await prisma.folioItem.findFirst({
+    where: { id, Folio: { hotelId } },
     include: { Folio: true },
   });
 
-  if (!folioItem) {
-    throw new AppError("Folio item not found", 404);
-  }
-
-  if (folioItem.isVoided) {
+  if (!folioItem) throw new AppError("Folio item not found", 404);
+  if (folioItem.status === FolioItemStatus.VOIDED) {
     throw new AppError("Folio item is already voided", 400);
   }
 
-  // Start transaction: update folio item and adjust folio balance
-  return await prisma.$transaction(async (tx) => {
-    // Mark the item as voided
-    const updatedItem = await tx.folioItem.update({
+  const wasPaid = folioItem.status === FolioItemStatus.PAID;
+  // Start DB transaction
+  const updatedItem = await prisma.$transaction(async (tx) => {
+    const item = await tx.folioItem.update({
       where: { id },
       data: {
-        isVoided: true,
+        status: FolioItemStatus.VOIDED,
         voidReason,
         voidedAt: new Date(),
         voidedBy,
       },
     });
 
-    // Subtract the amount from the folio balance
-    await tx.folio.update({
-      where: { id: folioItem.folioId },
-      data: {
-        balance: { decrement: updatedItem.amount },
-      },
-    });
-
-    return updatedItem;
+    await recalculateFolioBalance(item.folioId);
+    return item;
   });
+
+  // If it was paid before being voided, update the payout status
+  if (wasPaid) {
+    try {
+      const payoutRes = await fetch(`${PAYMENT_SERVICE_URL}/payout/get-by-folio-item/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+      });
+
+      if (payoutRes.ok) {
+        const payoutJson = await payoutRes.json();
+        const payoutId = payoutJson?.data?.id;
+        if (payoutId) {
+          console.log("updating..")
+          const updateRes = await fetch(`${PAYMENT_SERVICE_URL}/payout/update/${payoutId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: authToken,
+            },
+            body: JSON.stringify({
+              status: PayoutStatus.VOIDED,
+              hotelId,
+            }),
+          });
+
+          if (!updateRes.ok) {
+            const error = await updateRes.json().catch(() => ({}));
+            console.error("Failed to void payout status:", error);
+          }
+        }
+      } else {
+        const errorData = await payoutRes.json().catch(() => ({}));
+        console.error("Failed to fetch payout for voiding:", errorData);
+      }
+    } catch (err) {
+      console.error("Error while voiding payout:", err);
+    }
+  }
+
+  return updatedItem;
 }
+
+
+
 
 
 

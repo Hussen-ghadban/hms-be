@@ -32,6 +32,7 @@ export type AppSubjects =
   | "GroupProfile"
   | "GroupBooking"
   | "FolioItem"
+  | "Payout"
   | "all";
 
 export type AppActions = "create" | "read" | "update" | "delete" | "manage";
@@ -102,6 +103,7 @@ function isValidSubject(subject: string): subject is AppSubjects {
     "GroupProfile",
     "GroupBooking",
     "FolioItem",
+    "Payout",
     "all"
   ].includes(subject);
 }

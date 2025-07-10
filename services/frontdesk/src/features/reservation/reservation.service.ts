@@ -255,6 +255,7 @@ async getReservation(hotelId: string, startDate: string, endDate: string) {
     throw new AppError("startDate and endDate are required", 400);
   }
 
+
   const start = new Date(startDate);
   const end = new Date(endDate);
 
@@ -279,8 +280,11 @@ async getReservation(hotelId: string, startDate: string, endDate: string) {
       },
     },
   });
-
-  return result;
+    return {
+    startDate,
+    endDate,
+    reservations: result,
+  };
 }
 
 

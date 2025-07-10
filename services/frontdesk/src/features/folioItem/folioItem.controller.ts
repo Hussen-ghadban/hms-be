@@ -17,7 +17,6 @@ export const addChargeFolioItem = async (req: Request, res: Response, next: Next
       quantity,
       unitPrice,
       hotelId,
-      isPayment: false, // charge
     });
 
     res.status(201).json({
@@ -31,31 +30,6 @@ export const addChargeFolioItem = async (req: Request, res: Response, next: Next
   }
 };
 
-export const addPaymentFolioItem = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    if (!req.user?.hotelId) throw new AppError("Hotel ID is required", 400);
-    const { hotelId } = req.user;
-    const { folioId, itemType, quantity, unitPrice } = req.body;
-
-    const item = await folioItemService.createFolioItem({
-      folioId,
-      itemType,
-      quantity,
-      unitPrice,
-      hotelId,
-      isPayment: true, // payment
-    });
-
-    res.status(201).json({
-      status: 201,
-      message: "Payment item added successfully",
-      data: item,
-    });
-  } catch (err) {
-    console.error("Error creating payment folio item:", err);
-    next(err);
-  }
-};
 export const TransferFolioItems = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.user?.hotelId) throw new AppError("Hotel ID is required", 400);
@@ -73,22 +47,53 @@ export const TransferFolioItems = async (req: Request, res: Response, next: Next
   }
 };
 
+export const settleCharge = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user || !req.user.hotelId) throw new AppError("Hotel ID is required", 400);
+    const { hotelId } = req.user;
+
+    const {
+      folioItemIds,
+      currencyId,
+      type,
+      source,
+      reference,
+    } = req.body;
+
+    const authToken = req.headers.authorization || "";
+
+    const result = await folioItemService.settleCharge(
+      folioItemIds,
+      hotelId,
+      authToken,
+      { currencyId, type, source, reference }
+    );
+
+    res.status(200).json({
+      status: 200,
+      message: "Items were settled successfully",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 export const voidFolioItem = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    if (!req.user?.hotelId || !req.user?.id) {
-      throw new AppError("Authentication required", 401);
-    }
+    if (!req.user?.hotelId || !req.user?.id) throw new AppError("Authentication required", 401);
 
-    const { id } = req.params; // folio item id
+    const { id } = req.params;
     const { voidReason } = req.body;
     const userId = req.user.id;
+    const hotelId = req.user.hotelId;
+    const authToken = req.headers.authorization;
 
-    if (!voidReason || voidReason.trim() === "") {
-      throw new AppError("Void reason is required", 400);
-    }
+    if (!authToken) throw new AppError("Authorization token required", 401);
+    if (!voidReason?.trim()) throw new AppError("Void reason is required", 400);
 
-    // Call your service method to void the item here
-    const updatedItem = await folioItemService.voidFolioItem(id, voidReason, userId, req.user.hotelId);
+    const updatedItem = await folioItemService.voidFolioItem(id, voidReason, userId, hotelId, authToken);
 
     res.json({
       status: 200,
@@ -98,7 +103,9 @@ export const voidFolioItem = async (req: Request, res: Response, next: NextFunct
   } catch (err) {
     next(err);
   }
-}
+};
+
+
 export const getFolioItems = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     if (!req.user || !req.user.hotelId) throw new AppError("Hotel ID is required", 400);
