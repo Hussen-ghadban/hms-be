@@ -255,6 +255,9 @@ async getReservation(hotelId: string, startDate: string, endDate: string) {
     throw new AppError("startDate and endDate are required", 400);
   }
 
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
   const result = await prisma.roomType.findMany({
     where: { hotelId },
     include: {
@@ -262,8 +265,14 @@ async getReservation(hotelId: string, startDate: string, endDate: string) {
         include: {
           reservations: {
             where: {
-              checkIn: { gte: new Date(startDate) },
-              checkOut: { lte: new Date(endDate) },
+              OR: [
+                // Reservation starts within the range
+                { checkIn: { gte: start, lte: end } },
+                // Reservation ends within the range  
+                { checkOut: { gte: start, lte: end } },
+                // Reservation completely encompasses the range
+                { checkIn: { lte: start }, checkOut: { gte: end } }
+              ],
             },
           },
         },
