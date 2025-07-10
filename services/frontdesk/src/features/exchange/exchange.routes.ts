@@ -2,7 +2,7 @@ import express from 'express';
 
 import { validateRequest } from '../../middleware/validation';
 import { addExchangeRateSchema, exchangeRateIdSchema, updateExchangeRateSchema } from './exchange.validation';
-import { addExchangeRate, deleteExchangeRate, getExchangeRate, getExchangeRates, updateExchangeRate } from './exchange.controller';
+import { addExchangeRate, deleteExchangeRate, getCurrencies, getExchangeRate, getExchangeRates, updateExchangeRate } from './exchange.controller';
 import { requirePermissions } from '../../middleware/requirePermissions';
 import { actionLogger } from '../../middleware/logger';
 import { paginateResults } from '../../middleware/pagination.middleware';
@@ -29,6 +29,10 @@ router.get('/get/:id',
     getExchangeRate,
     actionLogger("get Exchange")
 );
+router.get('/currencies',
+    getCurrencies,
+    actionLogger("get Currencies"),
+)
 router.put('/update/:id',
     
      requirePermissions(["Guest.update"]),

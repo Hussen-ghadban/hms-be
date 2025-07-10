@@ -12,7 +12,7 @@ export default class RatePlanService {
     hotelId,
   }: CreateRatePlanParams) {
     try {
-        
+
       const ratePlan = await prisma.ratePlan.create({
         data: {
           code,
@@ -26,34 +26,34 @@ export default class RatePlanService {
 
       return ratePlan;
     } catch (err) {
-          console.error("Failed to create room type:", err);
-          if (err instanceof AppError) throw err;
-          throw new AppError("Failed to create room type", 500);
-        }
+      console.error("Failed to create rate plan:", err);
+      if (err instanceof AppError) throw err;
+      throw new AppError("Failed to create rate plan", 500);
+    }
   }
 
 
 
 
-// Paginated list
-async getRatePlans(hotelId: string, skip: number, take: number) {
-  return await prisma.ratePlan.findMany({
-    where: { hotelId },
-    orderBy: { createdAt: "desc" },
-    skip,
-    take,
-  });
-}
+  // Paginated list
+  async getRatePlans(hotelId: string, skip: number, take: number) {
+    return await prisma.ratePlan.findMany({
+      where: { hotelId },
+      orderBy: { createdAt: "desc" },
+      skip,
+      take,
+    });
+  }
 
-// Count for pagination
-async countRatePlans(hotelId: string) {
-  return await prisma.ratePlan.count({
-    where: { hotelId },
-  });
-}
+  // Count for pagination
+  async countRatePlans(hotelId: string) {
+    return await prisma.ratePlan.count({
+      where: { hotelId },
+    });
+  }
 
 
-  async getRatePlan(id: string,hotelId: string) {
+  async getRatePlan(id: string, hotelId: string) {
     return await prisma.ratePlan.findFirst({
       where: { id, hotelId },
     });
@@ -71,17 +71,17 @@ async countRatePlans(hotelId: string) {
   }: UpdateRatePlanParams) {
 
     const plan = await prisma.ratePlan.findFirst({ where: { id, hotelId } });
-    if (!plan) throw new AppError("Rate plan not found",404);
+    if (!plan) throw new AppError("Rate plan not found", 404);
 
     const updatedRatePlan = await prisma.ratePlan.update({
       where: { id },
       data: {
-    code,
-    name,
-    baseAdjType,
-    baseAdjVal,
-    currencyId,
-    hotelId,
+        code,
+        name,
+        baseAdjType,
+        baseAdjVal,
+        currencyId,
+        hotelId,
       },
     });
     return updatedRatePlan;
@@ -89,7 +89,7 @@ async countRatePlans(hotelId: string) {
 
   async deleteRatePlan(id: string, hotelId: string) {
     const plan = await prisma.ratePlan.findFirst({ where: { id, hotelId } });
-    if (!plan) throw new AppError("Rate plan not found",404);
+    if (!plan) throw new AppError("Rate plan not found", 404);
 
     await prisma.ratePlan.delete({ where: { id } });
     return { message: "Deleted successfully" };

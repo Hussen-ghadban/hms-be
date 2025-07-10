@@ -112,3 +112,18 @@ export const deleteExchangeRate = async (req: Request, res: Response, next: Next
     next(err);
   }
 };
+
+  export const getCurrencies = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+    const currencies = await service.getCurrencies();
+    res.status(200).json({
+      message: "Currencies retrieved successfully",
+      data: currencies
+    });
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new Error(e.message);
+      }
+      throw new Error("An unexpected error occurred");
+    }
+  }
