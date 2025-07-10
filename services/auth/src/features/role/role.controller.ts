@@ -6,10 +6,10 @@ const roleService = new RoleService();
 
 export const addRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
-     if (!req.user || !req.user.hotelId) {
-        throw new AppError("Hotel ID is required", 400);
-        }
-        const { hotelId } = req.user;
+    if (!req.user || !req.user.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
+    }
+    const { hotelId } = req.user;
     const { name, permissionIds } = req.body;
     const role = await roleService.createRole({ name, hotelId, permissionIds });
     res.status(201).json({ status: 201, message: "Role created", data: role });
@@ -20,10 +20,10 @@ export const addRole = async (req: Request, res: Response, next: NextFunction) =
 
 export const getRoles = async (req: Request, res: Response, next: NextFunction) => {
   try {
-        if (!req.user || !req.user.hotelId) {
-        throw new AppError("Hotel ID is required", 400);
-        }
-        const { hotelId } = req.user;
+    if (!req.user || !req.user.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
+    }
+    const { hotelId } = req.user;
     const roles = await roleService.getRoles(hotelId);
     res.json({ status: 200, data: roles });
   } catch (error) {
@@ -31,29 +31,29 @@ export const getRoles = async (req: Request, res: Response, next: NextFunction) 
   }
 };
 
-export const getPermissions=async(req:Request,res:Response,next:NextFunction)=>{
-  try{
-            if (!req.user || !req.user.hotelId) {
-        throw new AppError("Hotel ID is required", 400);
-        }
-        const { hotelId } = req.user;
-        const permissions=await roleService.getPermissions(hotelId);
-        res.json({
-          status:200,
-          message:"permissions was retrieved successfully",
-          data:permissions
-        })
-  }catch(error){
+export const getPermissions = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user || !req.user.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
+    }
+    const { hotelId } = req.user;
+    const permissions = await roleService.getPermissions(hotelId);
+    res.json({
+      status: 200,
+      message: "permissions was retrieved successfully",
+      data: permissions
+    })
+  } catch (error) {
     next(error)
   }
 }
 export const getRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-        if (!req.user || !req.user.hotelId) {
-        throw new AppError("Hotel ID is required", 400);
-        }
-        const { hotelId } = req.user;
+    if (!req.user || !req.user.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
+    }
+    const { hotelId } = req.user;
     const role = await roleService.getRole(id, hotelId);
     res.json({ status: 200, data: role });
   } catch (error) {
@@ -64,10 +64,10 @@ export const getRole = async (req: Request, res: Response, next: NextFunction) =
 export const updateRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-            if (!req.user || !req.user.hotelId) {
-        throw new AppError("Hotel ID is required", 400);
-        }
-        const { hotelId } = req.user;
+    if (!req.user || !req.user.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
+    }
+    const { hotelId } = req.user;
     const { name, permissionIds } = req.body;
     const updated = await roleService.updateRole({ id, name, hotelId, permissionIds });
     res.json({ status: 200, message: "Role updated", data: updated });
@@ -79,10 +79,10 @@ export const updateRole = async (req: Request, res: Response, next: NextFunction
 export const deleteRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-        if (!req.user || !req.user.hotelId) {
-        throw new AppError("Hotel ID is required", 400);
-        }
-        const { hotelId } = req.user;
+    if (!req.user || !req.user.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
+    }
+    const { hotelId } = req.user;
     const result = await roleService.deleteRole(id, hotelId);
     res.json({ status: 200, ...result });
   } catch (error) {

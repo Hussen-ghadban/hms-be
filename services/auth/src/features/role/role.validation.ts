@@ -2,7 +2,6 @@ import z from "zod";
 
 export const createRoleSchema = z.object({
   name: z.string().min(1, "Role name is required"),
-  hotelId: z.string().min(1, "Hotel ID is required"),
   permissionIds: z.array(z.string()).optional(),
 });
 

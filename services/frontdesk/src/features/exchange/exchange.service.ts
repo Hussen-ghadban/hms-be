@@ -84,4 +84,9 @@ async countExchangeRates(hotelId: string) {
     await prisma.exchangeRate.delete({ where: { id } });
     return { message: "Exchange rate deleted successfully" };
   }
+  async getCurrencies(){
+    return prisma.currency.findMany({
+      orderBy: { code: "asc" },
+    })
+  }
 }
