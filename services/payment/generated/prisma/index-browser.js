@@ -140,11 +140,12 @@ exports.Prisma.PayoutScalarFieldEnum = {
   currencyId: 'currencyId',
   source: 'source',
   type: 'type',
+  status: 'status',
   reference: 'reference',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   guestId: 'guestId',
-  folioItemIds: 'folioItemIds'
+  itemId: 'itemId'
 };
 
 exports.Prisma.SortOrder = {
@@ -172,10 +173,17 @@ exports.PaymentType = exports.$Enums.PaymentType = {
 
 exports.PayoutType = exports.$Enums.PayoutType = {
   GUEST_PAYMENT: 'GUEST_PAYMENT',
+  FOLIO_ITEM: 'FOLIO_ITEM',
   CITY_LEDGER: 'CITY_LEDGER',
   SUBSIDY: 'SUBSIDY',
   CREDIT: 'CREDIT',
   OTHER: 'OTHER'
+};
+
+exports.PayoutStatus = exports.$Enums.PayoutStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  VOIDED: 'VOIDED'
 };
 
 exports.Prisma.ModelName = {

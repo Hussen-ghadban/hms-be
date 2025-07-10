@@ -254,7 +254,6 @@ async getReservation(hotelId: string, startDate: string, endDate: string) {
   if (!startDate || !endDate) {
     throw new AppError("startDate and endDate are required", 400);
   }
-
   const result = await prisma.roomType.findMany({
     where: { hotelId },
     include: {
@@ -270,8 +269,11 @@ async getReservation(hotelId: string, startDate: string, endDate: string) {
       },
     },
   });
-
-  return result;
+    return {
+    startDate,
+    endDate,
+    reservations: result,
+  };
 }
 
 

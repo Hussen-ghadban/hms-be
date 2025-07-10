@@ -13,6 +13,7 @@ import {
   getPayouts,
   updatePayout,
   deletePayout,
+  getPayoutByFolioItem,
 } from "./payout.controller";
 
 const router = express.Router();
@@ -47,6 +48,9 @@ router.put(
   updatePayout,
   actionLogger("update payout")
 );
+  
+router.get("/get-by-folio-item/:folioItemId", requirePermissions(["Payout.read"]), getPayoutByFolioItem, actionLogger("update payout"));
+
 
 router.delete(
   "/delete/:id",

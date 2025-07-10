@@ -15,7 +15,13 @@ export const updateFolioItemSchema = z.object({
   amount: z.number().optional(),
 });
 
-
+export const settleFolioItemSchema = z.object({
+  folioItemIds: z.array(z.string()).nonempty("At least one folio item ID is required"),
+  currencyId: z.string().optional(),
+  type: z.string().optional(),
+  source: z.string().optional(),
+  reference: z.string().optional(),
+});
 export const folioItemIdSchema = z.object({
   id: z.string().min(1),
 });

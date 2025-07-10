@@ -35,11 +35,17 @@ model Payout {
   currencyId     String
   source       String // e.g., "Guest", "Partner", "OTA"
   type         PayoutType // e.g., GUEST_PAYMENT, CREDIT, SUBSIDY
+  status       PayoutStatus
   reference    String? // e.g., invoice, transaction code
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   guestId      String?
-  folioItemIds String[]
+  itemId String?
+}
+enum PayoutStatus {
+  PENDING
+  COMPLETED
+  VOIDED
 }
 
 enum PaymentType {
@@ -53,6 +59,7 @@ enum PaymentType {
 
 enum PayoutType {
   GUEST_PAYMENT
+  FOLIO_ITEM
   CITY_LEDGER
   SUBSIDY
   CREDIT

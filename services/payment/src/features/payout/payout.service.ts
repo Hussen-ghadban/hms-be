@@ -22,47 +22,64 @@ async createPayout(data: CreatePayoutInput & { authorization: string }) {
     return prisma.payout.findMany();
   }
 
-async updatePayout(id: string, data: UpdatePayoutInput & { authorization: string }) {
-  const { authorization, ...payoutData } = data;
-  const exists = await prisma.payout.findUnique({ where: { id } });
-  if (!exists) throw new AppError("Payout not found", 404);
+async updatePayout(id: string, data: UpdatePayoutInput & { authorization: string; hotelId: string }) {
+  const { authorization, hotelId, ...payoutData } = data;
 
-  await this.validateReferences(payoutData, authorization);
-  return prisma.payout.update({ where: { id }, data: payoutData });
+  const existing = await prisma.payout.findUnique({ where: { id } });
+  if (!existing) throw new AppError("Payout not found", 404);
+
+  // Ensure payout belongs to this hotel (optional but safer)
+  if (existing.hotelId !== hotelId) {
+    throw new AppError("Unauthorized to update this payout", 403);
+  }
+
+  // Only validate references if guestId or itemId is being updated
+  if (payoutData.guestId || payoutData.itemId) {
+    await this.validateReferences(payoutData, authorization);
+  }
+
+  return prisma.payout.update({
+    where: { id },
+    data: payoutData,
+  });
 }
 
+
+async getFolioItemByPayout(itemId:string){
+  return prisma.payout.findFirst({
+    where:{itemId}
+  })
+}
   async deletePayout(id: string) {
     return prisma.payout.delete({ where: { id } });
   }
-    private async validateReferences(data: Partial<CreatePayoutInput>,authorization:string) {
-    const { guestId, folioItemIds } = data;
+ private async validateReferences(data: Partial<CreatePayoutInput>, authorization: string) {
+  const { guestId, itemId } = data;
 
-    // Validate guestId if present
-    if (guestId) {
-      const res = await fetch(`${CUSTOMER_SERVICE_URL}/guest/get/${guestId}`,{
-                headers: {
-          Authorization: authorization,
-          "Content-Type": "application/json"
-        }
-      });
-      if (!res.ok) {
-        throw new AppError("Invalid guest ID", 400);
-      }
-    }
-
-    // Validate folioItemIds if present
-    if (folioItemIds && Array.isArray(folioItemIds)) {
-      for (const id of folioItemIds) {
-        const res = await fetch(`${FRONTDESK_SERVICE_URL}/folio-item/get/${id}`,{        
-            
-            headers: {
-          Authorization: authorization || "",
-          "Content-Type": "application/json"
-        }});
-        if (!res.ok) {
-          throw new AppError(`Invalid folio item ID: ${id}`, 400);
-        }
-      }
+  // Validate guestId if present
+  if (guestId) {
+    const res = await fetch(`${CUSTOMER_SERVICE_URL}/guest/get/${guestId}`, {
+      headers: {
+        Authorization: authorization,
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) {
+      throw new AppError("Invalid guest ID", 400);
     }
   }
+
+  // Validate itemId only if present
+  if (itemId) {
+    const res = await fetch(`${FRONTDESK_SERVICE_URL}/folio-item/get/${itemId}`, {
+      headers: {
+        Authorization: authorization || "",
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) {
+      throw new AppError(`Invalid folio item ID: ${itemId}`, 400);
+    }
+  }
+}
 }
