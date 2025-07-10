@@ -49,7 +49,7 @@ router.put(
   actionLogger("update payout")
 );
   
-router.get("/get-by-folio-item/:folioItemId", requirePermissions(["Payout.read"]), getPayoutByFolioItem, actionLogger("update payout"));
+router.get("/get-by-folio-item/:id", requirePermissions(["Payout.read"]), getPayoutByFolioItem, actionLogger("update payout"));
 
 
 router.delete(

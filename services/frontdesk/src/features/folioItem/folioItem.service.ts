@@ -173,6 +173,7 @@ if (!res.ok) {
     folioIds: affectedFolioIds,
   };
 }
+
 async voidFolioItem(
   id: string,
   voidReason: string,
@@ -186,7 +187,12 @@ async voidFolioItem(
   });
 
   if (!folioItem) throw new AppError("Folio item not found", 404);
+  if (folioItem.status === FolioItemStatus.VOIDED) {
+    throw new AppError("Folio item is already voided", 400);
+  }
 
+  const wasPaid = folioItem.status === FolioItemStatus.PAID;
+  // Start DB transaction
   const updatedItem = await prisma.$transaction(async (tx) => {
     const item = await tx.folioItem.update({
       where: { id },
@@ -198,13 +204,54 @@ async voidFolioItem(
       },
     });
 
-    // Recalculate folio balance
     await recalculateFolioBalance(item.folioId);
-
     return item;
   });
+
+  // If it was paid before being voided, update the payout status
+  if (wasPaid) {
+    try {
+      const payoutRes = await fetch(`${PAYMENT_SERVICE_URL}/payout/get-by-folio-item/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+      });
+
+      if (payoutRes.ok) {
+        const payoutJson = await payoutRes.json();
+        const payoutId = payoutJson?.data?.id;
+        if (payoutId) {
+          console.log("updating..")
+          const updateRes = await fetch(`${PAYMENT_SERVICE_URL}/payout/update/${payoutId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: authToken,
+            },
+            body: JSON.stringify({
+              status: PayoutStatus.VOIDED,
+              hotelId,
+            }),
+          });
+
+          if (!updateRes.ok) {
+            const error = await updateRes.json().catch(() => ({}));
+            console.error("Failed to void payout status:", error);
+          }
+        }
+      } else {
+        const errorData = await payoutRes.json().catch(() => ({}));
+        console.error("Failed to fetch payout for voiding:", errorData);
+      }
+    } catch (err) {
+      console.error("Error while voiding payout:", err);
+    }
+  }
+
   return updatedItem;
 }
+
 
 
 

@@ -83,6 +83,7 @@ export const updatePayout = async (req: Request, res: Response, next: NextFuncti
       reference,
       guestId,
       itemId,
+      status,
     } = req.body;
 
     const updateData: UpdatePayoutInput & { authorization: string; hotelId: string } = {
@@ -95,10 +96,9 @@ export const updatePayout = async (req: Request, res: Response, next: NextFuncti
       itemId,
       authorization,
       hotelId,
+      status
     };
-
     const payout = await payoutService.updatePayout(payoutId, updateData);
-
     res.json({ status: 200, message: "Payout updated", data: payout });
   } catch (err) {
     next(err);
@@ -110,7 +110,7 @@ export const updatePayout = async (req: Request, res: Response, next: NextFuncti
 export const getPayoutByFolioItem = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const payout = await payoutService.getFolioItemByPayout(id);
+    const payout = await payoutService.getPayoutByFolioItem(id);
 
     if (!payout) {
       return res.status(404).json({

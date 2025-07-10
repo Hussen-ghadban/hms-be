@@ -15,5 +15,5 @@ export const addPayoutSchema = z.object({
 export const updatePayoutSchema = addPayoutSchema.partial();
 
 export const payoutIdSchema = z.object({
-  id: z.string().uuid(),
+    id: z.string().min(1, "payout ID is required"),
 });

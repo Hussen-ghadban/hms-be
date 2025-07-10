@@ -45,7 +45,7 @@ async updatePayout(id: string, data: UpdatePayoutInput & { authorization: string
 }
 
 
-async getFolioItemByPayout(itemId:string){
+async getPayoutByFolioItem(itemId:string){
   return prisma.payout.findFirst({
     where:{itemId}
   })
