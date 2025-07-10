@@ -17,18 +17,18 @@ async function logCompletedAction(req: Request, res: Response, action: string) {
         console.log(`Logging action: ${action} for user ${req.user.id} in hotel ${req.user.hotelId}`);
         
         try {
-            await fetch(`${authServiceUrl}/logger/log-action`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    userId: req.user.id,
-                    hotelId: req.user.hotelId,
-                    service: serviceName,
-                    action: action,
-                    resourceType: extractResourceType(req.path),
-                    status: 'SUCCESS',
-                })
-            });
+            // await fetch(`${authServiceUrl}/logger/log-action`, {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({
+            //         userId: req.user.id,
+            //         hotelId: req.user.hotelId,
+            //         service: serviceName,
+            //         action: action,
+            //         resourceType: extractResourceType(req.path),
+            //         status: 'SUCCESS',
+            //     })
+            // });
         } catch (error) {
             console.error('Failed to log action:', error);
         }
