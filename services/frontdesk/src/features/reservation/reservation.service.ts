@@ -1,4 +1,4 @@
-import { FolioStatus, GroupBookingStatus, ReservationStatus, RoomStatus } from "../../../generated/prisma";
+import { AdjType, FolioStatus, GroupBookingStatus, ReservationStatus, RoomStatus } from "../../../generated/prisma";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import { checkRoomAvailability } from "../../utils/availability";
@@ -108,6 +108,31 @@ export default class ReservationService {
       if (err instanceof AppError) throw err;
       throw new AppError("Failed to create reservation", 500);
     }
+  }
+
+  async nightPrice(hotelId:string, ratePlanId:string, roomTypeId:string){
+    const roomtype=await prisma.roomType.findUnique({
+      where:{id:roomTypeId,hotelId}
+    })
+    if(!roomtype){
+      throw new AppError("room type is not found",404)
+    }
+    const ratePlan=await prisma.ratePlan.findUnique({
+      where:{id:ratePlanId,hotelId}
+    })
+        if(!ratePlan){
+      throw new AppError("rate plan is not found",404)
+    }
+      let totalPrice = new Decimal(0);
+      let price = new Decimal(roomtype.baseRate);
+        if (ratePlan.baseAdjType ===AdjType.PERCENT) {
+          price = price.plus(price.mul(ratePlan.baseAdjVal).div(100));
+        } else if (ratePlan.baseAdjType === AdjType.FIXED) {
+          price = price.plus(ratePlan.baseAdjVal);
+        }
+        totalPrice = totalPrice.plus(price);
+        return totalPrice;
+
   }
   async updateReservation({
     reservationId,

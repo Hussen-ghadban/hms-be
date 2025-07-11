@@ -4,6 +4,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './features/auth/auth.routes';
 import roleRoutes from './features/role/role.routes';
+import hotelRoutes from './features/hotel/hotel.routes';
+
 // import introspectRoutes from './features/introspection/introspection.routes'
 // import validateRoutes from './middleware/authenticate';
 import { errorHandler } from './middleware/errorHandler';
@@ -22,6 +24,8 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/logger',loggerRoutes)
 app.use('/role', roleRoutes);
+app.use('/hotel', hotelRoutes);
+
 
 
 app.listen(process.env.PORT || 4000, () =>

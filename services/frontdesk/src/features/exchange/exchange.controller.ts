@@ -52,6 +52,35 @@ export const getExchangeRates = async (
     next(err);
   }
 };
+// exchange.controller.ts
+export const convertCurrency = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user || !req.user.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
+    }
+
+    const { baseCurrency, targetCurrency, amount } = req.body;
+
+    if (!baseCurrency || !targetCurrency || typeof amount !== "number") {
+      throw new AppError("baseCurrency, targetCurrency, and amount are required", 400);
+    }
+
+    const result = await service.convertCurrency({
+      baseCurrency,
+      targetCurrency,
+      amount,
+      hotelId: req.user.hotelId,
+    });
+
+    res.status(200).json({
+      status: 200,
+      message: "Conversion successful",
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const getExchangeRate = async (req: Request, res: Response, next: NextFunction) => {
   try {
