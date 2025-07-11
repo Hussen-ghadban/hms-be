@@ -16,7 +16,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     res.status(200).json({
       message: "Login successful",
       data: {
-        accessToken: auth.token, permissions: auth.permissions
+        accessToken: auth.accessToken, permissions: auth.permissions, refreshToken: auth.refreshToken
       }
     });
   } catch (error) {
@@ -95,6 +95,29 @@ export const employees = async (req: Request, res: Response, next: NextFunction)
     });
   } catch (error) {
     console.error('Get employees error:', error);
+    next(error);
+  }
+};
+
+export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      throw new AppError("Refresh token is required", 400);
+    }
+
+    const result = await authService.refreshToken(refreshToken);
+
+    res.status(200).json({
+      status: 200,
+      message: "Token refreshed successfully",
+      data: {
+        accessToken: result.accessToken,
+      }
+    });
+  } catch (error) {
+    console.error('Refresh token error:', error);
     next(error);
   }
 };

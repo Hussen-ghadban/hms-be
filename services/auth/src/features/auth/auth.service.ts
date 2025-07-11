@@ -16,27 +16,40 @@ class AuthService {
     });
 
     if (!user || !user.isActive) {
-      throw new AppError('Invalid Credentials',401);
+      throw new AppError('Invalid Credentials', 401);
     }
 
     const userHotel = user.hotel[0];
     if (!userHotel) {
-      throw new AppError('Invalid Credentials',401);
+      throw new AppError('Invalid Credentials', 401);
     }
 
     // const passwordMatches = await bcrypt.compare(password, user.password);
     // if (!passwordMatches) {
-    //   throw new AppError('Invalid Credentials',401);
+    //   throw new AppError('Invalid Credentials', 401);
     // }
 
-    const payload = {
+    // Generate access token (short-lived)
+    const accessTokenPayload = {
       sub: user.id,
       hid: userHotel.id,
     };
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET!, {
-      expiresIn: '24h',
+    const accessToken = jwt.sign(accessTokenPayload, process.env.JWT_SECRET!, {
+      expiresIn: '15m', // 15 minutes
     });
+
+    // Generate refresh token (long-lived)
+    const refreshTokenPayload = {
+      sub: user.id,
+      hid: userHotel.id,
+      type: 'refresh',
+    };
+
+    const refreshToken = jwt.sign(refreshTokenPayload, process.env.JWT_REFRESH_SECRET!, {
+      expiresIn: '7d', // 7 days
+    });
+
     // Create session and log login
     try {
       await loggerService.logAction({
@@ -49,14 +62,24 @@ class AuthService {
     } catch (error) {
       console.error('Failed to log login:', error);
     }
-        const permissions = user.role.permissions.map((p) => ({
+
+    const permissions = user.role.permissions.map((p) => ({
       subject: p.subject,
       action: p.action,
     }));
 
-        return {
-      token,
-        permissions,
+    return {
+      accessToken,
+      refreshToken,
+      permissions,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role.name,
+      },
     };
   }
 
@@ -68,18 +91,18 @@ class AuthService {
     lastName,
     roleId,
     hotelId,
-  }:addUserParams) {
+  }: addUserParams) {
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
       throw new AppError('User already exists');
     }
     const existingUser = await prisma.user.findUnique({
-  where: { username },
-});
+      where: { username },
+    });
 
-if (existingUser) {
-  throw new AppError("Username already exists", 409);
-}
+    if (existingUser) {
+      throw new AppError('Username already exists', 409);
+    }
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -93,7 +116,7 @@ if (existingUser) {
         firstName: firstName,
         lastName: lastName,
         hotel: { connect: { id: hotelId } },
-        roleId: roleId
+        roleId: roleId,
       },
       include: {
         role: true,
@@ -103,28 +126,29 @@ if (existingUser) {
 
     return user;
   }
-  async getUser(id:string,hotelId:string){
-      const user=await prisma.user.findFirst({
-        where:{id}
-      })
-      if(!user){
-        throw new AppError("user not found",404)
-      }
-      return user;
-    
+  async getUser(id: string, hotelId: string) {
+    const user = await prisma.user.findFirst({
+      where: { id },
+    });
+    if (!user) {
+      throw new AppError('user not found', 404);
+    }
+    return user;
   }
 
   async authenticate(token: string, requiredPermissions: string[] = []) {
     try {
       if (!token) {
-        throw new AppError('No token provided',401);
+        throw new AppError('No token provided', 401);
       }
 
-
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { sub: string; hid: string };
+      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
+        sub: string;
+        hid: string;
+      };
 
       if (!decoded || !decoded.sub || !decoded.hid) {
-        throw new AppError("Invalid token structure",401);
+        throw new AppError('Invalid token structure', 401);
       }
 
       const userId = decoded.sub;
@@ -142,15 +166,15 @@ if (existingUser) {
         },
       });
       if (!user) {
-        throw new AppError("User not found",404);
+        throw new AppError('User not found', 404);
       }
 
       if (!user.role) {
-        throw new AppError("User has no role assigned",403);
+        throw new AppError('User has no role assigned', 403);
       }
 
       // Map permissions from DB to Permission[]
-      const userPermissions: Permission[] = user.role.permissions.map(p => ({
+      const userPermissions: Permission[] = user.role.permissions.map((p) => ({
         subject: p.subject,
         action: p.action,
       }));
@@ -159,13 +183,15 @@ if (existingUser) {
       const ability = await defineAbilitiesForUser(userPermissions);
 
       const denied: string[] = [];
-      const available: string[] = userPermissions.map(p => `${p.subject}.${p.action}`);
+      const available: string[] = userPermissions.map((p) => `${p.subject}.${p.action}`);
 
       // Check required permissions
       for (const perm of requiredPermissions) {
         const [subject, action] = perm.split('.');
         if (!subject || !action) {
-          throw new AppError(`Invalid permission format: ${perm}. Expected format: subject.action`);
+          throw new AppError(
+            `Invalid permission format: ${perm}. Expected format: subject.action`
+          );
         }
 
         if (!ability.can(action as AppActions, subject as AppSubjects)) {
@@ -183,58 +209,139 @@ if (existingUser) {
           id: userId,
           hotelId: hotelId,
           email: user.email,
-          role: user.role.name
-        }
+          role: user.role.name,
+        },
       };
-
     } catch (e) {
       // Re-throw JWT errors with more specific messages
       if (e instanceof jwt.JsonWebTokenError) {
-        throw new AppError('Invalid token',401);
+        throw new AppError('Invalid token', 401);
       }
       if (e instanceof jwt.TokenExpiredError) {
-        throw new AppError('Token expired',401);
+        throw new AppError('Token expired', 401);
       }
       if (e instanceof jwt.NotBeforeError) {
-        throw new AppError('Token not active',401);
+        throw new AppError('Token not active', 401);
       }
 
       if (e instanceof AppError) {
         throw e; // Re-throw our custom errors
       }
-      throw new AppError("An unexpected error occurred during authentication",500);
+      throw new AppError('An unexpected error occurred during authentication', 500);
     }
   }
-async getUsers(userId: string, hotelId: string, skip: number, take: number) {
-  return prisma.user.findMany({
-    where: {
-      hotel: {
-        some: {
-          id: hotelId,
+  async getUsers(userId: string, hotelId: string, skip: number, take: number) {
+    return prisma.user.findMany({
+      where: {
+        hotel: {
+          some: {
+            id: hotelId,
+          },
         },
       },
-    },
-    include: {
-      role: true,
-      hotel: true,
-    },
-    skip,
-    take,
-  });
-}
+      include: {
+        role: true,
+        hotel: true,
+      },
+      skip,
+      take,
+    });
+  }
 
-async countUsers(hotelId: string) {
-  return prisma.user.count({
-    where: {
-      hotel: {
-        some: {
-          id: hotelId,
+  async countUsers(hotelId: string) {
+    return prisma.user.count({
+      where: {
+        hotel: {
+          some: {
+            id: hotelId,
+          },
         },
       },
-    },
-  });
-}
+    });
+  }
 
+  async refreshToken(refreshToken: string) {
+    try {
+      if (!refreshToken) {
+        throw new AppError('No refresh token provided', 401);
+      }
+
+      // Verify the refresh token
+      const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as {
+        sub: string;
+        hid: string;
+        type: string;
+      };
+
+      if (!decoded || !decoded.sub || !decoded.hid || decoded.type !== 'refresh') {
+        throw new AppError('Invalid refresh token structure', 401);
+      }
+
+      const userId = decoded.sub;
+      const hotelId = decoded.hid;
+
+      // Check if user still exists and is active
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          hotel: true,
+        },
+      });
+
+      if (!user || !user.isActive) {
+        throw new AppError('User not found or inactive', 404);
+      }
+
+      // Verify user still belongs to the hotel
+      const userHotel = user.hotel.find((h) => h.id === hotelId);
+      if (!userHotel) {
+        throw new AppError('User no longer has access to this hotel', 403);
+      }
+
+      // Generate new access token
+      const accessTokenPayload = {
+        sub: user.id,
+        hid: hotelId,
+      };
+
+      const newAccessToken = jwt.sign(accessTokenPayload, process.env.JWT_SECRET!, {
+        expiresIn: '15m', // Short-lived access token
+      });
+
+      // Log the token refresh
+      try {
+        await loggerService.logAction({
+          userId: user.id,
+          hotelId: hotelId,
+          service: 'auth',
+          action: 'token_refresh',
+          status: 'SUCCESS',
+        });
+      } catch (error) {
+        console.error('Failed to log token refresh:', error);
+      }
+
+      return {
+        accessToken: newAccessToken,
+      };
+    } catch (e) {
+      // Handle JWT errors
+      if (e instanceof jwt.JsonWebTokenError) {
+        throw new AppError('Invalid refresh token', 401);
+      }
+      if (e instanceof jwt.TokenExpiredError) {
+        throw new AppError('Refresh token expired', 401);
+      }
+      if (e instanceof jwt.NotBeforeError) {
+        throw new AppError('Refresh token not active', 401);
+      }
+
+      if (e instanceof AppError) {
+        throw e; // Re-throw our custom errors
+      }
+      throw new AppError('An unexpected error occurred during token refresh', 500);
+    }
+  }
 }
 
 export const authService = new AuthService();
