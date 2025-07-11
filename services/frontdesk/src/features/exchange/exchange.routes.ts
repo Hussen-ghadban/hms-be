@@ -1,8 +1,8 @@
 import express from 'express';
 
 import { validateRequest } from '../../middleware/validation';
-import { addExchangeRateSchema, exchangeRateIdSchema, updateExchangeRateSchema } from './exchange.validation';
-import { addExchangeRate, deleteExchangeRate, getCurrencies, getExchangeRate, getExchangeRates, updateExchangeRate } from './exchange.controller';
+import { addExchangeRateSchema, convertCurrencySchema, exchangeRateIdSchema, updateExchangeRateSchema } from './exchange.validation';
+import { addExchangeRate, convertCurrency, deleteExchangeRate, getCurrencies, getExchangeRate, getExchangeRates, updateExchangeRate } from './exchange.controller';
 import { requirePermissions } from '../../middleware/requirePermissions';
 import { actionLogger } from '../../middleware/logger';
 import { paginateResults } from '../../middleware/pagination.middleware';
@@ -14,6 +14,13 @@ router.post('/add',
     validateRequest({ body: addExchangeRateSchema }),
     addExchangeRate,
     actionLogger("add Exchange")
+);
+router.post(
+  "/convert",
+  requirePermissions(["Exchange.read"]),
+  validateRequest(convertCurrencySchema),
+  convertCurrency,
+  actionLogger("convert currency")
 );
 router.get('/get',
     

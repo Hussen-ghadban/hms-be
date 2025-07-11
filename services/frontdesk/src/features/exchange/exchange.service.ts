@@ -41,6 +41,31 @@ async countExchangeRates(hotelId: string) {
   });
 }
 
+// exchange.service.ts
+async convertCurrency({
+  baseCurrency,
+  targetCurrency,
+  amount,
+  hotelId,
+}: {
+  baseCurrency: string;
+  targetCurrency: string;
+  amount: number;
+  hotelId: string;
+}) {
+  const rate = await prisma.exchangeRate.findFirst({
+    where: {
+      baseCurrency,
+      targetCurrency,
+      hotelId,
+    },
+  });
+
+  if (!rate) throw new AppError("Exchange rate not found", 404);
+
+  const convertedAmount = Number(rate.rate) * amount;
+  return { rate: Number(rate.rate), convertedAmount };
+}
 
   async getExchangeRate(id: string, hotelId: string) {
     const rate = await prisma.exchangeRate.findFirst({
