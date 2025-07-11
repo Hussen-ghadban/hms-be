@@ -35,7 +35,7 @@ class AuthService {
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET!, {
-      expiresIn: '1h',
+      expiresIn: '24h',
     });
     // Create session and log login
     try {

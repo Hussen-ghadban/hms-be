@@ -5,6 +5,7 @@ import {
   getGroupProfile,
   updateGroupProfile,
   deleteGroupProfile,
+  linkGuestsToGroup,
 } from "./groupProfile.controller";
 import { validateRequest } from "../../middleware/validation";
 import { requirePermissions } from "../../middleware/requirePermissions";
@@ -15,9 +16,9 @@ import { paginateResults } from "../../middleware/pagination.middleware";
 const router = express.Router();
 
 router.post("/add", requirePermissions(["GroupProfile.create"]), validateRequest({ body: groupProfileSchema }), addGroupProfile, actionLogger("add group profile"));
-router.get("/get", requirePermissions(["GroupProfile.read"]), paginateResults,getGroupProfiles, actionLogger("get group profiles"));
+router.get("/get", requirePermissions(["GroupProfile.read"]), paginateResults, getGroupProfiles, actionLogger("get group profiles"));
 router.get("/get/:id", requirePermissions(["GroupProfile.read"]), validateRequest({ params: groupProfileIdSchema }), getGroupProfile, actionLogger("get group profile"));
 router.put("/update/:id", requirePermissions(["GroupProfile.update"]), validateRequest({ params: groupProfileIdSchema, body: updateGroupProfileSchema }), updateGroupProfile, actionLogger("update group profile"));
 router.delete("/delete/:id", requirePermissions(["GroupProfile.delete"]), validateRequest({ params: groupProfileIdSchema }), deleteGroupProfile, actionLogger("delete group profile"));
-
+router.post("/link/:groupId", requirePermissions(["GroupProfile.update"]), linkGuestsToGroup, actionLogger("link guests to group profile"));
 export default router;

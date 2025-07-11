@@ -988,6 +988,67 @@ export namespace Prisma {
    */
 
 
+  /**
+   * Count Type GuestCountOutputType
+   */
+
+  export type GuestCountOutputType = {
+    GroupProfile: number
+  }
+
+  export type GuestCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    GroupProfile?: boolean | GuestCountOutputTypeCountGroupProfileArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * GuestCountOutputType without action
+   */
+  export type GuestCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GuestCountOutputType
+     */
+    select?: GuestCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * GuestCountOutputType without action
+   */
+  export type GuestCountOutputTypeCountGroupProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GroupProfileWhereInput
+  }
+
+
+  /**
+   * Count Type GroupProfileCountOutputType
+   */
+
+  export type GroupProfileCountOutputType = {
+    LinkedGuests: number
+  }
+
+  export type GroupProfileCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    LinkedGuests?: boolean | GroupProfileCountOutputTypeCountLinkedGuestsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * GroupProfileCountOutputType without action
+   */
+  export type GroupProfileCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupProfileCountOutputType
+     */
+    select?: GroupProfileCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * GroupProfileCountOutputType without action
+   */
+  export type GroupProfileCountOutputTypeCountLinkedGuestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GuestWhereInput
+  }
+
 
   /**
    * Models
@@ -1213,6 +1274,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     hotelId?: boolean
+    GroupProfile?: boolean | Guest$GroupProfileArgs<ExtArgs>
+    _count?: boolean | GuestCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["guest"]>
 
   export type GuestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1264,10 +1327,18 @@ export namespace Prisma {
   }
 
   export type GuestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gid" | "firstName" | "lastName" | "email" | "phoneNumber" | "identification" | "nationality" | "preferences" | "dob" | "createdAt" | "updatedAt" | "hotelId", ExtArgs["result"]["guest"]>
+  export type GuestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    GroupProfile?: boolean | Guest$GroupProfileArgs<ExtArgs>
+    _count?: boolean | GuestCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type GuestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type GuestIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $GuestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Guest"
-    objects: {}
+    objects: {
+      GroupProfile: Prisma.$GroupProfilePayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       gid: string
@@ -1676,6 +1747,7 @@ export namespace Prisma {
    */
   export interface Prisma__GuestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    GroupProfile<T extends Guest$GroupProfileArgs<ExtArgs> = {}>(args?: Subset<T, Guest$GroupProfileArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1735,6 +1807,10 @@ export namespace Prisma {
      */
     omit?: GuestOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
      * Filter, which Guest to fetch.
      */
     where: GuestWhereUniqueInput
@@ -1753,6 +1829,10 @@ export namespace Prisma {
      */
     omit?: GuestOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
      * Filter, which Guest to fetch.
      */
     where: GuestWhereUniqueInput
@@ -1770,6 +1850,10 @@ export namespace Prisma {
      * Omit specific fields from the Guest
      */
     omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
     /**
      * Filter, which Guest to fetch.
      */
@@ -1819,6 +1903,10 @@ export namespace Prisma {
      */
     omit?: GuestOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
      * Filter, which Guest to fetch.
      */
     where?: GuestWhereInput
@@ -1867,6 +1955,10 @@ export namespace Prisma {
      */
     omit?: GuestOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
      * Filter, which Guests to fetch.
      */
     where?: GuestWhereInput
@@ -1909,6 +2001,10 @@ export namespace Prisma {
      * Omit specific fields from the Guest
      */
     omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
     /**
      * The data needed to create a Guest.
      */
@@ -1957,6 +2053,10 @@ export namespace Prisma {
      * Omit specific fields from the Guest
      */
     omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
     /**
      * The data needed to update a Guest.
      */
@@ -2024,6 +2124,10 @@ export namespace Prisma {
      */
     omit?: GuestOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
      * The filter to search for the Guest to update in case it exists.
      */
     where: GuestWhereUniqueInput
@@ -2050,6 +2154,10 @@ export namespace Prisma {
      */
     omit?: GuestOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
      * Filter which Guest to delete.
      */
     where: GuestWhereUniqueInput
@@ -2070,6 +2178,30 @@ export namespace Prisma {
   }
 
   /**
+   * Guest.GroupProfile
+   */
+  export type Guest$GroupProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupProfile
+     */
+    select?: GroupProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupProfile
+     */
+    omit?: GroupProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupProfileInclude<ExtArgs> | null
+    where?: GroupProfileWhereInput
+    orderBy?: GroupProfileOrderByWithRelationInput | GroupProfileOrderByWithRelationInput[]
+    cursor?: GroupProfileWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GroupProfileScalarFieldEnum | GroupProfileScalarFieldEnum[]
+  }
+
+  /**
    * Guest without action
    */
   export type GuestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2081,6 +2213,10 @@ export namespace Prisma {
      * Omit specific fields from the Guest
      */
     omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
   }
 
 
@@ -2324,6 +2460,8 @@ export namespace Prisma {
     hotelId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    LinkedGuests?: boolean | GroupProfile$LinkedGuestsArgs<ExtArgs>
+    _count?: boolean | GroupProfileCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["groupProfile"]>
 
   export type GroupProfileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2384,10 +2522,18 @@ export namespace Prisma {
   }
 
   export type GroupProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "legalName" | "email" | "phone" | "primaryContact" | "address" | "billingAddress" | "businessType" | "specialRequirements" | "status" | "isVip" | "notes" | "hotelId" | "createdAt" | "updatedAt", ExtArgs["result"]["groupProfile"]>
+  export type GroupProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    LinkedGuests?: boolean | GroupProfile$LinkedGuestsArgs<ExtArgs>
+    _count?: boolean | GroupProfileCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type GroupProfileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type GroupProfileIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $GroupProfilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "GroupProfile"
-    objects: {}
+    objects: {
+      LinkedGuests: Prisma.$GuestPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
@@ -2799,6 +2945,7 @@ export namespace Prisma {
    */
   export interface Prisma__GroupProfileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    LinkedGuests<T extends GroupProfile$LinkedGuestsArgs<ExtArgs> = {}>(args?: Subset<T, GroupProfile$LinkedGuestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2861,6 +3008,10 @@ export namespace Prisma {
      */
     omit?: GroupProfileOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupProfileInclude<ExtArgs> | null
+    /**
      * Filter, which GroupProfile to fetch.
      */
     where: GroupProfileWhereUniqueInput
@@ -2879,6 +3030,10 @@ export namespace Prisma {
      */
     omit?: GroupProfileOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupProfileInclude<ExtArgs> | null
+    /**
      * Filter, which GroupProfile to fetch.
      */
     where: GroupProfileWhereUniqueInput
@@ -2896,6 +3051,10 @@ export namespace Prisma {
      * Omit specific fields from the GroupProfile
      */
     omit?: GroupProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupProfileInclude<ExtArgs> | null
     /**
      * Filter, which GroupProfile to fetch.
      */
@@ -2945,6 +3104,10 @@ export namespace Prisma {
      */
     omit?: GroupProfileOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupProfileInclude<ExtArgs> | null
+    /**
      * Filter, which GroupProfile to fetch.
      */
     where?: GroupProfileWhereInput
@@ -2993,6 +3156,10 @@ export namespace Prisma {
      */
     omit?: GroupProfileOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupProfileInclude<ExtArgs> | null
+    /**
      * Filter, which GroupProfiles to fetch.
      */
     where?: GroupProfileWhereInput
@@ -3035,6 +3202,10 @@ export namespace Prisma {
      * Omit specific fields from the GroupProfile
      */
     omit?: GroupProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupProfileInclude<ExtArgs> | null
     /**
      * The data needed to create a GroupProfile.
      */
@@ -3083,6 +3254,10 @@ export namespace Prisma {
      * Omit specific fields from the GroupProfile
      */
     omit?: GroupProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupProfileInclude<ExtArgs> | null
     /**
      * The data needed to update a GroupProfile.
      */
@@ -3150,6 +3325,10 @@ export namespace Prisma {
      */
     omit?: GroupProfileOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupProfileInclude<ExtArgs> | null
+    /**
      * The filter to search for the GroupProfile to update in case it exists.
      */
     where: GroupProfileWhereUniqueInput
@@ -3176,6 +3355,10 @@ export namespace Prisma {
      */
     omit?: GroupProfileOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupProfileInclude<ExtArgs> | null
+    /**
      * Filter which GroupProfile to delete.
      */
     where: GroupProfileWhereUniqueInput
@@ -3196,6 +3379,30 @@ export namespace Prisma {
   }
 
   /**
+   * GroupProfile.LinkedGuests
+   */
+  export type GroupProfile$LinkedGuestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    where?: GuestWhereInput
+    orderBy?: GuestOrderByWithRelationInput | GuestOrderByWithRelationInput[]
+    cursor?: GuestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GuestScalarFieldEnum | GuestScalarFieldEnum[]
+  }
+
+  /**
    * GroupProfile without action
    */
   export type GroupProfileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3207,6 +3414,10 @@ export namespace Prisma {
      * Omit specific fields from the GroupProfile
      */
     omit?: GroupProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupProfileInclude<ExtArgs> | null
   }
 
 
@@ -3429,6 +3640,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Guest"> | Date | string
     updatedAt?: DateTimeFilter<"Guest"> | Date | string
     hotelId?: StringFilter<"Guest"> | string
+    GroupProfile?: GroupProfileListRelationFilter
   }
 
   export type GuestOrderByWithRelationInput = {
@@ -3445,6 +3657,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     hotelId?: SortOrder
+    GroupProfile?: GroupProfileOrderByRelationAggregateInput
   }
 
   export type GuestWhereUniqueInput = Prisma.AtLeast<{
@@ -3464,6 +3677,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Guest"> | Date | string
     updatedAt?: DateTimeFilter<"Guest"> | Date | string
     hotelId?: StringFilter<"Guest"> | string
+    GroupProfile?: GroupProfileListRelationFilter
   }, "id" | "gid" | "email">
 
   export type GuestOrderByWithAggregationInput = {
@@ -3524,6 +3738,7 @@ export namespace Prisma {
     hotelId?: StringFilter<"GroupProfile"> | string
     createdAt?: DateTimeFilter<"GroupProfile"> | Date | string
     updatedAt?: DateTimeFilter<"GroupProfile"> | Date | string
+    LinkedGuests?: GuestListRelationFilter
   }
 
   export type GroupProfileOrderByWithRelationInput = {
@@ -3543,6 +3758,7 @@ export namespace Prisma {
     hotelId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    LinkedGuests?: GuestOrderByRelationAggregateInput
   }
 
   export type GroupProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -3565,6 +3781,7 @@ export namespace Prisma {
     hotelId?: StringFilter<"GroupProfile"> | string
     createdAt?: DateTimeFilter<"GroupProfile"> | Date | string
     updatedAt?: DateTimeFilter<"GroupProfile"> | Date | string
+    LinkedGuests?: GuestListRelationFilter
   }, "id">
 
   export type GroupProfileOrderByWithAggregationInput = {
@@ -3625,6 +3842,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     hotelId: string
+    GroupProfile?: GroupProfileCreateNestedManyWithoutLinkedGuestsInput
   }
 
   export type GuestUncheckedCreateInput = {
@@ -3641,6 +3859,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     hotelId: string
+    GroupProfile?: GroupProfileUncheckedCreateNestedManyWithoutLinkedGuestsInput
   }
 
   export type GuestUpdateInput = {
@@ -3657,6 +3876,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hotelId?: StringFieldUpdateOperationsInput | string
+    GroupProfile?: GroupProfileUpdateManyWithoutLinkedGuestsNestedInput
   }
 
   export type GuestUncheckedUpdateInput = {
@@ -3673,6 +3893,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hotelId?: StringFieldUpdateOperationsInput | string
+    GroupProfile?: GroupProfileUncheckedUpdateManyWithoutLinkedGuestsNestedInput
   }
 
   export type GuestCreateManyInput = {
@@ -3740,6 +3961,7 @@ export namespace Prisma {
     hotelId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    LinkedGuests?: GuestCreateNestedManyWithoutGroupProfileInput
   }
 
   export type GroupProfileUncheckedCreateInput = {
@@ -3759,6 +3981,7 @@ export namespace Prisma {
     hotelId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    LinkedGuests?: GuestUncheckedCreateNestedManyWithoutGroupProfileInput
   }
 
   export type GroupProfileUpdateInput = {
@@ -3778,6 +4001,7 @@ export namespace Prisma {
     hotelId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    LinkedGuests?: GuestUpdateManyWithoutGroupProfileNestedInput
   }
 
   export type GroupProfileUncheckedUpdateInput = {
@@ -3797,6 +4021,7 @@ export namespace Prisma {
     hotelId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    LinkedGuests?: GuestUncheckedUpdateManyWithoutGroupProfileNestedInput
   }
 
   export type GroupProfileCreateManyInput = {
@@ -3954,9 +4179,19 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type GroupProfileListRelationFilter = {
+    every?: GroupProfileWhereInput
+    some?: GroupProfileWhereInput
+    none?: GroupProfileWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
+  }
+
+  export type GroupProfileOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type GuestCountOrderByAggregateInput = {
@@ -4138,6 +4373,16 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type GuestListRelationFilter = {
+    every?: GuestWhereInput
+    some?: GuestWhereInput
+    none?: GuestWhereInput
+  }
+
+  export type GuestOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type GroupProfileCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -4217,6 +4462,18 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type GroupProfileCreateNestedManyWithoutLinkedGuestsInput = {
+    create?: XOR<GroupProfileCreateWithoutLinkedGuestsInput, GroupProfileUncheckedCreateWithoutLinkedGuestsInput> | GroupProfileCreateWithoutLinkedGuestsInput[] | GroupProfileUncheckedCreateWithoutLinkedGuestsInput[]
+    connectOrCreate?: GroupProfileCreateOrConnectWithoutLinkedGuestsInput | GroupProfileCreateOrConnectWithoutLinkedGuestsInput[]
+    connect?: GroupProfileWhereUniqueInput | GroupProfileWhereUniqueInput[]
+  }
+
+  export type GroupProfileUncheckedCreateNestedManyWithoutLinkedGuestsInput = {
+    create?: XOR<GroupProfileCreateWithoutLinkedGuestsInput, GroupProfileUncheckedCreateWithoutLinkedGuestsInput> | GroupProfileCreateWithoutLinkedGuestsInput[] | GroupProfileUncheckedCreateWithoutLinkedGuestsInput[]
+    connectOrCreate?: GroupProfileCreateOrConnectWithoutLinkedGuestsInput | GroupProfileCreateOrConnectWithoutLinkedGuestsInput[]
+    connect?: GroupProfileWhereUniqueInput | GroupProfileWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -4233,6 +4490,44 @@ export namespace Prisma {
     set?: Date | string
   }
 
+  export type GroupProfileUpdateManyWithoutLinkedGuestsNestedInput = {
+    create?: XOR<GroupProfileCreateWithoutLinkedGuestsInput, GroupProfileUncheckedCreateWithoutLinkedGuestsInput> | GroupProfileCreateWithoutLinkedGuestsInput[] | GroupProfileUncheckedCreateWithoutLinkedGuestsInput[]
+    connectOrCreate?: GroupProfileCreateOrConnectWithoutLinkedGuestsInput | GroupProfileCreateOrConnectWithoutLinkedGuestsInput[]
+    upsert?: GroupProfileUpsertWithWhereUniqueWithoutLinkedGuestsInput | GroupProfileUpsertWithWhereUniqueWithoutLinkedGuestsInput[]
+    set?: GroupProfileWhereUniqueInput | GroupProfileWhereUniqueInput[]
+    disconnect?: GroupProfileWhereUniqueInput | GroupProfileWhereUniqueInput[]
+    delete?: GroupProfileWhereUniqueInput | GroupProfileWhereUniqueInput[]
+    connect?: GroupProfileWhereUniqueInput | GroupProfileWhereUniqueInput[]
+    update?: GroupProfileUpdateWithWhereUniqueWithoutLinkedGuestsInput | GroupProfileUpdateWithWhereUniqueWithoutLinkedGuestsInput[]
+    updateMany?: GroupProfileUpdateManyWithWhereWithoutLinkedGuestsInput | GroupProfileUpdateManyWithWhereWithoutLinkedGuestsInput[]
+    deleteMany?: GroupProfileScalarWhereInput | GroupProfileScalarWhereInput[]
+  }
+
+  export type GroupProfileUncheckedUpdateManyWithoutLinkedGuestsNestedInput = {
+    create?: XOR<GroupProfileCreateWithoutLinkedGuestsInput, GroupProfileUncheckedCreateWithoutLinkedGuestsInput> | GroupProfileCreateWithoutLinkedGuestsInput[] | GroupProfileUncheckedCreateWithoutLinkedGuestsInput[]
+    connectOrCreate?: GroupProfileCreateOrConnectWithoutLinkedGuestsInput | GroupProfileCreateOrConnectWithoutLinkedGuestsInput[]
+    upsert?: GroupProfileUpsertWithWhereUniqueWithoutLinkedGuestsInput | GroupProfileUpsertWithWhereUniqueWithoutLinkedGuestsInput[]
+    set?: GroupProfileWhereUniqueInput | GroupProfileWhereUniqueInput[]
+    disconnect?: GroupProfileWhereUniqueInput | GroupProfileWhereUniqueInput[]
+    delete?: GroupProfileWhereUniqueInput | GroupProfileWhereUniqueInput[]
+    connect?: GroupProfileWhereUniqueInput | GroupProfileWhereUniqueInput[]
+    update?: GroupProfileUpdateWithWhereUniqueWithoutLinkedGuestsInput | GroupProfileUpdateWithWhereUniqueWithoutLinkedGuestsInput[]
+    updateMany?: GroupProfileUpdateManyWithWhereWithoutLinkedGuestsInput | GroupProfileUpdateManyWithWhereWithoutLinkedGuestsInput[]
+    deleteMany?: GroupProfileScalarWhereInput | GroupProfileScalarWhereInput[]
+  }
+
+  export type GuestCreateNestedManyWithoutGroupProfileInput = {
+    create?: XOR<GuestCreateWithoutGroupProfileInput, GuestUncheckedCreateWithoutGroupProfileInput> | GuestCreateWithoutGroupProfileInput[] | GuestUncheckedCreateWithoutGroupProfileInput[]
+    connectOrCreate?: GuestCreateOrConnectWithoutGroupProfileInput | GuestCreateOrConnectWithoutGroupProfileInput[]
+    connect?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+  }
+
+  export type GuestUncheckedCreateNestedManyWithoutGroupProfileInput = {
+    create?: XOR<GuestCreateWithoutGroupProfileInput, GuestUncheckedCreateWithoutGroupProfileInput> | GuestCreateWithoutGroupProfileInput[] | GuestUncheckedCreateWithoutGroupProfileInput[]
+    connectOrCreate?: GuestCreateOrConnectWithoutGroupProfileInput | GuestCreateOrConnectWithoutGroupProfileInput[]
+    connect?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+  }
+
   export type EnumBusinessTypeFieldUpdateOperationsInput = {
     set?: $Enums.BusinessType
   }
@@ -4243,6 +4538,32 @@ export namespace Prisma {
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type GuestUpdateManyWithoutGroupProfileNestedInput = {
+    create?: XOR<GuestCreateWithoutGroupProfileInput, GuestUncheckedCreateWithoutGroupProfileInput> | GuestCreateWithoutGroupProfileInput[] | GuestUncheckedCreateWithoutGroupProfileInput[]
+    connectOrCreate?: GuestCreateOrConnectWithoutGroupProfileInput | GuestCreateOrConnectWithoutGroupProfileInput[]
+    upsert?: GuestUpsertWithWhereUniqueWithoutGroupProfileInput | GuestUpsertWithWhereUniqueWithoutGroupProfileInput[]
+    set?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+    disconnect?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+    delete?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+    connect?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+    update?: GuestUpdateWithWhereUniqueWithoutGroupProfileInput | GuestUpdateWithWhereUniqueWithoutGroupProfileInput[]
+    updateMany?: GuestUpdateManyWithWhereWithoutGroupProfileInput | GuestUpdateManyWithWhereWithoutGroupProfileInput[]
+    deleteMany?: GuestScalarWhereInput | GuestScalarWhereInput[]
+  }
+
+  export type GuestUncheckedUpdateManyWithoutGroupProfileNestedInput = {
+    create?: XOR<GuestCreateWithoutGroupProfileInput, GuestUncheckedCreateWithoutGroupProfileInput> | GuestCreateWithoutGroupProfileInput[] | GuestUncheckedCreateWithoutGroupProfileInput[]
+    connectOrCreate?: GuestCreateOrConnectWithoutGroupProfileInput | GuestCreateOrConnectWithoutGroupProfileInput[]
+    upsert?: GuestUpsertWithWhereUniqueWithoutGroupProfileInput | GuestUpsertWithWhereUniqueWithoutGroupProfileInput[]
+    set?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+    disconnect?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+    delete?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+    connect?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+    update?: GuestUpdateWithWhereUniqueWithoutGroupProfileInput | GuestUpdateWithWhereUniqueWithoutGroupProfileInput[]
+    updateMany?: GuestUpdateManyWithWhereWithoutGroupProfileInput | GuestUpdateManyWithWhereWithoutGroupProfileInput[]
+    deleteMany?: GuestScalarWhereInput | GuestScalarWhereInput[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -4470,6 +4791,264 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type GroupProfileCreateWithoutLinkedGuestsInput = {
+    id?: string
+    name: string
+    legalName?: string | null
+    email?: string | null
+    phone?: string | null
+    primaryContact?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    billingAddress?: NullableJsonNullValueInput | InputJsonValue
+    businessType: $Enums.BusinessType
+    specialRequirements?: string | null
+    status?: $Enums.GroupStatus
+    isVip?: boolean
+    notes?: string | null
+    hotelId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GroupProfileUncheckedCreateWithoutLinkedGuestsInput = {
+    id?: string
+    name: string
+    legalName?: string | null
+    email?: string | null
+    phone?: string | null
+    primaryContact?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    billingAddress?: NullableJsonNullValueInput | InputJsonValue
+    businessType: $Enums.BusinessType
+    specialRequirements?: string | null
+    status?: $Enums.GroupStatus
+    isVip?: boolean
+    notes?: string | null
+    hotelId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GroupProfileCreateOrConnectWithoutLinkedGuestsInput = {
+    where: GroupProfileWhereUniqueInput
+    create: XOR<GroupProfileCreateWithoutLinkedGuestsInput, GroupProfileUncheckedCreateWithoutLinkedGuestsInput>
+  }
+
+  export type GroupProfileUpsertWithWhereUniqueWithoutLinkedGuestsInput = {
+    where: GroupProfileWhereUniqueInput
+    update: XOR<GroupProfileUpdateWithoutLinkedGuestsInput, GroupProfileUncheckedUpdateWithoutLinkedGuestsInput>
+    create: XOR<GroupProfileCreateWithoutLinkedGuestsInput, GroupProfileUncheckedCreateWithoutLinkedGuestsInput>
+  }
+
+  export type GroupProfileUpdateWithWhereUniqueWithoutLinkedGuestsInput = {
+    where: GroupProfileWhereUniqueInput
+    data: XOR<GroupProfileUpdateWithoutLinkedGuestsInput, GroupProfileUncheckedUpdateWithoutLinkedGuestsInput>
+  }
+
+  export type GroupProfileUpdateManyWithWhereWithoutLinkedGuestsInput = {
+    where: GroupProfileScalarWhereInput
+    data: XOR<GroupProfileUpdateManyMutationInput, GroupProfileUncheckedUpdateManyWithoutLinkedGuestsInput>
+  }
+
+  export type GroupProfileScalarWhereInput = {
+    AND?: GroupProfileScalarWhereInput | GroupProfileScalarWhereInput[]
+    OR?: GroupProfileScalarWhereInput[]
+    NOT?: GroupProfileScalarWhereInput | GroupProfileScalarWhereInput[]
+    id?: StringFilter<"GroupProfile"> | string
+    name?: StringFilter<"GroupProfile"> | string
+    legalName?: StringNullableFilter<"GroupProfile"> | string | null
+    email?: StringNullableFilter<"GroupProfile"> | string | null
+    phone?: StringNullableFilter<"GroupProfile"> | string | null
+    primaryContact?: JsonNullableFilter<"GroupProfile">
+    address?: JsonNullableFilter<"GroupProfile">
+    billingAddress?: JsonNullableFilter<"GroupProfile">
+    businessType?: EnumBusinessTypeFilter<"GroupProfile"> | $Enums.BusinessType
+    specialRequirements?: StringNullableFilter<"GroupProfile"> | string | null
+    status?: EnumGroupStatusFilter<"GroupProfile"> | $Enums.GroupStatus
+    isVip?: BoolFilter<"GroupProfile"> | boolean
+    notes?: StringNullableFilter<"GroupProfile"> | string | null
+    hotelId?: StringFilter<"GroupProfile"> | string
+    createdAt?: DateTimeFilter<"GroupProfile"> | Date | string
+    updatedAt?: DateTimeFilter<"GroupProfile"> | Date | string
+  }
+
+  export type GuestCreateWithoutGroupProfileInput = {
+    id?: string
+    gid: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phoneNumber?: string | null
+    identification: JsonNullValueInput | InputJsonValue
+    nationality?: string | null
+    preferences?: NullableJsonNullValueInput | InputJsonValue
+    dob?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    hotelId: string
+  }
+
+  export type GuestUncheckedCreateWithoutGroupProfileInput = {
+    id?: string
+    gid: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phoneNumber?: string | null
+    identification: JsonNullValueInput | InputJsonValue
+    nationality?: string | null
+    preferences?: NullableJsonNullValueInput | InputJsonValue
+    dob?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    hotelId: string
+  }
+
+  export type GuestCreateOrConnectWithoutGroupProfileInput = {
+    where: GuestWhereUniqueInput
+    create: XOR<GuestCreateWithoutGroupProfileInput, GuestUncheckedCreateWithoutGroupProfileInput>
+  }
+
+  export type GuestUpsertWithWhereUniqueWithoutGroupProfileInput = {
+    where: GuestWhereUniqueInput
+    update: XOR<GuestUpdateWithoutGroupProfileInput, GuestUncheckedUpdateWithoutGroupProfileInput>
+    create: XOR<GuestCreateWithoutGroupProfileInput, GuestUncheckedCreateWithoutGroupProfileInput>
+  }
+
+  export type GuestUpdateWithWhereUniqueWithoutGroupProfileInput = {
+    where: GuestWhereUniqueInput
+    data: XOR<GuestUpdateWithoutGroupProfileInput, GuestUncheckedUpdateWithoutGroupProfileInput>
+  }
+
+  export type GuestUpdateManyWithWhereWithoutGroupProfileInput = {
+    where: GuestScalarWhereInput
+    data: XOR<GuestUpdateManyMutationInput, GuestUncheckedUpdateManyWithoutGroupProfileInput>
+  }
+
+  export type GuestScalarWhereInput = {
+    AND?: GuestScalarWhereInput | GuestScalarWhereInput[]
+    OR?: GuestScalarWhereInput[]
+    NOT?: GuestScalarWhereInput | GuestScalarWhereInput[]
+    id?: StringFilter<"Guest"> | string
+    gid?: StringFilter<"Guest"> | string
+    firstName?: StringFilter<"Guest"> | string
+    lastName?: StringFilter<"Guest"> | string
+    email?: StringNullableFilter<"Guest"> | string | null
+    phoneNumber?: StringNullableFilter<"Guest"> | string | null
+    identification?: JsonFilter<"Guest">
+    nationality?: StringNullableFilter<"Guest"> | string | null
+    preferences?: JsonNullableFilter<"Guest">
+    dob?: DateTimeNullableFilter<"Guest"> | Date | string | null
+    createdAt?: DateTimeFilter<"Guest"> | Date | string
+    updatedAt?: DateTimeFilter<"Guest"> | Date | string
+    hotelId?: StringFilter<"Guest"> | string
+  }
+
+  export type GroupProfileUpdateWithoutLinkedGuestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    legalName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryContact?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    billingAddress?: NullableJsonNullValueInput | InputJsonValue
+    businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
+    specialRequirements?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumGroupStatusFieldUpdateOperationsInput | $Enums.GroupStatus
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    hotelId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupProfileUncheckedUpdateWithoutLinkedGuestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    legalName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryContact?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    billingAddress?: NullableJsonNullValueInput | InputJsonValue
+    businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
+    specialRequirements?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumGroupStatusFieldUpdateOperationsInput | $Enums.GroupStatus
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    hotelId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupProfileUncheckedUpdateManyWithoutLinkedGuestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    legalName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryContact?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    billingAddress?: NullableJsonNullValueInput | InputJsonValue
+    businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
+    specialRequirements?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumGroupStatusFieldUpdateOperationsInput | $Enums.GroupStatus
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    hotelId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GuestUpdateWithoutGroupProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gid?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    identification?: JsonNullValueInput | InputJsonValue
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: NullableJsonNullValueInput | InputJsonValue
+    dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hotelId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GuestUncheckedUpdateWithoutGroupProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gid?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    identification?: JsonNullValueInput | InputJsonValue
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: NullableJsonNullValueInput | InputJsonValue
+    dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hotelId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GuestUncheckedUpdateManyWithoutGroupProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gid?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    identification?: JsonNullValueInput | InputJsonValue
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: NullableJsonNullValueInput | InputJsonValue
+    dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hotelId?: StringFieldUpdateOperationsInput | string
   }
 
 

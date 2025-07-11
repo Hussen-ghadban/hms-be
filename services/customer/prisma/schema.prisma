@@ -30,6 +30,7 @@ model Guest {
   hotelId        String
 
   @@unique([email])
+  GroupProfile GroupProfile[]
 }
 
 
@@ -58,6 +59,9 @@ model GroupProfile {
   isVip              Boolean     @default(false)
   notes              String?
   
+  //Linked Guests
+  LinkedGuests  Guest[]
+
   // Multi-tenant Support
   hotelId            String
   

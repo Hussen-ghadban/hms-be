@@ -63,4 +63,26 @@ async updateGroupProfile(params: UpdateGroupProfileParams) {
     if (!profile) throw new AppError("Group profile not found", 404);
     await prisma.groupProfile.delete({ where: { id } });
   }
+
+  async linkGuests(groupId: string, guestIds: string[]) {
+    const groupProfile = await prisma.groupProfile.findFirst({ where: { id: groupId } });
+    if (!groupProfile) throw new AppError("Group profile not found", 404);
+
+    const guests = await prisma.guest.findMany({
+      where: { id: { in: guestIds }, hotelId: groupProfile.hotelId },
+    });
+
+    if (guests.length !== guestIds.length) {
+      throw new AppError("Some guests not found or do not belong to this hotel", 404);
+    }
+
+    return prisma.groupProfile.update({
+      where: { id: groupId },
+      data: {
+        LinkedGuests: {
+          connect: guests.map(guest => ({ id: guest.id })),
+        },
+      },
+    });
+  }
 }

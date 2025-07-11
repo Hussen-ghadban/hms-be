@@ -15,8 +15,8 @@ datasource db {
 }
 
 model Guest {
-  id             String    @id @default(cuid())
-  gid            String    @unique
+  id             String         @id @default(cuid())
+  gid            String         @unique
   firstName      String
   lastName       String
   email          String?
@@ -25,9 +25,10 @@ model Guest {
   nationality    String?
   preferences    Json?
   dob            DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
   hotelId        String
+  GroupProfile   GroupProfile[]
 
   @@unique([email])
 }
@@ -56,6 +57,9 @@ model GroupProfile {
   status GroupStatus @default(ACTIVE)
   isVip  Boolean     @default(false)
   notes  String?
+
+  //Linked Guests
+  LinkedGuests Guest[]
 
   // Multi-tenant Support
   hotelId String

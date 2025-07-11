@@ -1,0 +1,2298 @@
+{
+    "info": {
+        "name": "HMS Complete API - All Endpoints",
+        "description": "Postman collection for testing amenity, exchange rate, folio item, housekeeping, and maintenance endpoints in the HMS Front Desk service",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{auth_token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:4001",
+            "type": "string"
+        },
+        {
+            "key": "auth_token",
+            "value": "your_jwt_token_here",
+            "type": "string"
+        },
+        {
+            "key": "amenity_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "exchange_rate_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "folio_item_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "folio_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "from_folio_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "to_folio_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "housekeeping_task_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "maintenance_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "room_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "user_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "area_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "room_type_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "guest_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "rate_plan_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "reservation_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "group_profile_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "auth_base_url",
+            "value": "http://localhost:4000",
+            "type": "string"
+        },
+        {
+            "key": "role_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "permission_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "employee_id",
+            "value": "",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Amenity Management",
+            "item": [
+                {
+                    "name": "Create Amenity",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Swimming Pool\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/amenity/add",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "amenity",
+                                "add"
+                            ]
+                        },
+                        "description": "Create a new amenity for the hotel"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Amenities",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/amenity/get",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "amenity",
+                                "get"
+                            ]
+                        },
+                        "description": "Get all amenities for the hotel"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Single Amenity",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/amenity/get/{{amenity_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "amenity",
+                                "get",
+                                "{{amenity_id}}"
+                            ]
+                        },
+                        "description": "Get a specific amenity by ID"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Amenity",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Updated Swimming Pool\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/amenity/update/{{amenity_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "amenity",
+                                "update",
+                                "{{amenity_id}}"
+                            ]
+                        },
+                        "description": "Update an existing amenity"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Amenity",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/amenity/delete/{{amenity_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "amenity",
+                                "delete",
+                                "{{amenity_id}}"
+                            ]
+                        },
+                        "description": "Delete an amenity"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "All endpoints related to amenity management"
+        },
+        {
+            "name": "Exchange Rate Management",
+            "item": [
+                {
+                    "name": "Create Exchange Rate",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"baseCurrency\": \"USD\",\n  \"targetCurrency\": \"EUR\",\n  \"rate\": 0.85\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/exchange/add",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "exchange",
+                                "add"
+                            ]
+                        },
+                        "description": "Create a new exchange rate for the hotel"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Exchange Rates",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/exchange/get?page=1&limit=10",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "exchange",
+                                "get"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number for pagination"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10",
+                                    "description": "Number of items per page"
+                                }
+                            ]
+                        },
+                        "description": "Get all exchange rates for the hotel with pagination"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Single Exchange Rate",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/exchange/get/{{exchange_rate_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "exchange",
+                                "get",
+                                "{{exchange_rate_id}}"
+                            ]
+                        },
+                        "description": "Get a specific exchange rate by ID"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Exchange Rate",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"baseCurrency\": \"USD\",\n  \"targetCurrency\": \"EUR\",\n  \"rate\": 0.87\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/exchange/update/{{exchange_rate_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "exchange",
+                                "update",
+                                "{{exchange_rate_id}}"
+                            ]
+                        },
+                        "description": "Update an existing exchange rate (all fields are optional)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Exchange Rate",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/exchange/delete/{{exchange_rate_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "exchange",
+                                "delete",
+                                "{{exchange_rate_id}}"
+                            ]
+                        },
+                        "description": "Delete an exchange rate"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Currencies",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/exchange/currencies",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "exchange",
+                                "currencies"
+                            ]
+                        },
+                        "description": "Get all available currencies from the system"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "All endpoints related to exchange rate management"
+        },
+        {
+            "name": "Folio Item Management",
+            "item": [
+                {
+                    "name": "Add Charge to Folio",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"folioId\": \"{{folio_id}}\",\n  \"itemType\": \"ROOM_CHARGE\",\n  \"quantity\": 1,\n  \"unitPrice\": 150.00\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/folio-item/add-charge",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "folio-item",
+                                "add-charge"
+                            ]
+                        },
+                        "description": "Add a charge item to a folio"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Folio Items",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/folio-item/get",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "folio-item",
+                                "get"
+                            ]
+                        },
+                        "description": "Get all folio items for the hotel"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Folio Items by Folio",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/folio-item/get-by-folio?folioId={{folio_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "folio-item",
+                                "get-by-folio"
+                            ],
+                            "query": [
+                                {
+                                    "key": "folioId",
+                                    "value": "{{folio_id}}",
+                                    "description": "The folio ID to get items for"
+                                }
+                            ]
+                        },
+                        "description": "Get all folio items for a specific folio"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Single Folio Item",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/folio-item/get/{{folio_item_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "folio-item",
+                                "get",
+                                "{{folio_item_id}}"
+                            ]
+                        },
+                        "description": "Get a specific folio item by ID"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Folio Item",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"itemType\": \"ROOM_CHARGE\",\n  \"quantity\": 2,\n  \"unitPrice\": 175.00,\n  \"amount\": 350.00\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/folio-item/update/{{folio_item_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "folio-item",
+                                "update",
+                                "{{folio_item_id}}"
+                            ]
+                        },
+                        "description": "Update an existing folio item (all fields are optional)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Transfer Folio Items",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"fromFolioId\": \"{{from_folio_id}}\",\n  \"toFolioId\": \"{{to_folio_id}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/folio-item/transfer",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "folio-item",
+                                "transfer"
+                            ]
+                        },
+                        "description": "Transfer all folio items from one folio to another"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Void Folio Item",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"voidReason\": \"Customer complaint - service not provided\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/folio-item/void/{{folio_item_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "folio-item",
+                                "void",
+                                "{{folio_item_id}}"
+                            ]
+                        },
+                        "description": "Void a folio item with a reason"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Settle Folio Items",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"folioItemIds\": [\"{{folio_item_id}}\"],\n  \"currencyId\": \"currency_id_here\",\n  \"type\": \"CASH\",\n  \"source\": \"FRONT_DESK\",\n  \"reference\": \"Payment reference\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/folio-item/settle",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "folio-item",
+                                "settle"
+                            ]
+                        },
+                        "description": "Settle multiple folio items by creating payouts"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Folio Item",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/folio-item/delete/{{folio_item_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "folio-item",
+                                "delete",
+                                "{{folio_item_id}}"
+                            ]
+                        },
+                        "description": "Delete a folio item"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "All endpoints related to folio item management including charges, transfers, settlements, and voiding"
+        },
+        {
+            "name": "Housekeeping Management",
+            "item": [
+                {
+                    "name": "Create Housekeeping Task",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"roomId\": \"{{room_id}}\",\n  \"userId\": \"{{user_id}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/housekeeping/add",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "housekeeping",
+                                "add"
+                            ]
+                        },
+                        "description": "Create a new housekeeping task for a room"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Start Housekeeping Task",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/housekeeping/start/{{housekeeping_task_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "housekeeping",
+                                "start",
+                                "{{housekeeping_task_id}}"
+                            ]
+                        },
+                        "description": "Start a housekeeping task and set room status to CLEANING"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Complete Housekeeping Task",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/housekeeping/complete/{{housekeeping_task_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "housekeeping",
+                                "complete",
+                                "{{housekeeping_task_id}}"
+                            ]
+                        },
+                        "description": "Complete a housekeeping task and set room status to AVAILABLE"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Housekeeping Tasks",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/housekeeping/get?page=1&limit=10",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "housekeeping",
+                                "get"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number for pagination"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10",
+                                    "description": "Number of items per page"
+                                }
+                            ]
+                        },
+                        "description": "Get all housekeeping tasks with pagination and user details"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Single Housekeeping Task",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/housekeeping/get/{{housekeeping_task_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "housekeeping",
+                                "get",
+                                "{{housekeeping_task_id}}"
+                            ]
+                        },
+                        "description": "Get a specific housekeeping task by ID"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Housekeeping Task",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"roomId\": \"{{room_id}}\",\n  \"userId\": \"{{user_id}}\",\n  \"status\": \"IN_PROGRESS\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/housekeeping/update/{{housekeeping_task_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "housekeeping",
+                                "update",
+                                "{{housekeeping_task_id}}"
+                            ]
+                        },
+                        "description": "Update a housekeeping task (all fields optional)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Housekeeping Task",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/housekeeping/delete/{{housekeeping_task_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "housekeeping",
+                                "delete",
+                                "{{housekeeping_task_id}}"
+                            ]
+                        },
+                        "description": "Delete a housekeeping task and set room status to AVAILABLE"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "All endpoints related to housekeeping task management including room status updates"
+        },
+        {
+            "name": "Maintenance Management",
+            "item": [
+                {
+                    "name": "Create Maintenance Request",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"description\": \"Fix broken air conditioning\",\n  \"priority\": \"HIGH\",\n  \"roomId\": \"{{room_id}}\",\n  \"userId\": \"{{user_id}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/maintenance/add",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "maintenance",
+                                "add"
+                            ]
+                        },
+                        "description": "Create a new maintenance request for a room or area"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Maintenance Request (Area)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"description\": \"Repair lobby lighting\",\n  \"priority\": \"MEDIUM\",\n  \"areaId\": \"{{area_id}}\",\n  \"userId\": \"{{user_id}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/maintenance/add",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "maintenance",
+                                "add"
+                            ]
+                        },
+                        "description": "Create a new maintenance request for a specific area"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Start Maintenance",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/maintenance/start/{{maintenance_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "maintenance",
+                                "start",
+                                "{{maintenance_id}}"
+                            ]
+                        },
+                        "description": "Start maintenance work and set room status to MAINTENANCE"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Complete Maintenance",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/maintenance/complete/{{maintenance_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "maintenance",
+                                "complete",
+                                "{{maintenance_id}}"
+                            ]
+                        },
+                        "description": "Complete maintenance work and set room status to AVAILABLE"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Maintenance Requests",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/maintenance/get?page=1&limit=10",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "maintenance",
+                                "get"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number for pagination"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10",
+                                    "description": "Number of items per page"
+                                }
+                            ]
+                        },
+                        "description": "Get all maintenance requests with pagination and user details"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Single Maintenance Request",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/maintenance/get/{{maintenance_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "maintenance",
+                                "get",
+                                "{{maintenance_id}}"
+                            ]
+                        },
+                        "description": "Get a specific maintenance request by ID"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Maintenance Request",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"description\": \"Updated maintenance description\",\n  \"priority\": \"LOW\",\n  \"status\": \"IN_PROGRESS\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/maintenance/update/{{maintenance_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "maintenance",
+                                "update",
+                                "{{maintenance_id}}"
+                            ]
+                        },
+                        "description": "Update a maintenance request (all fields optional)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Maintenance Request",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/maintenance/delete/{{maintenance_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "maintenance",
+                                "delete",
+                                "{{maintenance_id}}"
+                            ]
+                        },
+                        "description": "Delete a maintenance request"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "All endpoints related to maintenance request management including room and area maintenance"
+        },
+        {
+            "name": "Room Management",
+            "item": [
+                {
+                    "name": "Create Room",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"roomNumber\": \"101\",\n  \"roomTypeId\": \"{{room_type_id}}\",\n  \"floor\": 1,\n  \"description\": \"Standard room with city view\",\n  \"amenities\": [\"{{amenity_id}}\"],\n  \"connectedRoomIds\": [],\n  \"photos\": []\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/room/add",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "room",
+                                "add"
+                            ]
+                        },
+                        "description": "Create a new room with amenities and connected rooms"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Rooms",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/room/get?page=1&limit=10",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "room",
+                                "get"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number for pagination"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10",
+                                    "description": "Number of items per page"
+                                }
+                            ]
+                        },
+                        "description": "Get all rooms with pagination"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Single Room",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/room/get/{{room_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "room",
+                                "get",
+                                "{{room_id}}"
+                            ]
+                        },
+                        "description": "Get a specific room by ID with amenities and connected rooms"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Rooms by Room Type",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/room/get-by-room-type/{{room_type_id}}?page=1&limit=10",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "room",
+                                "get-by-room-type",
+                                "{{room_type_id}}"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number for pagination"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10",
+                                    "description": "Number of items per page"
+                                }
+                            ]
+                        },
+                        "description": "Get all rooms of a specific room type"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Rooms by Status",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/room/get-rooms-by-status/AVAILABLE",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "room",
+                                "get-rooms-by-status",
+                                "AVAILABLE"
+                            ]
+                        },
+                        "description": "Get rooms by status (AVAILABLE, OCCUPIED, CLEANING, MAINTENANCE, DIRTY)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Room",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"roomNumber\": \"101A\",\n  \"status\": \"AVAILABLE\",\n  \"description\": \"Updated room description\",\n  \"amenities\": [\"{{amenity_id}}\"],\n  \"connectedRoomIds\": []\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/room/update/{{room_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "room",
+                                "update",
+                                "{{room_id}}"
+                            ]
+                        },
+                        "description": "Update an existing room (all fields optional)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Room",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/room/delete/{{room_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "room",
+                                "delete",
+                                "{{room_id}}"
+                            ]
+                        },
+                        "description": "Delete a room"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "All endpoints related to room management including amenities, connected rooms, and status updates"
+        },
+        {
+            "name": "Reservation Management",
+            "item": [
+                {
+                    "name": "Create Reservation",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"checkIn\": \"2024-01-15\",\n  \"checkOut\": \"2024-01-20\",\n  \"guestId\": \"{{guest_id}}\",\n  \"roomIds\": [\"{{room_id}}\"],\n  \"ratePlanId\": \"{{rate_plan_id}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/reservation/add",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "reservation",
+                                "add"
+                            ]
+                        },
+                        "description": "Create a new reservation for single or multiple connected rooms"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Reservation",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"checkIn\": \"2024-01-16\",\n  \"checkOut\": \"2024-01-22\",\n  \"roomIds\": [\"{{room_id}}\"],\n  \"ratePlanId\": \"{{rate_plan_id}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/reservation/update/{{reservation_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "reservation",
+                                "update",
+                                "{{reservation_id}}"
+                            ]
+                        },
+                        "description": "Update an existing reservation (all fields optional)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Reservations",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/reservation/get-reservation?startDate=2024-01-01&endDate=2024-01-31",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "reservation",
+                                "get-reservation"
+                            ],
+                            "query": [
+                                {
+                                    "key": "startDate",
+                                    "value": "2024-01-01",
+                                    "description": "Start date for reservation search"
+                                },
+                                {
+                                    "key": "endDate",
+                                    "value": "2024-01-31",
+                                    "description": "End date for reservation search"
+                                }
+                            ]
+                        },
+                        "description": "Get reservations within a date range with room availability"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Check In Guest",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"deposit\": 100.00\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/reservation/check-in/{{reservation_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "reservation",
+                                "check-in",
+                                "{{reservation_id}}"
+                            ]
+                        },
+                        "description": "Check in a guest - updates reservation status and room status to OCCUPIED"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Check Out Guest",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/reservation/check-out/{{reservation_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "reservation",
+                                "check-out",
+                                "{{reservation_id}}"
+                            ]
+                        },
+                        "description": "Check out a guest - updates room status to DIRTY and closes folio"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Group Booking",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"groupProfileId\": \"{{group_profile_id}}\",\n  \"checkIn\": \"2024-02-01\",\n  \"checkOut\": \"2024-02-05\",\n  \"ratePlanId\": \"{{rate_plan_id}}\",\n  \"guestsAndRooms\": {\n    \"guest_id_1\": [\"room_id_1\"],\n    \"guest_id_2\": [\"room_id_2\"]\n  }\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/reservation/create",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "reservation",
+                                "create"
+                            ]
+                        },
+                        "description": "Create a group booking with multiple guests and rooms"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "All endpoints related to reservation management including check-in, check-out, and group bookings"
+        },
+        {
+            "name": "Rate Plan Management",
+            "item": [
+                {
+                    "name": "Create Rate Plan",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"code\": \"STANDARD\",\n  \"name\": \"Standard Rate\",\n  \"baseAdjType\": \"PERCENT\",\n  \"baseAdjVal\": 10,\n  \"currencyId\": \"currency_id_here\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/ratePlan/add",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "ratePlan",
+                                "add"
+                            ]
+                        },
+                        "description": "Create a new rate plan for the hotel"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Rate Plans",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/ratePlan/get?page=1&limit=10",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "ratePlan",
+                                "get"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number for pagination"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10",
+                                    "description": "Number of items per page"
+                                }
+                            ]
+                        },
+                        "description": "Get all rate plans with pagination"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Single Rate Plan",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/ratePlan/get/{{rate_plan_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "ratePlan",
+                                "get",
+                                "{{rate_plan_id}}"
+                            ]
+                        },
+                        "description": "Get a specific rate plan by ID"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Rate Plan",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"code\": \"PREMIUM\",\n  \"name\": \"Premium Rate\",\n  \"baseAdjType\": \"FIXED\",\n  \"baseAdjVal\": 50\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/ratePlan/update/{{rate_plan_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "ratePlan",
+                                "update",
+                                "{{rate_plan_id}}"
+                            ]
+                        },
+                        "description": "Update an existing rate plan (all fields optional)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Rate Plan",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/ratePlan/delete/{{rate_plan_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "ratePlan",
+                                "delete",
+                                "{{rate_plan_id}}"
+                            ]
+                        },
+                        "description": "Delete a rate plan"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "All endpoints related to rate plan management"
+        },
+        {
+            "name": "Authentication Management",
+            "item": [
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"password123\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{auth_base_url}}/auth/login",
+                            "host": [
+                                "{{auth_base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "login"
+                            ]
+                        },
+                        "description": "Authenticate user and get access token"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Add User",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"newuser@example.com\",\n  \"username\": \"newuser\",\n  \"password\": \"password123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"roleId\": \"{{role_id}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{auth_base_url}}/auth/add-user",
+                            "host": [
+                                "{{auth_base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "add-user"
+                            ]
+                        },
+                        "description": "Create a new user account"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get User",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{auth_base_url}}/auth/get-user/{{employee_id}}",
+                            "host": [
+                                "{{auth_base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "get-user",
+                                "{{employee_id}}"
+                            ]
+                        },
+                        "description": "Get a specific user by ID"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Employees",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{auth_base_url}}/auth/employees?page=1&limit=10",
+                            "host": [
+                                "{{auth_base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "employees"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number for pagination"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10",
+                                    "description": "Number of items per page"
+                                }
+                            ]
+                        },
+                        "description": "Get all employees with pagination"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Authenticate Service Request",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"token\": \"{{auth_token}}\",\n  \"permissions\": [\"Room.read\", \"User.create\"]\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{auth_base_url}}/auth/services/authenticate",
+                            "host": [
+                                "{{auth_base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "services",
+                                "authenticate"
+                            ]
+                        },
+                        "description": "Authenticate and authorize service requests with required permissions"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "All endpoints related to user authentication, authorization, and employee management"
+        },
+        {
+            "name": "Role Management",
+            "item": [
+                {
+                    "name": "Create Role",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Front Desk Manager\",\n  \"permissionIds\": [\"{{permission_id}}\"]\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{auth_base_url}}/role/add",
+                            "host": [
+                                "{{auth_base_url}}"
+                            ],
+                            "path": [
+                                "role",
+                                "add"
+                            ]
+                        },
+                        "description": "Create a new role with assigned permissions"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Roles",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{auth_base_url}}/role/get",
+                            "host": [
+                                "{{auth_base_url}}"
+                            ],
+                            "path": [
+                                "role",
+                                "get"
+                            ]
+                        },
+                        "description": "Get all roles for the hotel with their permissions"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Single Role",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{auth_base_url}}/role/get/{{role_id}}",
+                            "host": [
+                                "{{auth_base_url}}"
+                            ],
+                            "path": [
+                                "role",
+                                "get",
+                                "{{role_id}}"
+                            ]
+                        },
+                        "description": "Get a specific role by ID with its permissions"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Role",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Updated Role Name\",\n  \"permissionIds\": [\"{{permission_id}}\"]\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{auth_base_url}}/role/update/{{role_id}}",
+                            "host": [
+                                "{{auth_base_url}}"
+                            ],
+                            "path": [
+                                "role",
+                                "update",
+                                "{{role_id}}"
+                            ]
+                        },
+                        "description": "Update an existing role (all fields optional)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Role",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{auth_base_url}}/role/delete/{{role_id}}",
+                            "host": [
+                                "{{auth_base_url}}"
+                            ],
+                            "path": [
+                                "role",
+                                "delete",
+                                "{{role_id}}"
+                            ]
+                        },
+                        "description": "Delete a role"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Permissions",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{auth_base_url}}/role/get-permissions",
+                            "host": [
+                                "{{auth_base_url}}"
+                            ],
+                            "path": [
+                                "role",
+                                "get-permissions"
+                            ]
+                        },
+                        "description": "Get all available permissions in the system"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "All endpoints related to role and permission management"
+        }
+    ]
+}

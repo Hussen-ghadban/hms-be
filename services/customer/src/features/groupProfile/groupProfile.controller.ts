@@ -178,3 +178,29 @@ export const deleteGroupProfile = async (req: Request, res: Response, next: Next
     next(error);
   }
 };
+
+export const linkGuestsToGroup = async (req:Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user || !req.user.hotelId) {
+      throw new AppError("Hotel ID is required", 400);
+    }
+
+    const { hotelId } = req.user;
+    const groupId = req.params.groupId;
+    const guestIds: string[] = req.body.guestIds;
+
+    if (!guestIds || guestIds.length === 0) {
+      throw new AppError("Guest IDs are required", 400);
+    }
+
+    const updatedGroupProfile = await groupProfileService.linkGuests(groupId, guestIds);
+
+    res.json({
+      status: 200,
+      message: "Guests linked to group profile successfully",
+      data: updatedGroupProfile,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
