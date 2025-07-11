@@ -1,7 +1,7 @@
 // folioItem.routes.ts
 import express from "express";
 import { validateRequest } from "../../middleware/validation";
-import { getFolioItem, getFolioItemsByFolio, updateFolioItem, deleteFolioItem, getFolioItems, TransferFolioItems, addChargeFolioItem, voidFolioItem, settleCharge } from "./folioItem.controller";
+import { getFolioItem, getFolioItemsByFolio, updateFolioItem, deleteFolioItem, getFolioItems, TransferFolioItems, addChargeFolioItem, voidFolioItem, settleCharge, getUnsettledCharge } from "./folioItem.controller";
 import { requirePermissions } from "../../middleware/requirePermissions";
 import { actionLogger } from "../../middleware/logger";
 import { addFolioItemSchema, TransferFolioItemsSchema, folioItemIdSchema, updateFolioItemSchema, settleFolioItemSchema } from "./folioItem.validation";
@@ -18,6 +18,8 @@ router.get("/get-by-folio", requirePermissions(["FolioItem.read"]), getFolioItem
 router.get("/get/:id", requirePermissions(["FolioItem.read"]), validateRequest({ params: folioItemIdSchema }), getFolioItem, actionLogger("get folioItem"));
 router.put("/update/:id", requirePermissions(["FolioItem.update"]), validateRequest({ params: folioItemIdSchema, body: updateFolioItemSchema }), updateFolioItem, actionLogger("update folioItem"));
 router.post("/settle", requirePermissions(["FolioItem.update"]), validateRequest({ body: settleFolioItemSchema }), settleCharge, actionLogger("settle folio items"));
+router.get("/unsettled-charges/:id", requirePermissions(["FolioItem.read"]), getUnsettledCharge, actionLogger("get unsettled charges folio items"));
+
 router.delete("/delete/:id", requirePermissions(["FolioItem.delete"]), validateRequest({ params: folioItemIdSchema }), deleteFolioItem, actionLogger("delete folioItem"));
 
 export default router;

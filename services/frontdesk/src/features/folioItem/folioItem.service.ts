@@ -173,6 +173,17 @@ if (!res.ok) {
     folioIds: affectedFolioIds,
   };
 }
+async getUnsettledCharge(
+  folioId:string,hotelId:string
+){
+  const folio=await prisma.folio.findFirst({
+    where:{id:folioId,hotelId},
+    include:{folioItems:{
+      where:{status:FolioItemStatus.UNPAID }
+    }}
+  })
+  return folio;
+}
 
 async voidFolioItem(
   id: string,
