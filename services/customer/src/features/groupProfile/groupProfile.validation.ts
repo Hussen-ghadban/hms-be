@@ -10,7 +10,6 @@ export const groupProfileSchema = z.object({
   billingAddress: z.record(z.any()).optional(),
   businessType: z.enum(["CORPORATE", "TRAVEL_AGENCY", "EVENT_PLANNER", "GOVERNMENT", "OTHER"]),
   specialRequirements: z.string().optional(),
-  status: z.enum(["ACTIVE", "INACTIVE", "SUSPENDED"]).optional(),
   isVip: z.boolean().optional(),
   notes: z.string().optional(),
 });

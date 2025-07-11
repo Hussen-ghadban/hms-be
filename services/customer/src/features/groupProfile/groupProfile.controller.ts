@@ -22,7 +22,6 @@ export const addGroupProfile = async (req: Request, res: Response, next: NextFun
       billingAddress,
       businessType,
       specialRequirements,
-      status,
       isVip,
       notes,
     } = req.body;
@@ -37,7 +36,6 @@ export const addGroupProfile = async (req: Request, res: Response, next: NextFun
       billingAddress,
       businessType,
       specialRequirements,
-      status,
       isVip,
       notes,
       hotelId,

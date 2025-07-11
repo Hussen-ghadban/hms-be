@@ -10,7 +10,7 @@ export default class GroupProfileService {
       data: {
         ...data,
         businessType: data.businessType as BusinessType,
-        status: data.status ? (data.status as GroupStatus) : undefined,
+        status:GroupStatus.ACTIVE
       },
     });
   }
@@ -40,7 +40,7 @@ async updateGroupProfile(params: UpdateGroupProfileParams) {
   const existing = await prisma.groupProfile.findFirst({ where: { id: params.id, hotelId: params.hotelId } });
   if (!existing) throw new AppError("Group profile not found", 404);
 
-  const { id, hotelId, businessType, status, ...rest } = params;
+  const { id, hotelId, businessType,  ...rest } = params;
 
   const updateData: any = { ...rest };
 
