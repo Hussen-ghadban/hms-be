@@ -15,7 +15,13 @@ export const updateExchangeRateSchema = z.object({
 export const exchangeRateIdSchema = z.object({
   id: z.string().min(1, "Exchange rate ID is required"),
 });
-
+export const convertCurrencySchema = {
+  body: z.object({
+    baseCurrency: z.string().min(1),
+    targetCurrency: z.string().min(1),
+    amount: z.number().positive(),
+  }),
+};
 export type AddExchangeRateInput = z.infer<typeof addExchangeRateSchema>;
 export type UpdateExchangeRateInput = z.infer<typeof updateExchangeRateSchema>;
 export type ExchangeRateIdInput = z.infer<typeof exchangeRateIdSchema>;

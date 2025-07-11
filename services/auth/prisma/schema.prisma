@@ -17,6 +17,7 @@ datasource db {
 model Hotel {
   id    String @id @default(cuid())
   name  String
+  baseCurrency String?
   users User[]
   roles Role[]
 }

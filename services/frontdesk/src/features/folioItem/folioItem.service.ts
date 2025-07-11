@@ -2,9 +2,13 @@ import { FolioItemStatus, FolioStatus } from "../../../generated/prisma";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import { recalculateFolioBalance } from "../../utils/recalculateFolioBalance";
+import ExchangeRateService from "../exchange/exchange.service";
 import { CreateFolioItemParams, UpdateFolioItemParams } from "./folioItem.types";
+const exchangeRateService = new ExchangeRateService();
 
 const PAYMENT_SERVICE_URL = process.env.PAYMENT_SERVICE_URL;
+const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL;
+
 export enum PayoutStatus {
   PENDING = "PENDING",
   COMPLETED = "COMPLETED",
@@ -92,12 +96,28 @@ async settleCharge(
   hotelId: string,
   authToken: string,
   payoutData: {
-    currencyId?: string;
+    currencyId: string;
     type?: string;
     source?: string;
     reference?: string;
   }
 ) {
+  // STEP 1: Fetch base currency
+    const response = await fetch(`${AUTH_SERVICE_URL}/hotel/base-currency`, {
+    headers: {
+      Authorization: authToken,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch base currency from hotel service");
+  }
+
+  const result = await response.json();
+  const baseCurrency = result.data; 
+
+  // STEP 2: Fetch folio items
   const folioItems = await prisma.folioItem.findMany({
     where: {
       id: { in: folioItemIds },
@@ -124,6 +144,7 @@ async settleCharge(
     throw new AppError("No valid unpaid folio items found", 400);
   }
 
+  // STEP 3: Mark folio items as PAID
   await prisma.folioItem.updateMany({
     where: {
       id: { in: folioItems.map((item) => item.id) },
@@ -133,37 +154,57 @@ async settleCharge(
   });
 
   const affectedFolioIds = [...new Set(folioItems.map((item) => item.folioId))];
-  console.log("folioItems",folioItems)
+
+  // STEP 4: Loop and create payouts
   for (const item of folioItems) {
     try {
-const res = await fetch(`${PAYMENT_SERVICE_URL}/payout/add`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: authToken,
-  },
-  body: JSON.stringify({
-    amount: Number(item.amount),
-    currencyId: payoutData.currencyId,
-    source: payoutData.source,
-    status:PayoutStatus.COMPLETED,
-    type: payoutData.type,
-    reference: payoutData.reference,
-    guestId: item.Folio?.reservation?.guestId || null,
-    itemId: item.id,
-  }),
-});
+      let payoutAmount = Number(item.amount);
 
-if (!res.ok) {
-  const errBody = await res.text();
-  console.error(`Payout failed for item ${item.id}:`, errBody);
-}
+      // Only convert if target currency is different from base
+      if (payoutData.currencyId !== baseCurrency) {
+        try {
+          const conversion = await exchangeRateService.convertCurrency({
+            baseCurrency,
+            targetCurrency: payoutData.currencyId,
+            amount: payoutAmount,
+            hotelId,
+          });
+          payoutAmount = conversion.convertedAmount;
+        } catch (e) {
+          console.error(`Conversion failed for item ${item.id}:`, e);
+          continue; // Optionally skip this payout
+        }
+      }
 
+      // Create payout
+      const res = await fetch(`${PAYMENT_SERVICE_URL}/payout/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+        body: JSON.stringify({
+          amount: payoutAmount,
+          currencyId: payoutData.currencyId,
+          source: payoutData.source,
+          status: PayoutStatus.COMPLETED,
+          type: payoutData.type,
+          reference: payoutData.reference,
+          guestId: item.Folio?.reservation?.guestId || null,
+          itemId: item.id,
+        }),
+      });
+
+      if (!res.ok) {
+        const errBody = await res.text();
+        console.error(`Payout failed for item ${item.id}:`, errBody);
+      }
     } catch (err) {
       console.error(`Failed to create payout for folioItem ${item.id}`, err);
     }
   }
 
+  // STEP 5: Recalculate balances
   for (const folioId of affectedFolioIds) {
     await recalculateFolioBalance(folioId);
   }
@@ -172,6 +213,18 @@ if (!res.ok) {
     message: `${folioItems.length} folio items settled and payouts created`,
     folioIds: affectedFolioIds,
   };
+}
+
+async getUnsettledCharge(
+  folioId:string,hotelId:string
+){
+  const folio=await prisma.folio.findFirst({
+    where:{id:folioId,hotelId},
+    include:{folioItems:{
+      where:{status:FolioItemStatus.UNPAID }
+    }}
+  })
+  return folio;
 }
 
 async voidFolioItem(

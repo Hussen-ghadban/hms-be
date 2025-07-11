@@ -32,6 +32,29 @@ export const addReservation = async (req: Request,res: Response,next: NextFuncti
     next(error);
   }
 };
+export const nightPrice= async(req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+try{
+        if (!req.user || !req.user.hotelId) {
+        throw new AppError("Hotel ID is required", 400);
+        }
+        const { hotelId } = req.user;
+        const {ratePlanId, roomTypeId}=req.query;
+        
+    if (typeof ratePlanId !== 'string' || typeof roomTypeId !== 'string') {
+      throw new AppError("ratePlanId and roomTypeId must be provided as query parameters", 400);
+    }
+        const nightPrice=await reservationService.nightPrice(hotelId,ratePlanId,roomTypeId);
+        res.status(200).json({
+          message:"night price was fetched successfully",
+          data:nightPrice
+        })
+}catch(err){
+  next(err)
+}
+}
 
 export const updateReservation = async (
   req: Request,

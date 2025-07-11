@@ -78,6 +78,21 @@ export const settleCharge = async (req: Request, res: Response, next: NextFuncti
     next(error);
   }
 };
+export const getUnsettledCharge=async (req: Request, res: Response, next: NextFunction) => {
+  try{
+    if (!req.user || !req.user.hotelId) throw new AppError("Hotel ID is required", 400);
+    const { hotelId } = req.user;
+    const {id}=req.params;
+    const unsettledCharge=await folioItemService.getUnsettledCharge(id,hotelId);
+    res.status(200).json({
+      message:"unsettled charges were fetched successfully",
+      data:unsettledCharge
+    })
+
+  }catch(error){
+    next(error)
+  }
+}
 
 
 export const voidFolioItem = async (req: Request, res: Response, next: NextFunction) => {
