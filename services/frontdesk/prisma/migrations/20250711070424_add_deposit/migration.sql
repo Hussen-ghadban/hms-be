@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Folio" ADD COLUMN     "deposit" DECIMAL(10,4) NOT NULL DEFAULT 0;

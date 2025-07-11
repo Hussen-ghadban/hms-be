@@ -333,7 +333,8 @@ async getReservation(hotelId: string, startDate: string, endDate: string) {
         data: {
           hotelId,
           reservationId: reservation.id,
-          balance: deposit,
+          deposit: deposit,
+          balance:0
         },
       });
 
